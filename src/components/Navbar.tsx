@@ -42,8 +42,12 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
         {/* Brand Logo */}
         <Link href="/" className="flex items-center gap-3 shrink-0 group">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#FFC400] to-[#B38600] flex items-center justify-center font-black text-black text-xl shadow-[0_0_20px_rgba(255,196,0,0.3)] group-hover:scale-105 transition-transform">
-            ⚙️
+          <div className="relative w-11 h-11 rounded-2xl overflow-hidden bg-gradient-to-br from-[#1A1A1A] to-black border border-[#FFC400]/40 p-1 flex items-center justify-center shadow-[0_0_25px_rgba(255,196,0,0.35)] group-hover:shadow-[0_0_35px_rgba(255,196,0,0.6)] group-hover:scale-105 transition-all">
+            <img
+              src="/logo.png"
+              alt="شعار عالم الصيانة"
+              className="w-full h-full object-contain rounded-xl drop-shadow-md"
+            />
           </div>
           <div className="flex flex-col">
             <div className="flex items-center gap-1.5">

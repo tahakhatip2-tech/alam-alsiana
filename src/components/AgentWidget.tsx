@@ -24,7 +24,7 @@ export default function AgentWidget() {
       role: "model",
       content:
         "هلا يا معلم! 👋 أنا **عامر**، موظفك الذكي في عالم الصيانة. أقدر أساعدك فوراً:\n• متابعة أجهزة الخزنة وحالاتها 📱\n• إشعار الزبائن عبر واتساب بضغطة واحدة 📲\n• إعطاء تقرير إيرادات وأداء المحل 📊\n• تنفيذ أي أمر على النظام مباشرة ⚡",
-      time: new Date().toLocaleTimeString("ar-JO", { hour: "2-digit", minute: "2-digit" }),
+      time: "الآن",
     },
   ]);
 
