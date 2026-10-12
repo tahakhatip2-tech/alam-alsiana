@@ -26,9 +26,9 @@ export default function HomePage() {
     },
     {
       href: "/market",
-      title: "سوق الدراج ومطلوب بوردة",
+      title: "السوق ومطلوب بوردة",
       badge: "بيع، شراء، وطلبات",
-      subtitle: "Souq Al-Daraj & Bounties - اللوحات الميتة",
+      subtitle: "The Market & Bounties - اللوحات الميتة",
       desc: "بيع وشراء بوردات ميتة أو اطلب بوردة معينة تبحث عنها. فلترة حسب المدينة مع احتساب عمولة 15% والتواصل عبر واتساب فوراً.",
       icon: "🛒",
       color: "from-emerald-500/20 to-emerald-900/10",

@@ -220,10 +220,10 @@ export default function MarketPage() {
         <div>
           <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-emerald-500/10 text-emerald-400 text-xs font-bold mb-2">
             <span>الباب الثالث 🚪</span>
-            <span>Souq Al-Daraj & In-App Chat</span>
+            <span>The Market & In-App Chat</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-white flex items-center gap-2">
-            <span>🛒 سوق الدراج للوحات الميتة وقطع التشليح</span>
+            <span>🛒 السوق للوحات الميتة وقطع التشليح</span>
           </h1>
           <p className="text-neutral-400 text-xs sm:text-sm mt-1">
             اشترِ وبِع لوحات ميتة للاستفادة من القطع الشغالة — تواصل فوري عبر المحادثة المباشرة (مثل السوق المفتوح) أو الواتساب

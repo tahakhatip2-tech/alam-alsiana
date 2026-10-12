@@ -43,7 +43,7 @@ export const INITIAL_CONVERSATIONS: ChatConversation[] = [
         conversationId: "conv-101",
         senderPhone: "0790001122",
         senderName: "فني عمان (أنت)",
-        text: "مرحباً يا غالي، بخصوص بوردة الـ A12 المعروضة عندك في سوق الدراج",
+        text: "مرحباً يا غالي، بخصوص بوردة الـ A12 المعروضة عندك في السوق",
         isRead: true,
         createdAt: "2025-05-12T15:10:00Z"
       },

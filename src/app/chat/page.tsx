@@ -115,7 +115,7 @@ function ChatContent() {
                 <span className="text-3xl block">📭</span>
                 <p>لا توجد محادثات نشطة حالياً</p>
                 <p className="text-[11px] text-neutral-600">
-                  تصفح سوق الدراج واضغط "مراسلة البائع" لبدء التفاوض
+                  تصفح السوق واضغط "مراسلة البائع" لبدء التفاوض
                 </p>
                 <Link
                   href="/market"

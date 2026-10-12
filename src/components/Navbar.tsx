@@ -175,7 +175,7 @@ export default function Navbar() {
             )}
           </div>
 
-          {/* Direct Link: سوق الدراج */}
+          {/* Direct Link: السوق */}
           <Link
             href="/market"
             className={`px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition-colors ${
@@ -184,7 +184,7 @@ export default function Navbar() {
                 : "text-neutral-300 hover:text-white hover:bg-neutral-900"
             }`}
           >
-            <span>🛒 سوق الدراج</span>
+            <span>🛒 السوق</span>
           </Link>
 
           {/* Direct Link: المحادثات مع مؤشر حي */}
@@ -304,7 +304,7 @@ export default function Navbar() {
                 className="p-2.5 rounded-xl bg-neutral-900 border border-neutral-800 text-xs font-bold text-neutral-200 flex items-center gap-2"
               >
                 <span>🛒</span>
-                <span>سوق الدراج</span>
+                <span>السوق</span>
               </Link>
               <Link
                 href="/chat"
