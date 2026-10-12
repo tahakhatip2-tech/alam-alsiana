@@ -69,8 +69,6 @@ export default function RootLayout({
                 </Link>
                 <span>•</span>
                 <span>دردشة صفقات فورية</span>
-                <span>•</span>
-                <span className="text-emerald-400">MongoDB Atlas Connected ✅</span>
               </div>
               <div className="px-3 py-1 rounded-full bg-neutral-900 border border-neutral-800 text-neutral-300 text-[11px] font-bold shadow-inner">
                 تمت البرمجة بواسطة <span className="text-[#FFC400]">الخطيب للبرمجيات</span>
