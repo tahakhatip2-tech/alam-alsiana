@@ -1,14 +1,36 @@
 import { NextRequest, NextResponse } from "next/server";
-import { INITIAL_BOARDS, INITIAL_WANTED_BOARDS, DeadBoardItem, WantedBoardItem } from "@/lib/market-pricing-data";
+import {
+  INITIAL_BOARDS,
+  INITIAL_WANTED_BOARDS,
+  INITIAL_PHONES,
+  DeadBoardItem,
+  WantedBoardItem,
+  PhoneListingItem,
+} from "@/lib/market-pricing-data";
 
 let memoryBoards: DeadBoardItem[] = [...INITIAL_BOARDS];
 let memoryWanted: WantedBoardItem[] = [...INITIAL_WANTED_BOARDS];
+let memoryPhones: PhoneListingItem[] = [...INITIAL_PHONES];
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const type = searchParams.get("type"); // "wanted" or undefined
+  const type = searchParams.get("type"); // "wanted", "phones", or undefined
   const city = searchParams.get("city");
   const model = searchParams.get("model");
+
+  if (type === "phones") {
+    let phonesList = memoryPhones;
+    if (city && city !== "الكل") {
+      phonesList = phonesList.filter((p) => p.city.includes(city));
+    }
+    if (model) {
+      phonesList = phonesList.filter((p) =>
+        p.title.toLowerCase().includes(model.toLowerCase()) ||
+        p.model.toLowerCase().includes(model.toLowerCase())
+      );
+    }
+    return NextResponse.json({ success: true, count: phonesList.length, data: phonesList });
+  }
 
   if (type === "wanted") {
     let wantedList = memoryWanted;
@@ -35,6 +57,50 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
+
+    // Check if adding to "phones"
+    if (body.type === "phone") {
+      const {
+        title,
+        brand,
+        model,
+        priceJOD,
+        city,
+        condition,
+        battery,
+        storage,
+        color,
+        description,
+        imageUrl,
+        sellerPhone,
+        sellerRole,
+      } = body;
+
+      if (!title || !priceJOD || !sellerPhone) {
+        return NextResponse.json({ error: "الرجاء تعبئة العنوان والسعر ورقم الهاتف" }, { status: 400 });
+      }
+
+      const newPhone: PhoneListingItem = {
+        id: `ph-${Date.now()}`,
+        title: title.trim(),
+        brand: brand || "Apple",
+        model: model || title.trim(),
+        priceJOD: Number(priceJOD),
+        city: city || "عمان",
+        condition: condition || "مستعمل نظيف جداً",
+        battery: battery ? Number(battery) : undefined,
+        storage: storage || "128GB",
+        color: color || "أساسي",
+        description: description || "هاتف معروض للبيع بحالة ممتازة",
+        imageUrl: imageUrl || "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=600&auto=format&fit=crop&q=80",
+        sellerPhone: sellerPhone.trim(),
+        sellerRole: sellerRole || "TECH",
+        createdAt: new Date().toISOString(),
+      };
+
+      memoryPhones.unshift(newPhone);
+      return NextResponse.json({ success: true, data: newPhone }, { status: 201 });
+    }
 
     // Check if adding to "wanted"
     if (body.type === "wanted") {

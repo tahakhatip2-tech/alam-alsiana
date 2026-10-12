@@ -1,3 +1,92 @@
+export interface PhoneListingItem {
+  id: string;
+  title: string;
+  brand: string;
+  model: string;
+  priceJOD: number;
+  city: string;
+  condition: string;
+  battery?: number;
+  storage: string;
+  color?: string;
+  description: string;
+  imageUrl: string;
+  sellerPhone: string;
+  sellerRole?: "TECH" | "TRADER" | "CUSTOMER";
+  createdAt: string;
+}
+
+export const INITIAL_PHONES: PhoneListingItem[] = [
+  {
+    id: "ph-001",
+    title: "iPhone 13 Pro Max أزرق مميز - بطارية 89%",
+    brand: "Apple",
+    model: "iPhone 13 Pro Max",
+    priceJOD: 460,
+    city: "عمان",
+    condition: "مستعمل نظيف جداً (وكالة بدون أي خدش)",
+    battery: 89,
+    storage: "256GB",
+    color: "Sierra Blue",
+    description: "الجهاز نظيف جداً مفحوص كامل قطع أصلية، بطارية 89% تدوم يوم كامل مع الكرتونة والشاحن الأصلي، قابل للتفاوض البسيط.",
+    imageUrl: "https://images.unsplash.com/photo-1632661674596-df8be070a5c5?w=600&auto=format&fit=crop&q=80",
+    sellerPhone: "0790112233",
+    sellerRole: "TECH",
+    createdAt: "2025-05-12T16:00:00Z",
+  },
+  {
+    id: "ph-002",
+    title: "Samsung Galaxy S23 Ultra كفالة رسمية - 512GB",
+    brand: "Samsung",
+    model: "Galaxy S23 Ultra",
+    priceJOD: 520,
+    city: "إربد",
+    condition: "مستعمل كالجديد 99%",
+    battery: 98,
+    storage: "512GB",
+    color: "Phantom Black",
+    description: "سامسونج الترا جبار، رام 12 جيجا وذاكرة 512، كاميرا 200 ميجابكسل، خالي من أي ضربات، لقطة لمحبين التصوير والأداء.",
+    imageUrl: "https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=600&auto=format&fit=crop&q=80",
+    sellerPhone: "0788990011",
+    sellerRole: "TRADER",
+    createdAt: "2025-05-12T14:20:00Z",
+  },
+  {
+    id: "ph-003",
+    title: "Xiaomi Redmi Note 13 Pro 4G جديد بالكرتونة",
+    brand: "Xiaomi",
+    model: "Redmi Note 13 Pro",
+    priceJOD: 165,
+    city: "الزرقاء",
+    condition: "جديد بالكرتونة بتغليف المصنع",
+    battery: 100,
+    storage: "256GB",
+    color: "Midnight Black",
+    description: "جهاز جديد غير مستعمل إطلاقاً مع الكفالة السنوية، شاشة أموليد 120Hz وشحن فائق السرعة 67 واط.",
+    imageUrl: "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=600&auto=format&fit=crop&q=80",
+    sellerPhone: "0771239876",
+    sellerRole: "TRADER",
+    createdAt: "2025-05-12T11:45:00Z",
+  },
+  {
+    id: "ph-004",
+    title: "iPhone 11 أسود 128GB بحالة ممتازة",
+    brand: "Apple",
+    model: "iPhone 11",
+    priceJOD: 195,
+    city: "عمان",
+    condition: "مستعمل بحالة ممتازة",
+    battery: 84,
+    storage: "128GB",
+    color: "Black",
+    description: "آيفون 11 نظيف جداً، كل قطعه فحص كامل بما فيها الفيس آي دي والكاميرات، مع كفر حماية ولاصق شاشة ضد الكسر.",
+    imageUrl: "https://images.unsplash.com/photo-1574755393849-623942496936?w=600&auto=format&fit=crop&q=80",
+    sellerPhone: "0795556677",
+    sellerRole: "CUSTOMER",
+    createdAt: "2025-05-11T18:10:00Z",
+  },
+];
+
 export interface WantedBoardItem {
   id: string;
   requesterPhone: string;

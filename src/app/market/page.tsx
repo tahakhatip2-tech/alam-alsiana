@@ -2,32 +2,61 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { DeadBoardItem, WantedBoardItem } from "@/lib/market-pricing-data";
+import {
+  DeadBoardItem,
+  WantedBoardItem,
+  PhoneListingItem,
+  INITIAL_PHONES,
+} from "@/lib/market-pricing-data";
 
 export default function MarketPage() {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<"available" | "wanted">("available");
+  const [activeTab, setActiveTab] = useState<"phones" | "boards" | "wanted">("phones");
+
+  // Phones State
+  const [phones, setPhones] = useState<PhoneListingItem[]>([]);
+  const [loadingPhones, setLoadingPhones] = useState(true);
+  const [phoneBrandFilter, setPhoneBrandFilter] = useState("الكل");
 
   // Available Boards State
   const [boards, setBoards] = useState<DeadBoardItem[]>([]);
   const [loadingBoards, setLoadingBoards] = useState(true);
-  const [cityFilter, setCityFilter] = useState("الكل");
-  const [showAddModal, setShowAddModal] = useState(false);
 
-  // Wanted Boards State
+  // Wanted State
   const [wantedList, setWantedList] = useState<WantedBoardItem[]>([]);
   const [loadingWanted, setLoadingWanted] = useState(true);
+
+  // Global City Filter
+  const [cityFilter, setCityFilter] = useState("الكل");
+
+  // Modals
+  const [showAddPhoneModal, setShowAddPhoneModal] = useState(false);
+  const [showAddBoardModal, setShowAddBoardModal] = useState(false);
   const [showAddWantedModal, setShowAddWantedModal] = useState(false);
 
-  // New available board form state
-  const [phone, setPhone] = useState("");
-  const [city, setCity] = useState("عمان");
-  const [boardModel, setBoardModel] = useState("");
-  const [price, setPrice] = useState("");
-  const [parts, setParts] = useState<string[]>([]);
-  const [condition, setCondition] = useState("لوحة ميتة فاصلة باور");
+  // Form: Phone
+  const [pTitle, setPTitle] = useState("");
+  const [pBrand, setPBrand] = useState("Apple");
+  const [pModel, setPModel] = useState("");
+  const [pPrice, setPPrice] = useState("");
+  const [pCity, setPCity] = useState("عمان");
+  const [pCondition, setPCityCondition] = useState("مستعمل نظيف جداً 95%");
+  const [pBattery, setPBattery] = useState("90");
+  const [pStorage, setPStorage] = useState("256GB");
+  const [pColor, setPColor] = useState("");
+  const [pDesc, setPDesc] = useState("");
+  const [pPhone, setPPhone] = useState("");
+  const [pRole, setPRole] = useState<"TECH" | "TRADER" | "CUSTOMER">("TECH");
 
-  // New wanted board form state
+  // Form: Board
+  const [bPhone, setBPhone] = useState("");
+  const [bCity, setBCity] = useState("عمان");
+  const [bModel, setBModel] = useState("");
+  const [bPrice, setBPrice] = useState("");
+  const [bParts, setBParts] = useState<string[]>([]);
+  const [bCondition, setBCondition] = useState("لوحة ميتة فاصلة باور");
+
+  // Form: Wanted
   const [wPhone, setWPhone] = useState("");
   const [wCity, setWCity] = useState("عمان");
   const [wModel, setWModel] = useState("");
@@ -36,6 +65,7 @@ export default function MarketPage() {
   const [wNotes, setWNotes] = useState("");
 
   const jordanCities = ["الكل", "عمان", "إربد", "الزرقاء", "العقبة", "السلط", "المفرق"];
+  const phoneBrands = ["الكل", "Apple", "Samsung", "Xiaomi", "Honor", "Huawei"];
 
   const commonPartsList = [
     "آيسي شحن (Charging IC)",
@@ -47,13 +77,30 @@ export default function MarketPage() {
     "درايفر إضاءة وشاشة",
   ];
 
+  // Fetch data
+  const fetchPhones = async () => {
+    try {
+      const res = await fetch("/api/boards?type=phones");
+      const json = await res.json();
+      if (json.data && json.data.length > 0) {
+        setPhones(json.data);
+      } else {
+        setPhones(INITIAL_PHONES);
+      }
+    } catch {
+      setPhones(INITIAL_PHONES);
+    } finally {
+      setLoadingPhones(false);
+    }
+  };
+
   const fetchBoards = async () => {
     try {
       const res = await fetch("/api/boards");
       const json = await res.json();
       if (json.data) setBoards(json.data);
     } catch {
-      // offline fallback
+      // fallback
     } finally {
       setLoadingBoards(false);
     }
@@ -65,26 +112,71 @@ export default function MarketPage() {
       const json = await res.json();
       if (json.data) setWantedList(json.data);
     } catch {
-      // offline fallback
+      // fallback
     } finally {
       setLoadingWanted(false);
     }
   };
 
   useEffect(() => {
+    fetchPhones();
     fetchBoards();
     fetchWanted();
   }, []);
 
   const handleTogglePart = (part: string) => {
-    setParts((prev) =>
+    setBParts((prev) =>
       prev.includes(part) ? prev.filter((p) => p !== part) : [...prev, part]
     );
   };
 
+  // Submit: Phone
+  const handleCreatePhone = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!pTitle || !pPrice || !pPhone) {
+      alert("يرجى ملء العنوان والسعر ورقم الهاتف");
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/boards", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "phone",
+          title: pTitle,
+          brand: pBrand,
+          model: pModel || pTitle,
+          priceJOD: Number(pPrice),
+          city: pCity,
+          condition: pCondition,
+          battery: pBattery ? Number(pBattery) : undefined,
+          storage: pStorage,
+          color: pColor,
+          description: pDesc,
+          sellerPhone: pPhone,
+          sellerRole: pRole,
+        }),
+      });
+
+      if (res.ok) {
+        setShowAddPhoneModal(false);
+        setPTitle("");
+        setPModel("");
+        setPPrice("");
+        setPDesc("");
+        setPPhone("");
+        fetchPhones();
+      }
+    } catch {
+      alert("حدث خطأ أثناء إضافة الهاتف");
+    }
+  };
+
+  // Submit: Board
   const handleCreateBoard = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!phone || !boardModel || !price) {
+    if (!bPhone || !bModel || !bPrice) {
       alert("يرجى ملء الحقول المطلوبة (الهاتف، الموديل، السعر)");
       return;
     }
@@ -94,21 +186,21 @@ export default function MarketPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          sellerPhone: phone,
-          sellerCity: city,
-          boardModel,
-          priceJOD: Number(price),
-          workingParts: parts,
-          condition,
+          sellerPhone: bPhone,
+          sellerCity: bCity,
+          boardModel: bModel,
+          priceJOD: Number(bPrice),
+          workingParts: bParts,
+          condition: bCondition,
         }),
       });
 
       if (res.ok) {
-        setShowAddModal(false);
-        setPhone("");
-        setBoardModel("");
-        setPrice("");
-        setParts([]);
+        setShowAddBoardModal(false);
+        setBPhone("");
+        setBModel("");
+        setBPrice("");
+        setBParts([]);
         fetchBoards();
       }
     } catch {
@@ -116,6 +208,7 @@ export default function MarketPage() {
     }
   };
 
+  // Submit: Wanted
   const handleCreateWanted = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!wPhone || !wModel || !wBudget) {
@@ -132,7 +225,7 @@ export default function MarketPage() {
           requesterPhone: wPhone,
           requesterCity: wCity,
           requestedModel: wModel,
-          requiredPart: wPart,
+          requiredPart: wPart || "جهاز كامل أو بوردة",
           budgetJOD: Number(wBudget),
           notes: wNotes,
         }),
@@ -152,7 +245,33 @@ export default function MarketPage() {
     }
   };
 
-  // Open Chat Room with product header
+  // Chat Navigations
+  const handleOpenChatForPhone = async (item: PhoneListingItem) => {
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "start",
+          itemId: item.id,
+          itemTitle: item.title,
+          itemPrice: item.priceJOD,
+          itemImage: item.imageUrl,
+          itemCity: item.city,
+          sellerPhone: item.sellerPhone,
+          buyerPhone: "0790001122",
+          initialText: `مرحباً، أنا مهتم بهاتف (${item.title}) المعروض بسعر ${item.priceJOD} دينار أردني. هل الجهاز ما زال متوفراً؟`,
+        }),
+      });
+      const json = await res.json();
+      if (json.data && json.data.id) {
+        router.push(`/chat?id=${json.data.id}`);
+      }
+    } catch {
+      router.push("/chat");
+    }
+  };
+
   const handleOpenChatForBoard = async (board: DeadBoardItem) => {
     try {
       const res = await fetch("/api/chat", {
@@ -166,7 +285,7 @@ export default function MarketPage() {
           itemImage: board.imageUrl,
           itemCity: board.sellerCity,
           sellerPhone: board.sellerPhone,
-          buyerPhone: "0790001122"
+          buyerPhone: "0790001122",
         }),
       });
       const json = await res.json();
@@ -191,7 +310,7 @@ export default function MarketPage() {
           itemCity: item.requesterCity,
           sellerPhone: item.requesterPhone,
           buyerPhone: "0790001122",
-          initialText: `مرحباً، بخصوص طلبك لبوردة (${item.requestedModel})، القطعة متوفرة عندي.`
+          initialText: `مرحباً، بخصوص طلبك لـ (${item.requestedModel})، القطعة أو الجهاز متوفر عندي.`,
         }),
       });
       const json = await res.json();
@@ -202,6 +321,13 @@ export default function MarketPage() {
       router.push("/chat");
     }
   };
+
+  // Filtered Lists
+  const filteredPhones = phones.filter((p) => {
+    const cityMatch = cityFilter === "الكل" || p.city.includes(cityFilter);
+    const brandMatch = phoneBrandFilter === "الكل" || p.brand.toLowerCase() === phoneBrandFilter.toLowerCase();
+    return cityMatch && brandMatch;
+  });
 
   const filteredBoards =
     cityFilter === "الكل"
@@ -216,75 +342,99 @@ export default function MarketPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 space-y-8 flex-1 w-full">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#222] pb-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#222] pb-6">
         <div>
           <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-emerald-500/10 text-emerald-400 text-xs font-bold mb-2">
             <span>الباب الثالث 🚪</span>
             <span>The Market & In-App Chat</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-white flex items-center gap-2">
-            <span>🛒 السوق للوحات الميتة وقطع التشليح</span>
+            <span>🛒 السوق الشامل للهواتف واللوحات وقطع الغيار</span>
           </h1>
           <p className="text-neutral-400 text-xs sm:text-sm mt-1">
-            اشترِ وبِع لوحات ميتة للاستفادة من القطع الشغالة — تواصل فوري عبر المحادثة المباشرة (مثل السوق المفتوح) أو الواتساب
+            سوق مفتوح ومتخصص للهواتف الذكية (جديد ومستعمل)، بوردات التشليح، وطلبات الشراء في الأردن مع محادثة مباشرة وواتساب
           </p>
         </div>
 
         {/* Action Buttons */}
-        <div className="flex items-center gap-2 self-start sm:self-auto">
-          {activeTab === "available" ? (
-            <button
-              onClick={() => setShowAddModal(true)}
-              className="px-5 py-2.5 rounded-xl bg-[#FFC400] text-black font-black text-xs hover:bg-[#E0AC00] transition-all shadow-[0_0_20px_rgba(255,196,0,0.25)] flex items-center gap-2"
-            >
-              <span>+ عرض بوردة للبيع</span>
-            </button>
-          ) : (
-            <button
-              onClick={() => setShowAddWantedModal(true)}
-              className="px-5 py-2.5 rounded-xl bg-amber-500 text-black font-black text-xs hover:bg-amber-400 transition-all shadow-[0_0_20px_rgba(245,158,11,0.25)] flex items-center gap-2"
-            >
-              <span>+ إضافة طلب بوردة (مطلوب)</span>
-            </button>
-          )}
+        <div className="flex items-center gap-2 flex-wrap">
+          <button
+            onClick={() => setShowAddPhoneModal(true)}
+            className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#FFC400] to-[#E0AC00] text-black font-black text-xs hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(255,196,0,0.3)] flex items-center gap-1.5"
+          >
+            <span>+ بيع هاتف</span>
+            <span>📱</span>
+          </button>
+
+          <button
+            onClick={() => setShowAddBoardModal(true)}
+            className="px-3.5 py-2.5 rounded-xl bg-neutral-900 border border-neutral-700 hover:border-[#FFC400]/40 text-neutral-200 font-bold text-xs transition-colors flex items-center gap-1.5"
+          >
+            <span>+ عرض بوردة</span>
+            <span>📦</span>
+          </button>
+
+          <button
+            onClick={() => setShowAddWantedModal(true)}
+            className="px-3.5 py-2.5 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-400 font-bold text-xs hover:bg-amber-500/25 transition-colors flex items-center gap-1.5"
+          >
+            <span>+ طلب شراء</span>
+            <span>🔍</span>
+          </button>
         </div>
       </div>
 
       {/* Main Tabs Switcher */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-center bg-[#141414] border border-[#2B2B2B] p-1.5 rounded-xl text-xs font-bold">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        {/* Tabs Bar */}
+        <div className="flex items-center bg-[#141414] border border-[#2B2B2B] p-1.5 rounded-xl text-xs font-bold overflow-x-auto max-w-full">
           <button
-            onClick={() => setActiveTab("available")}
-            className={`px-4 py-2 rounded-lg transition-all ${
-              activeTab === "available"
-                ? "bg-[#FFC400] text-black shadow"
+            onClick={() => setActiveTab("phones")}
+            className={`px-4 py-2 rounded-lg transition-all flex items-center gap-1.5 shrink-0 ${
+              activeTab === "phones"
+                ? "bg-[#FFC400] text-black shadow font-black"
                 : "text-neutral-400 hover:text-white"
             }`}
           >
-            📦 بوردات معروضة للبيع ({boards.length})
+            <span>📱 سوق الهواتف</span>
+            <span className="bg-black/30 px-1.5 py-0.5 rounded text-[10px]">({phones.length})</span>
           </button>
+
+          <button
+            onClick={() => setActiveTab("boards")}
+            className={`px-4 py-2 rounded-lg transition-all flex items-center gap-1.5 shrink-0 ${
+              activeTab === "boards"
+                ? "bg-[#FFC400] text-black shadow font-black"
+                : "text-neutral-400 hover:text-white"
+            }`}
+          >
+            <span>📦 بوردات وقطع تشليح</span>
+            <span className="bg-black/30 px-1.5 py-0.5 rounded text-[10px]">({boards.length})</span>
+          </button>
+
           <button
             onClick={() => setActiveTab("wanted")}
-            className={`px-4 py-2 rounded-lg transition-all ${
+            className={`px-4 py-2 rounded-lg transition-all flex items-center gap-1.5 shrink-0 ${
               activeTab === "wanted"
-                ? "bg-amber-500 text-black shadow"
+                ? "bg-amber-500 text-black shadow font-black"
                 : "text-neutral-400 hover:text-white"
             }`}
           >
-            🔍 مطلوب بوردات وقطع ({wantedList.length})
+            <span>🔍 مطلوب أجهزة وقطع</span>
+            <span className="bg-black/30 px-1.5 py-0.5 rounded text-[10px]">({wantedList.length})</span>
           </button>
         </div>
 
         {/* City Filter */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1">
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 max-w-full">
           <span className="text-xs font-bold text-neutral-400 ml-1 whitespace-nowrap">
-            📍 تصفية حسب المدينة:
+            📍 المدينة:
           </span>
           {jordanCities.map((c) => (
             <button
               key={c}
               onClick={() => setCityFilter(c)}
-              className={`px-2.5 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition-colors ${
+              className={`px-2.5 py-1 rounded-lg text-xs font-bold whitespace-nowrap transition-colors shrink-0 ${
                 cityFilter === c
                   ? "bg-[#FFC400] text-black"
                   : "bg-neutral-900 text-neutral-300 hover:bg-neutral-800 border border-neutral-800"
@@ -296,8 +446,166 @@ export default function MarketPage() {
         </div>
       </div>
 
-      {/* TAB 1: Available Boards */}
-      {activeTab === "available" && (
+      {/* ======================================================== */}
+      {/* TAB 1: PHONES MARKETPLACE (NEW & USED) */}
+      {/* ======================================================== */}
+      {activeTab === "phones" && (
+        <div className="space-y-6">
+          {/* Brand Sub-filter for phones */}
+          <div className="flex items-center justify-between gap-3 flex-wrap bg-[#111] p-3 rounded-2xl border border-neutral-800">
+            <div className="flex items-center gap-2 overflow-x-auto">
+              <span className="text-xs font-bold text-neutral-400 whitespace-nowrap">الماركة:</span>
+              {phoneBrands.map((b) => (
+                <button
+                  key={b}
+                  onClick={() => setPhoneBrandFilter(b)}
+                  className={`px-3 py-1 rounded-lg text-xs font-bold transition-colors whitespace-nowrap ${
+                    phoneBrandFilter === b
+                      ? "bg-white text-black font-black"
+                      : "bg-[#1A1A1A] text-neutral-300 hover:text-white border border-neutral-800"
+                  }`}
+                >
+                  {b}
+                </button>
+              ))}
+            </div>
+
+            <span className="text-xs text-neutral-400 font-bold">
+              يظهر: <span className="text-[#FFC400]">{filteredPhones.length}</span> هاتف متاح
+            </span>
+          </div>
+
+          {loadingPhones ? (
+            <div className="text-center py-12 text-neutral-400">جارِ تحميل سوق الهواتف... ⏳</div>
+          ) : filteredPhones.length === 0 ? (
+            <div className="text-center py-16 bg-[#121212] rounded-2xl border border-[#222]">
+              <span className="text-4xl block mb-2">📱</span>
+              <p className="text-sm font-bold text-white mb-1">لا توجد هواتف معروضة بهذه التصفية حالياً</p>
+              <p className="text-xs text-neutral-400">كن أول من ينشر إعلان بيع لهاتفك واجذب الزبائن والفنيين فوراً!</p>
+              <button
+                onClick={() => setShowAddPhoneModal(true)}
+                className="mt-4 px-5 py-2.5 rounded-xl bg-[#FFC400] text-black font-bold text-xs"
+              >
+                + نشر إعلان بيع هاتف الآن
+              </button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredPhones.map((phoneItem) => {
+                const waText = encodeURIComponent(
+                  `مرحباً، أنا مهتم بهاتفك المعروض في سوق تطبيق عالم الصيانة:\nالموديل: ${phoneItem.title}\nالسعر: ${phoneItem.priceJOD} د.أ\nالمدينة: ${phoneItem.city}`
+                );
+
+                return (
+                  <div
+                    key={phoneItem.id}
+                    className="bg-[#121212] border border-[#242424] rounded-2xl overflow-hidden hover:border-[#FFC400]/40 transition-all shadow-xl flex flex-col justify-between group"
+                  >
+                    <div>
+                      {/* Image + Top Badges */}
+                      <div className="relative h-52 bg-black overflow-hidden">
+                        <img
+                          src={phoneItem.imageUrl}
+                          alt={phoneItem.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+
+                        {/* Top Badges */}
+                        <div className="absolute top-3 right-3 flex items-center gap-1.5">
+                          <span className="px-2.5 py-1 rounded-full bg-black/80 backdrop-blur border border-white/10 text-white text-[11px] font-bold">
+                            📍 {phoneItem.city}
+                          </span>
+                          <span className="px-2.5 py-1 rounded-full bg-emerald-500/90 text-black text-[11px] font-black shadow">
+                            {phoneItem.priceJOD} JOD
+                          </span>
+                        </div>
+
+                        {/* Condition Badge */}
+                        <div className="absolute bottom-3 right-3">
+                          <span className="px-2 py-0.5 rounded bg-black/80 text-[#FFC400] border border-[#FFC400]/40 text-[10px] font-bold">
+                            ✨ {phoneItem.condition}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Content */}
+                      <div className="p-5 space-y-3">
+                        <div className="flex items-start justify-between gap-2">
+                          <div>
+                            <span className="text-[10px] text-neutral-400 font-bold block">{phoneItem.brand}</span>
+                            <h3 className="font-black text-white text-base leading-snug">{phoneItem.title}</h3>
+                          </div>
+                          {phoneItem.sellerRole === "TRADER" && (
+                            <span className="text-[9px] bg-blue-500/20 text-blue-400 border border-blue-500/40 px-2 py-0.5 rounded-full font-bold shrink-0">
+                              🏬 تاجر
+                            </span>
+                          )}
+                          {phoneItem.sellerRole === "TECH" && (
+                            <span className="text-[9px] bg-[#FFC400]/20 text-[#FFC400] border border-[#FFC400]/40 px-2 py-0.5 rounded-full font-bold shrink-0">
+                              🛠️ فني
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Specs Pills */}
+                        <div className="flex items-center gap-2 flex-wrap text-[11px]">
+                          {phoneItem.storage && (
+                            <span className="px-2 py-0.5 rounded-md bg-neutral-900 border border-neutral-800 text-neutral-300 font-bold">
+                              💾 {phoneItem.storage}
+                            </span>
+                          )}
+                          {phoneItem.battery && (
+                            <span className="px-2 py-0.5 rounded-md bg-emerald-950/60 border border-emerald-500/30 text-emerald-400 font-bold">
+                              🔋 بطارية {phoneItem.battery}%
+                            </span>
+                          )}
+                          {phoneItem.color && (
+                            <span className="px-2 py-0.5 rounded-md bg-neutral-900 border border-neutral-800 text-neutral-400">
+                              🎨 {phoneItem.color}
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Description */}
+                        <p className="text-neutral-400 text-xs line-clamp-2 leading-relaxed">
+                          {phoneItem.description}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Bottom Action Footer */}
+                    <div className="p-4 bg-[#0F0F0F] border-t border-[#1F1F1F] flex items-center gap-2">
+                      <button
+                        onClick={() => handleOpenChatForPhone(phoneItem)}
+                        className="flex-1 py-2.5 rounded-xl bg-[#FFC400] hover:bg-[#E0AC00] text-black font-black text-xs flex items-center justify-center gap-1.5 transition-all shadow"
+                      >
+                        <span>دردشة فورية</span>
+                        <span>💬</span>
+                      </button>
+
+                      <a
+                        href={`https://wa.me/962${phoneItem.sellerPhone.replace(/^0/, "")}?text=${waText}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="flex-1 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs flex items-center justify-center gap-1.5 transition-colors shadow"
+                      >
+                        <span>واتساب</span>
+                        <span>📲</span>
+                      </a>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ======================================================== */}
+      {/* TAB 2: BOARDS & SCRAP (بوردات وقطع تشليح) */}
+      {/* ======================================================== */}
+      {activeTab === "boards" && (
         <div>
           {loadingBoards ? (
             <div className="text-center py-12 text-neutral-400">جارِ تحميل اللوحات المعروضة... ⏳</div>
@@ -319,82 +627,77 @@ export default function MarketPage() {
                 return (
                   <div
                     key={board.id}
-                    className="bg-[#121212] border border-[#242424] hover:border-[#FFC400]/40 rounded-2xl overflow-hidden shadow-lg transition-all flex flex-col justify-between"
+                    className="bg-[#121212] border border-[#242424] rounded-2xl overflow-hidden hover:border-[#FFC400]/40 transition-colors shadow-lg flex flex-col justify-between"
                   >
                     <div>
-                      {/* Image container */}
-                      <div className="relative h-44 w-full bg-neutral-900">
+                      {/* Image Header */}
+                      <div className="relative h-44 bg-black overflow-hidden">
                         <img
                           src={board.imageUrl}
                           alt={board.boardModel}
-                          className="w-full h-full object-cover filter brightness-90"
+                          className="w-full h-full object-cover"
                         />
-                        <div className="absolute top-3 right-3 bg-black/75 backdrop-blur px-2.5 py-1 rounded-lg text-[11px] font-bold text-white border border-white/10">
-                          📍 {board.sellerCity}
-                        </div>
-                        <div className="absolute top-3 left-3 bg-emerald-500/90 text-black px-2.5 py-1 rounded-lg text-xs font-black shadow">
-                          {board.priceJOD} JOD
+                        <div className="absolute top-3 right-3 flex items-center gap-2">
+                          <span className="px-2.5 py-1 rounded-full bg-black/75 backdrop-blur border border-white/10 text-white text-[11px] font-bold">
+                            📍 {board.sellerCity}
+                          </span>
+                          <span className="px-2.5 py-1 rounded-full bg-emerald-500 text-black text-[11px] font-black">
+                            {board.priceJOD} JOD
+                          </span>
                         </div>
                       </div>
 
-                      {/* Info */}
+                      {/* Content */}
                       <div className="p-5 space-y-4">
                         <div>
-                          <h3 className="text-base font-black text-white">{board.boardModel}</h3>
-                          <p className="text-xs text-neutral-400 mt-0.5">{board.condition}</p>
+                          <h3 className="font-black text-white text-base">{board.boardModel}</h3>
+                          <p className="text-neutral-400 text-xs mt-0.5">{board.condition}</p>
                         </div>
 
-                        {/* Working parts badges */}
+                        {/* Working Parts Tags */}
                         <div>
-                          <span className="text-[11px] font-bold text-neutral-400 block mb-1.5">
+                          <span className="text-[11px] font-bold text-neutral-400 block mb-2">
                             القطع الشغالة المؤكدة:
                           </span>
                           <div className="flex flex-wrap gap-1.5">
-                            {board.workingParts.map((p, idx) => (
+                            {board.workingParts.map((part, i) => (
                               <span
-                                key={idx}
-                                className="text-[10px] bg-emerald-950/60 border border-emerald-500/30 text-emerald-300 px-2 py-0.5 rounded-md font-semibold"
+                                key={i}
+                                className="px-2 py-1 rounded-md bg-emerald-950/40 border border-emerald-500/30 text-emerald-300 text-[10px] font-bold flex items-center gap-1"
                               >
-                                ✓ {p}
+                                <span>✓</span>
+                                <span>{part}</span>
                               </span>
                             ))}
                           </div>
                         </div>
 
-                        {/* Commission breakdown */}
-                        <div className="bg-[#181818] p-3 rounded-xl border border-neutral-800 text-[11px] space-y-1">
-                          <div className="flex items-center justify-between text-neutral-400">
-                            <span>سعر البيع الإجمالي:</span>
-                            <span className="text-white font-bold">{board.priceJOD} JOD</span>
-                          </div>
-                          <div className="flex items-center justify-between text-neutral-400">
-                            <span>عمولة التطبيق (15%):</span>
-                            <span className="text-[#FFC400] font-bold">{commission} JOD</span>
-                          </div>
-                          <div className="flex items-center justify-between text-neutral-400 border-t border-neutral-700/60 pt-1 font-semibold">
-                            <span>صافي البائع المقدر:</span>
-                            <span className="text-emerald-400 font-bold">{sellerNet} JOD</span>
-                          </div>
+                        {/* Commission Info */}
+                        <div className="bg-[#1A1A1A] p-2.5 rounded-xl border border-neutral-800 text-[11px] text-neutral-400 flex items-center justify-between">
+                          <span>صافي الفني بعد العمولة:</span>
+                          <span className="font-bold text-[#FFC400] font-mono">{sellerNet} JOD</span>
                         </div>
                       </div>
                     </div>
 
-                    {/* Dual Action Buttons: In-App Chat + WhatsApp */}
-                    <div className="p-5 pt-0 space-y-2">
+                    {/* Actions */}
+                    <div className="p-4 bg-[#0F0F0F] border-t border-[#1C1C1C] flex items-center gap-2">
                       <button
                         onClick={() => handleOpenChatForBoard(board)}
-                        className="w-full py-2.5 rounded-xl bg-[#FFC400] hover:bg-[#E0AC00] text-black font-black text-xs flex items-center justify-center gap-2 transition-all shadow-[0_0_15px_rgba(255,196,0,0.25)]"
+                        className="flex-1 py-2.5 rounded-xl bg-[#FFC400] hover:bg-[#E0AC00] text-black font-black text-xs flex items-center justify-center gap-1.5 transition-colors shadow"
                       >
-                        <span>💬 مراسلة البائع (شات فوري مع تفاصيل المنتج)</span>
+                        <span>مراسلة في التطبيق</span>
+                        <span>💬</span>
                       </button>
 
                       <a
                         href={`https://wa.me/962${board.sellerPhone.replace(/^0/, "")}?text=${waText}`}
                         target="_blank"
                         rel="noreferrer"
-                        className="w-full py-2 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-neutral-300 hover:text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-colors border border-neutral-700"
+                        className="flex-1 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs flex items-center justify-center gap-1.5 transition-colors shadow"
                       >
-                        <span>أو تواصل عبر واتساب</span>
+                        <span>واتساب</span>
+                        <span>📲</span>
                       </a>
                     </div>
                   </div>
@@ -405,35 +708,37 @@ export default function MarketPage() {
         </div>
       )}
 
-      {/* TAB 2: Wanted Boards */}
+      {/* ======================================================== */}
+      {/* TAB 3: WANTED REQUESTS (مطلوب بوردات وهواتف) */}
+      {/* ======================================================== */}
       {activeTab === "wanted" && (
         <div>
           {loadingWanted ? (
-            <div className="text-center py-12 text-neutral-400">جارِ تحميل طلبات الفنيين... ⏳</div>
+            <div className="text-center py-12 text-neutral-400">جارِ تحميل طلبات الشراء... ⏳</div>
           ) : filteredWanted.length === 0 ? (
             <div className="text-center py-16 bg-[#121212] rounded-2xl border border-[#222]">
               <span className="text-4xl block mb-2">🔍</span>
-              <p className="text-sm font-bold text-white mb-1">لا يوجد طلبات حالياً في هذه المدينة</p>
-              <p className="text-xs text-neutral-400">إذا كنت تبحث عن بوردة أو آيسي نادر، انقر على زر إضافة طلب بالأعلى!</p>
+              <p className="text-sm font-bold text-white mb-1">لا توجد طلبات شراء مسجلة حالياً</p>
+              <p className="text-xs text-neutral-400">إذا كنت تبحث عن جهاز أو بوردة نادرة، انشر طلبك هنا ليصل لجميع الفنيين!</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredWanted.map((item) => (
                 <div
                   key={item.id}
-                  className="bg-[#141414] border border-amber-500/30 hover:border-amber-500/60 rounded-2xl p-5 space-y-4 shadow-lg flex flex-col justify-between"
+                  className="bg-[#121212] border border-[#242424] rounded-2xl p-5 space-y-4 shadow-lg hover:border-amber-500/40 transition-colors flex flex-col justify-between"
                 >
                   <div className="space-y-3">
                     <div className="flex items-start justify-between gap-2 border-b border-neutral-800 pb-3">
                       <div>
-                        <div className="inline-block px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 font-bold text-[10px] mb-1">
-                          مطلوب بوردة للشراء 🎯
-                        </div>
-                        <h3 className="text-base font-black text-white">{item.requestedModel}</h3>
+                        <span className="text-[10px] bg-amber-500/10 text-amber-400 font-bold px-2 py-0.5 rounded border border-amber-500/20 block mb-1">
+                          طلب شراء عاجل
+                        </span>
+                        <h3 className="font-black text-white text-base">{item.requestedModel}</h3>
                       </div>
                       <div className="text-left">
                         <span className="text-[10px] text-neutral-400 block">الميزانية:</span>
-                        <span className="font-mono text-sm font-black text-emerald-400">
+                        <span className="font-mono text-base font-black text-emerald-400">
                           {item.budgetJOD} JOD
                         </span>
                       </div>
@@ -441,7 +746,7 @@ export default function MarketPage() {
 
                     <div className="space-y-1.5 text-xs">
                       <div>
-                        <span className="text-neutral-400 block text-[11px]">القطعة المطلوبة تحديداً:</span>
+                        <span className="text-neutral-400 block text-[11px]">المطلوب بالتحديد:</span>
                         <p className="font-bold text-neutral-200">{item.requiredPart}</p>
                       </div>
 
@@ -461,12 +766,25 @@ export default function MarketPage() {
                     </div>
                   </div>
 
-                  <button
-                    onClick={() => handleOpenChatForWanted(item)}
-                    className="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black text-xs flex items-center justify-center gap-2 transition-colors shadow"
-                  >
-                    <span>💬 مراسلة صاحب الطلب (القطعة عندي)</span>
-                  </button>
+                  <div className="flex items-center gap-2 pt-2">
+                    <button
+                      onClick={() => handleOpenChatForWanted(item)}
+                      className="flex-1 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black text-xs flex items-center justify-center gap-1.5 transition-colors shadow"
+                    >
+                      <span>دردشة (متوفر عندي)</span>
+                      <span>💬</span>
+                    </button>
+                    <a
+                      href={`https://wa.me/962${item.requesterPhone.replace(/^0/, "")}?text=${encodeURIComponent(
+                        `مرحباً، بخصوص طلبك لـ (${item.requestedModel}) على تطبيق عالم الصيانة، الجهاز أو القطعة متوفرة عندي.`
+                      )}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="p-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs"
+                    >
+                      📲
+                    </a>
+                  </div>
                 </div>
               ))}
             </div>
@@ -474,14 +792,218 @@ export default function MarketPage() {
         </div>
       )}
 
-      {/* Modals */}
-      {showAddModal && (
+      {/* ======================================================== */}
+      {/* MODAL 1: ADD PHONE FOR SALE */}
+      {/* ======================================================== */}
+      {showAddPhoneModal && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#141414] border border-[#2B2B2B] rounded-2xl max-w-lg w-full p-6 space-y-5 animate-in zoom-in-95 duration-200">
+          <div className="bg-[#141414] border border-[#2B2B2B] rounded-2xl max-w-lg w-full p-6 space-y-4 animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-neutral-800 pb-3">
-              <h2 className="text-lg font-black text-white">عرض لوحة جديدة للبيع</h2>
+              <div className="flex items-center gap-2">
+                <span className="text-xl">📱</span>
+                <h2 className="text-base font-black text-white">إضافة هاتف للبيع في السوق</h2>
+              </div>
               <button
-                onClick={() => setShowAddModal(false)}
+                onClick={() => setShowAddPhoneModal(false)}
+                className="text-neutral-400 hover:text-white text-lg"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleCreatePhone} className="space-y-3.5 text-xs">
+              <div>
+                <label className="block text-neutral-300 font-bold mb-1">
+                  عنوان الإعلان:
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="مثال: iPhone 13 Pro Max أزرق 256GB نظيف جداً"
+                  value={pTitle}
+                  onChange={(e) => setPTitle(e.target.value)}
+                  className="w-full bg-[#1A1A1A] border border-[#333] rounded-lg p-2.5 text-white outline-none focus:border-[#FFC400]"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-neutral-300 font-bold mb-1">
+                    الماركة:
+                  </label>
+                  <select
+                    value={pBrand}
+                    onChange={(e) => setPBrand(e.target.value)}
+                    className="w-full bg-[#1A1A1A] border border-[#333] rounded-lg p-2.5 text-white outline-none focus:border-[#FFC400]"
+                  >
+                    <option value="Apple">Apple (آيفون)</option>
+                    <option value="Samsung">Samsung (سامسونج)</option>
+                    <option value="Xiaomi">Xiaomi (شاومي)</option>
+                    <option value="Honor">Honor (هونر)</option>
+                    <option value="Huawei">Huawei (هواوي)</option>
+                    <option value="General">أخرى</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-neutral-300 font-bold mb-1">
+                    السعر المطلوب (دينار أردني):
+                  </label>
+                  <input
+                    type="number"
+                    required
+                    min="1"
+                    placeholder="مثال: 350"
+                    value={pPrice}
+                    onChange={(e) => setPPrice(e.target.value)}
+                    className="w-full bg-[#1A1A1A] border border-[#333] rounded-lg p-2.5 text-white outline-none focus:border-[#FFC400]"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-3">
+                <div>
+                  <label className="block text-neutral-300 font-bold mb-1">
+                    الذاكرة:
+                  </label>
+                  <select
+                    value={pStorage}
+                    onChange={(e) => setPStorage(e.target.value)}
+                    className="w-full bg-[#1A1A1A] border border-[#333] rounded-lg p-2.5 text-white outline-none focus:border-[#FFC400]"
+                  >
+                    <option value="64GB">64GB</option>
+                    <option value="128GB">128GB</option>
+                    <option value="256GB">256GB</option>
+                    <option value="512GB">512GB</option>
+                    <option value="1TB">1TB</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-neutral-300 font-bold mb-1">
+                    صحة البطارية (%):
+                  </label>
+                  <input
+                    type="number"
+                    min="50"
+                    max="100"
+                    placeholder="مثال: 88"
+                    value={pBattery}
+                    onChange={(e) => setPBattery(e.target.value)}
+                    className="w-full bg-[#1A1A1A] border border-[#333] rounded-lg p-2.5 text-white outline-none focus:border-[#FFC400]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-neutral-300 font-bold mb-1">
+                    المدينة:
+                  </label>
+                  <select
+                    value={pCity}
+                    onChange={(e) => setPCity(e.target.value)}
+                    className="w-full bg-[#1A1A1A] border border-[#333] rounded-lg p-2.5 text-white outline-none focus:border-[#FFC400]"
+                  >
+                    {jordanCities
+                      .filter((c) => c !== "الكل")
+                      .map((c) => (
+                        <option key={c} value={c}>
+                          {c}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-neutral-300 font-bold mb-1">
+                  حالة ونظافة الجهاز:
+                </label>
+                <select
+                  value={pCondition}
+                  onChange={(e) => setPCityCondition(e.target.value)}
+                  className="w-full bg-[#1A1A1A] border border-[#333] rounded-lg p-2.5 text-white outline-none focus:border-[#FFC400]"
+                >
+                  <option value="جديد بالكرتونة بتغليف المصنع">جديد بالكرتونة بتغليف المصنع</option>
+                  <option value="مستعمل نظيف جداً 95% (بدون خدوش)">مستعمل نظيف جداً 95% (بدون خدوش)</option>
+                  <option value="مستعمل بحالة جيدة (خدوش بسيطة)">مستعمل بحالة جيدة (خدوش بسيطة)</option>
+                  <option value="مستعمل مع كسر في الظهر أو الشاشة">مستعمل مع كسر في الظهر أو الشاشة</option>
+                </select>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-neutral-300 font-bold mb-1">
+                    رقم هاتف التواصل والواتساب:
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="07XXXXXXXX"
+                    value={pPhone}
+                    onChange={(e) => setPPhone(e.target.value)}
+                    className="w-full bg-[#1A1A1A] border border-[#333] rounded-lg p-2.5 text-white outline-none focus:border-[#FFC400]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-neutral-300 font-bold mb-1">
+                    صفة المعلن:
+                  </label>
+                  <select
+                    value={pRole}
+                    onChange={(e) => setPRole(e.target.value as "TECH" | "TRADER" | "CUSTOMER")}
+                    className="w-full bg-[#1A1A1A] border border-[#333] rounded-lg p-2.5 text-white outline-none focus:border-[#FFC400]"
+                  >
+                    <option value="TECH">فني صيانة (مفحوص)</option>
+                    <option value="TRADER">محل / تاجر معتمد</option>
+                    <option value="CUSTOMER">مستخدم عادي</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-neutral-300 font-bold mb-1">
+                  تفاصيل إضافية عن الهاتف:
+                </label>
+                <textarea
+                  rows={2}
+                  placeholder="الملحقات الموجودة (كرتونة، شاحن، كفالة)، تاريخ الاستعمال..."
+                  value={pDesc}
+                  onChange={(e) => setPDesc(e.target.value)}
+                  className="w-full bg-[#1A1A1A] border border-[#333] rounded-lg p-2.5 text-white outline-none focus:border-[#FFC400]"
+                ></textarea>
+              </div>
+
+              <div className="pt-3 border-t border-neutral-800 flex items-center justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => setShowAddPhoneModal(false)}
+                  className="px-4 py-2 rounded-lg bg-neutral-800 text-neutral-300 font-bold hover:bg-neutral-700"
+                >
+                  إلغاء
+                </button>
+                <button
+                  type="submit"
+                  className="px-6 py-2 rounded-lg bg-[#FFC400] text-black font-black hover:bg-[#E0AC00] shadow"
+                >
+                  نشر إعلان الهاتف فوراً 🚀
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ======================================================== */}
+      {/* MODAL 2: ADD BOARD FOR SALE */}
+      {/* ======================================================== */}
+      {showAddBoardModal && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-[#141414] border border-[#2B2B2B] rounded-2xl max-w-lg w-full p-6 space-y-4 animate-in zoom-in-95 duration-200">
+            <div className="flex items-center justify-between border-b border-neutral-800 pb-3">
+              <h2 className="text-base font-black text-white">عرض لوحة جديدة للبيع (تشليح)</h2>
+              <button
+                onClick={() => setShowAddBoardModal(false)}
                 className="text-neutral-400 hover:text-white text-lg"
               >
                 ✕
@@ -497,8 +1019,8 @@ export default function MarketPage() {
                   type="text"
                   required
                   placeholder="مثال: Samsung Galaxy A12 أو Redmi 9"
-                  value={boardModel}
-                  onChange={(e) => setBoardModel(e.target.value)}
+                  value={bModel}
+                  onChange={(e) => setBModel(e.target.value)}
                   className="w-full bg-[#1A1A1A] border border-[#333] rounded-lg p-2.5 text-white outline-none focus:border-[#FFC400]"
                 />
               </div>
@@ -509,8 +1031,8 @@ export default function MarketPage() {
                     المدينة:
                   </label>
                   <select
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
+                    value={bCity}
+                    onChange={(e) => setBCity(e.target.value)}
                     className="w-full bg-[#1A1A1A] border border-[#333] rounded-lg p-2.5 text-white outline-none focus:border-[#FFC400]"
                   >
                     {jordanCities
@@ -532,8 +1054,8 @@ export default function MarketPage() {
                     required
                     min="1"
                     placeholder="مثال: 12"
-                    value={price}
-                    onChange={(e) => setPrice(e.target.value)}
+                    value={bPrice}
+                    onChange={(e) => setBPrice(e.target.value)}
                     className="w-full bg-[#1A1A1A] border border-[#333] rounded-lg p-2.5 text-white outline-none focus:border-[#FFC400]"
                   />
                 </div>
@@ -547,8 +1069,8 @@ export default function MarketPage() {
                   type="text"
                   required
                   placeholder="079XXXXXXX"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
+                  value={bPhone}
+                  onChange={(e) => setBPhone(e.target.value)}
                   className="w-full bg-[#1A1A1A] border border-[#333] rounded-lg p-2.5 text-white outline-none focus:border-[#FFC400]"
                 />
               </div>
@@ -559,8 +1081,8 @@ export default function MarketPage() {
                 </label>
                 <input
                   type="text"
-                  value={condition}
-                  onChange={(e) => setCondition(e.target.value)}
+                  value={bCondition}
+                  onChange={(e) => setBCondition(e.target.value)}
                   placeholder="مثال: فاصلة باور، شورت ماء..."
                   className="w-full bg-[#1A1A1A] border border-[#333] rounded-lg p-2.5 text-white outline-none focus:border-[#FFC400]"
                 />
@@ -578,7 +1100,7 @@ export default function MarketPage() {
                     >
                       <input
                         type="checkbox"
-                        checked={parts.includes(cp)}
+                        checked={bParts.includes(cp)}
                         onChange={() => handleTogglePart(cp)}
                         className="accent-[#FFC400]"
                       />
@@ -591,7 +1113,7 @@ export default function MarketPage() {
               <div className="pt-3 border-t border-neutral-800 flex items-center justify-end gap-3">
                 <button
                   type="button"
-                  onClick={() => setShowAddModal(false)}
+                  onClick={() => setShowAddBoardModal(false)}
                   className="px-4 py-2 rounded-lg bg-neutral-800 text-neutral-300 font-bold hover:bg-neutral-700"
                 >
                   إلغاء
@@ -608,11 +1130,14 @@ export default function MarketPage() {
         </div>
       )}
 
+      {/* ======================================================== */}
+      {/* MODAL 3: ADD WANTED REQUEST */}
+      {/* ======================================================== */}
       {showAddWantedModal && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#141414] border border-[#2B2B2B] rounded-2xl max-w-lg w-full p-6 space-y-5 animate-in zoom-in-95 duration-200">
+          <div className="bg-[#141414] border border-[#2B2B2B] rounded-2xl max-w-lg w-full p-6 space-y-4 animate-in zoom-in-95 duration-200">
             <div className="flex items-center justify-between border-b border-neutral-800 pb-3">
-              <h2 className="text-lg font-black text-white">إضافة طلب بوردة (أبحث عن قطعة)</h2>
+              <h2 className="text-base font-black text-white">إضافة طلب شراء (أبحث عن جهاز أو قطعة)</h2>
               <button
                 onClick={() => setShowAddWantedModal(false)}
                 className="text-neutral-400 hover:text-white text-lg"
@@ -629,7 +1154,7 @@ export default function MarketPage() {
                 <input
                   type="text"
                   required
-                  placeholder="مثال: Samsung Galaxy A32 أو Redmi Note 11"
+                  placeholder="مثال: Samsung Galaxy A32 أو iPhone 12 أو Redmi 11"
                   value={wModel}
                   onChange={(e) => setWModel(e.target.value)}
                   className="w-full bg-[#1A1A1A] border border-[#333] rounded-lg p-2.5 text-white outline-none focus:border-[#FFC400]"
@@ -638,12 +1163,12 @@ export default function MarketPage() {
 
               <div>
                 <label className="block text-neutral-300 font-bold mb-1">
-                  القطعة المطلوبة بالتحديد:
+                  القطعة أو الطلب بالتحديد:
                 </label>
                 <input
                   type="text"
                   required
-                  placeholder="مثال: آيسي باور PM6225 سليم أو بوردة كاملة"
+                  placeholder="مثال: جهاز كامل سليم، بوردة فيها معالج سليم، شاشة أصلية..."
                   value={wPart}
                   onChange={(e) => setWPart(e.target.value)}
                   className="w-full bg-[#1A1A1A] border border-[#333] rounded-lg p-2.5 text-white outline-none focus:border-[#FFC400]"
@@ -678,7 +1203,7 @@ export default function MarketPage() {
                     type="number"
                     required
                     min="1"
-                    placeholder="مثال: 15"
+                    placeholder="مثال: 50"
                     value={wBudget}
                     onChange={(e) => setWBudget(e.target.value)}
                     className="w-full bg-[#1A1A1A] border border-[#333] rounded-lg p-2.5 text-white outline-none focus:border-[#FFC400]"
@@ -716,7 +1241,7 @@ export default function MarketPage() {
               <div className="pt-3 border-t border-neutral-800 flex items-center justify-end gap-3">
                 <button
                   type="button"
-                  onClick={() => setShowAddModal(false)}
+                  onClick={() => setShowAddWantedModal(false)}
                   className="px-4 py-2 rounded-lg bg-neutral-800 text-neutral-300 font-bold hover:bg-neutral-700"
                 >
                   إلغاء
@@ -725,7 +1250,7 @@ export default function MarketPage() {
                   type="submit"
                   className="px-6 py-2 rounded-lg bg-amber-500 text-black font-black hover:bg-amber-400"
                 >
-                  نشر طلب القطعة
+                  نشر طلب الشراء
                 </button>
               </div>
             </form>
