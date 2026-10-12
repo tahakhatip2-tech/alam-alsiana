@@ -95,31 +95,31 @@ export default function AgentWidget() {
   ];
 
   return (
-    <div className="fixed bottom-6 left-6 z-50 print:hidden font-sans">
+    <div className="fixed bottom-4 left-4 sm:bottom-6 sm:left-6 z-50 print:hidden font-sans">
       {/* Floating Circle Button */}
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="group relative flex items-center gap-3 bg-gradient-to-r from-[#FFC400] to-[#E0AC00] text-black px-4 py-3 rounded-full shadow-[0_0_30px_rgba(255,196,0,0.4)] hover:shadow-[0_0_40px_rgba(255,196,0,0.6)] hover:scale-105 active:scale-95 transition-all duration-200 border-2 border-black"
+          className="group relative flex items-center gap-2 sm:gap-3 bg-gradient-to-r from-[#FFC400] to-[#E0AC00] text-black px-3 py-2.5 sm:px-4 sm:py-3 rounded-full shadow-[0_0_30px_rgba(255,196,0,0.4)] hover:shadow-[0_0_40px_rgba(255,196,0,0.6)] hover:scale-105 active:scale-95 transition-all duration-200 border-2 border-black"
           aria-label="تحدث مع عامر الوكيل الذكي"
         >
           {/* Animated ping dot */}
-          <span className="absolute -top-1 -right-1 flex h-4 w-4">
+          <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5 sm:h-4 sm:w-4">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-500 border-2 border-black"></span>
+            <span className="relative inline-flex rounded-full h-3.5 w-3.5 sm:h-4 sm:w-4 bg-emerald-500 border-2 border-black"></span>
           </span>
 
-          <span className="text-2xl animate-bounce">🤖</span>
-          <div className="flex flex-col text-right pr-1">
+          <span className="text-xl sm:text-2xl animate-bounce">🤖</span>
+          <div className="flex flex-col text-right pr-0.5 sm:pr-1">
             <span className="text-xs font-black leading-tight">عامر | الوكيل الذكي</span>
-            <span className="text-[10px] font-bold text-black/70">متصل بالخزنة والواتساب</span>
+            <span className="text-[9px] sm:text-[10px] font-bold text-black/70 hidden sm:block">متصل بالخزنة والواتساب</span>
           </div>
         </button>
       )}
 
       {/* Chat Window Panel */}
       {isOpen && (
-        <div className="w-[360px] sm:w-[420px] h-[580px] max-h-[85vh] bg-[#0E0E0E] border-2 border-[#FFC400]/40 rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.8)] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+        <div className="w-[calc(100vw-2rem)] sm:w-[400px] h-[520px] sm:h-[580px] max-h-[85vh] bg-[#0E0E0E] border-2 border-[#FFC400]/40 rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.8)] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
           {/* Header */}
           <div className="bg-gradient-to-r from-[#171717] to-[#121212] border-b border-[#262626] p-4 flex items-center justify-between">
             <div className="flex items-center gap-3">

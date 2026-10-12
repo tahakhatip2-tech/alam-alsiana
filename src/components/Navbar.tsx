@@ -41,22 +41,22 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 border-b border-[#222222] bg-[#0A0A0A]/95 backdrop-blur-xl print:hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
         {/* Brand Logo */}
-        <Link href="/" className="flex items-center gap-3 shrink-0 group">
-          <div className="relative w-11 h-11 rounded-2xl overflow-hidden bg-gradient-to-br from-[#1A1A1A] to-black border border-[#FFC400]/40 p-1 flex items-center justify-center shadow-[0_0_25px_rgba(255,196,0,0.35)] group-hover:shadow-[0_0_35px_rgba(255,196,0,0.6)] group-hover:scale-105 transition-all">
+        <Link href="/" className="flex items-center gap-2 sm:gap-3 shrink min-w-0 group">
+          <div className="relative w-9 h-9 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl overflow-hidden bg-gradient-to-br from-[#1A1A1A] to-black border border-[#FFC400]/40 p-1 flex items-center justify-center shrink-0 shadow-[0_0_25px_rgba(255,196,0,0.35)] group-hover:shadow-[0_0_35px_rgba(255,196,0,0.6)] group-hover:scale-105 transition-all">
             <img
               src="/logo.png"
               alt="شعار عالم الصيانة"
-              className="w-full h-full object-contain rounded-xl drop-shadow-md"
+              className="w-full h-full object-contain rounded-lg sm:rounded-xl drop-shadow-md"
             />
           </div>
-          <div className="flex flex-col">
-            <div className="flex items-center gap-1.5">
-              <span className="font-black text-lg text-white tracking-wide">عالم الصيانة</span>
-              <span className="text-[10px] bg-[#FFC400]/20 text-[#FFC400] px-1.5 py-0.5 rounded border border-[#FFC400]/30 font-black">
+          <div className="flex flex-col min-w-0">
+            <div className="flex items-center gap-1 sm:gap-1.5">
+              <span className="font-black text-base sm:text-lg text-white tracking-wide truncate">عالم الصيانة</span>
+              <span className="text-[9px] sm:text-[10px] bg-[#FFC400]/20 text-[#FFC400] px-1 sm:px-1.5 py-0.5 rounded border border-[#FFC400]/30 font-black shrink-0">
                 PRO
               </span>
             </div>
-            <span className="text-[10px] text-neutral-400 font-medium">سوبر آب هاردوير الهواتف</span>
+            <span className="text-[9px] sm:text-[10px] text-neutral-400 font-medium hidden sm:block truncate">سوبر آب هاردوير الهواتف</span>
           </div>
         </Link>
 
@@ -202,24 +202,25 @@ export default function Navbar() {
         </nav>
 
         {/* Right Section: Quick Action + Dashboard / Account + Admin + Mobile Menu */}
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
           {/* User Dashboard / Account Button */}
           <Link
             href="/dashboard"
-            className={`px-3 py-1.5 rounded-xl border text-xs font-black transition-all flex items-center gap-1.5 ${
+            className={`px-2.5 sm:px-3 py-1.5 rounded-xl border text-xs font-black transition-all flex items-center gap-1 sm:gap-1.5 ${
               pathname === "/dashboard"
                 ? "bg-[#FFC400] text-black border-[#FFC400] shadow-[0_0_15px_rgba(255,196,0,0.3)]"
                 : "bg-[#181818] border-neutral-700 text-neutral-200 hover:text-[#FFC400] hover:border-[#FFC400]/40"
             }`}
           >
             <span>👤</span>
-            <span>حسابي / لوحة التحكم</span>
+            <span className="hidden sm:inline">حسابي / لوحة التحكم</span>
+            <span className="sm:hidden text-[11px]">حسابي</span>
           </Link>
 
           {/* Admin Link Button */}
           <Link
             href="/admin"
-            className={`hidden sm:flex px-3 py-1.5 rounded-xl border text-xs font-bold transition-all items-center gap-1.5 ${
+            className={`hidden md:flex px-3 py-1.5 rounded-xl border text-xs font-bold transition-all items-center gap-1.5 ${
               pathname === "/admin"
                 ? "bg-amber-500/20 text-amber-300 border-amber-500/50 shadow"
                 : "border-neutral-800 text-neutral-400 hover:text-white hover:bg-neutral-900"
@@ -232,7 +233,7 @@ export default function Navbar() {
           {/* Quick Doctor CTA Button */}
           <Link
             href="/hospital"
-            className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-[#FFC400] to-[#E0AC00] text-black font-black text-xs hover:scale-105 active:scale-95 transition-all shadow-[0_0_15px_rgba(255,196,0,0.3)] flex items-center gap-1.5"
+            className="hidden sm:flex px-3.5 py-2 rounded-xl bg-gradient-to-r from-[#FFC400] to-[#E0AC00] text-black font-black text-xs hover:scale-105 active:scale-95 transition-all shadow-[0_0_15px_rgba(255,196,0,0.3)] items-center gap-1.5"
           >
             <span>فحص سريع</span>
             <span>⚡</span>
@@ -241,7 +242,7 @@ export default function Navbar() {
           {/* Mobile Hamburger Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden w-10 h-10 rounded-xl bg-neutral-900 border border-neutral-800 flex items-center justify-center text-white text-base hover:bg-neutral-800 transition-colors"
+            className="lg:hidden w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-neutral-900 border border-neutral-800 flex items-center justify-center text-white text-base hover:bg-neutral-800 transition-colors shrink-0"
             aria-label="القائمة الرئيسية"
           >
             {mobileMenuOpen ? "✕" : "☰"}

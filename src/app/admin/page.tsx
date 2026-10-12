@@ -263,14 +263,14 @@ export default function AdminDashboardPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 space-y-8 flex-1 w-full">
       {/* Top Admin Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#222] pb-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#222] pb-6">
         <div>
           <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-[#FFC400]/15 text-[#FFC400] text-xs font-bold mb-2">
             <span>لوحة التحكم الرئيسية ⚙️</span>
-            <span>Master Admin Control</span>
+            <span className="hidden sm:inline">Master Admin Control</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-white flex items-center gap-2">
-            <span>لوحة إدارة الدكتور الذكي والمخططات (ZXW)</span>
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-white flex items-center gap-2">
+            <span>لوحة إدارة الدكتور والمخططات (ZXW)</span>
           </h1>
           <p className="text-neutral-400 text-xs sm:text-sm mt-1">
             تحكم كامل في قاعدة بيانات أعطال وسحبات الباور سبلاي وإضافة لوحات PCB ومسارات الـ SVG التفاعلية
@@ -278,58 +278,63 @@ export default function AdminDashboardPage() {
         </div>
 
         {/* Live Counters Banner */}
-        <div className="flex items-center gap-3">
-          <div className="bg-[#141414] border border-[#282828] px-4 py-2 rounded-xl text-center">
+        <div className="grid grid-cols-3 gap-2 sm:gap-3 w-full md:w-auto">
+          <div className="bg-[#141414] border border-[#282828] p-2.5 sm:px-4 sm:py-2 rounded-xl text-center">
             <span className="text-[10px] text-neutral-400 block font-bold">أعطال الدكتور</span>
-            <span className="text-lg font-black text-[#FFC400] font-mono">{stats.totalFaults}</span>
+            <span className="text-base sm:text-lg font-black text-[#FFC400] font-mono">{stats.totalFaults}</span>
           </div>
-          <div className="bg-[#141414] border border-[#282828] px-4 py-2 rounded-xl text-center">
-            <span className="text-[10px] text-neutral-400 block font-bold">اللوحات المسجلة</span>
-            <span className="text-lg font-black text-blue-400 font-mono">{stats.totalBoards}</span>
+          <div className="bg-[#141414] border border-[#282828] p-2.5 sm:px-4 sm:py-2 rounded-xl text-center">
+            <span className="text-[10px] text-neutral-400 block font-bold">اللوحات</span>
+            <span className="text-base sm:text-lg font-black text-blue-400 font-mono">{stats.totalBoards}</span>
           </div>
-          <div className="bg-[#141414] border border-[#282828] px-4 py-2 rounded-xl text-center">
-            <span className="text-[10px] text-neutral-400 block font-bold">مسارات الـ Nets</span>
-            <span className="text-lg font-black text-emerald-400 font-mono">{stats.totalTracks}</span>
+          <div className="bg-[#141414] border border-[#282828] p-2.5 sm:px-4 sm:py-2 rounded-xl text-center">
+            <span className="text-[10px] text-neutral-400 block font-bold">المسارات</span>
+            <span className="text-base sm:text-lg font-black text-emerald-400 font-mono">{stats.totalTracks}</span>
           </div>
         </div>
       </div>
 
       {/* Main Tabs: Hospital vs Schematic */}
-      <div className="flex items-center justify-between border-b border-[#222] pb-4">
-        <div className="flex items-center gap-3 bg-[#131313] p-1.5 rounded-xl border border-[#262626]">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 border-b border-[#222] pb-4">
+        <div className="flex items-center gap-2 bg-[#131313] p-1.5 rounded-xl border border-[#262626] overflow-x-auto max-w-full">
           <button
             onClick={() => setActiveTab("hospital")}
-            className={`px-5 py-2.5 rounded-lg text-xs font-black transition-all flex items-center gap-2 ${
+            className={`px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg text-xs font-black transition-all flex items-center gap-1.5 sm:gap-2 shrink-0 ${
               activeTab === "hospital"
                 ? "bg-[#FFC400] text-black shadow-lg"
                 : "text-neutral-400 hover:text-white"
             }`}
           >
-            <span>🩺 الباب الأول: إدارة الدكتور الذكي</span>
+            <span>🩺</span>
+            <span className="hidden sm:inline">الباب الأول: </span>
+            <span>إدارة الدكتور الذكي</span>
             <span className="bg-black/30 px-1.5 py-0.5 rounded text-[10px]">{faults.length}</span>
           </button>
 
           <button
             onClick={() => setActiveTab("schematic")}
-            className={`px-5 py-2.5 rounded-lg text-xs font-black transition-all flex items-center gap-2 ${
+            className={`px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg text-xs font-black transition-all flex items-center gap-1.5 sm:gap-2 shrink-0 ${
               activeTab === "schematic"
                 ? "bg-blue-500 text-white shadow-lg"
                 : "text-neutral-400 hover:text-white"
             }`}
           >
-            <span>🗺️ الباب الثاني: إدارة المخططات واللوحات (ZXW)</span>
+            <span>🗺️</span>
+            <span className="hidden sm:inline">الباب الثاني: </span>
+            <span>المخططات واللوحات</span>
             <span className="bg-black/30 px-1.5 py-0.5 rounded text-[10px]">{boards.length}</span>
           </button>
 
           <button
             onClick={() => setActiveTab("agent")}
-            className={`px-5 py-2.5 rounded-lg text-xs font-black transition-all flex items-center gap-2 ${
+            className={`px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg text-xs font-black transition-all flex items-center gap-1.5 sm:gap-2 shrink-0 ${
               activeTab === "agent"
                 ? "bg-emerald-500 text-black shadow-lg"
                 : "text-neutral-400 hover:text-white"
             }`}
           >
-            <span>🤖 الوكيل الذكي (عامر) وربط الواتساب</span>
+            <span>🤖</span>
+            <span>الوكيل (عامر)</span>
             <span className="bg-emerald-400/20 text-emerald-400 px-1.5 py-0.5 rounded text-[10px] font-bold">AI</span>
           </button>
         </div>
@@ -338,27 +343,27 @@ export default function AdminDashboardPage() {
         {activeTab === "hospital" ? (
           <button
             onClick={() => setShowAddFaultModal(true)}
-            className="px-4 py-2.5 rounded-xl bg-[#FFC400] text-black font-black text-xs hover:bg-[#E0AC00] transition-all shadow-[0_0_15px_rgba(255,196,0,0.25)] flex items-center gap-1.5"
+            className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-[#FFC400] text-black font-black text-xs hover:bg-[#E0AC00] transition-all shadow-[0_0_15px_rgba(255,196,0,0.25)] flex items-center justify-center gap-1.5 shrink-0"
           >
             <span>+ إضافة عطل جديد للدكتور</span>
           </button>
-        ) : (
-          <div className="flex items-center gap-2">
+        ) : activeTab === "schematic" ? (
+          <div className="flex items-center gap-2 flex-wrap w-full sm:w-auto">
             <button
               onClick={() => setShowAddBoardModal(true)}
-              className="px-3.5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-black text-xs transition-colors flex items-center gap-1.5"
+              className="flex-1 sm:flex-initial px-3.5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-black text-xs transition-colors flex items-center justify-center gap-1.5"
             >
-              <span>+ إضافة لوحة هاتف جديدة</span>
+              <span>+ إضافة لوحة هاتف</span>
             </button>
             <button
               onClick={() => setShowAddTrackModal(true)}
               disabled={!selectedBoardId}
-              className="px-3.5 py-2.5 rounded-xl bg-[#FFC400] text-black font-black text-xs hover:bg-[#E0AC00] transition-colors disabled:opacity-50 flex items-center gap-1.5"
+              className="flex-1 sm:flex-initial px-3.5 py-2.5 rounded-xl bg-[#FFC400] text-black font-black text-xs hover:bg-[#E0AC00] transition-colors disabled:opacity-50 flex items-center justify-center gap-1.5"
             >
-              <span>+ إضافة مسار (Track/Net) للوحة</span>
+              <span>+ إضافة مسار (Track)</span>
             </button>
           </div>
-        )}
+        ) : null}
       </div>
 
       {/* ======================================================== */}

@@ -158,7 +158,7 @@ export default function SchematicPage() {
       </div>
 
       {/* Main Workspace Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 flex-1">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 flex-1 w-full max-w-full overflow-hidden">
         {/* Left/Sidebar: Tracks & Component inspector */}
         <div className="lg:col-span-1 space-y-4">
           <div className="bg-[#121212] border border-[#222] rounded-2xl p-5 space-y-4">

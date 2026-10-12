@@ -81,26 +81,26 @@ export default function ToolsPage() {
         </div>
 
         {/* Tab Switcher */}
-        <div className="flex items-center bg-[#141414] border border-[#2B2B2B] p-1.5 rounded-xl text-xs font-bold">
+        <div className="flex items-center bg-[#141414] border border-[#2B2B2B] p-1.5 rounded-xl text-xs font-bold overflow-x-auto max-w-full">
           <button
             onClick={() => setActiveTab("ic")}
-            className={`px-4 py-2 rounded-lg transition-all ${
+            className={`px-3.5 sm:px-4 py-2 rounded-lg transition-all shrink-0 ${
               activeTab === "ic"
                 ? "bg-[#FFC400] text-black shadow"
                 : "text-neutral-400 hover:text-white"
             }`}
           >
-            🔍 محول بدائل الآيسيات (IC Cross)
+            🔍 محول بدائل الآيسيات
           </button>
           <button
             onClick={() => setActiveTab("injector")}
-            className={`px-4 py-2 rounded-lg transition-all ${
+            className={`px-3.5 sm:px-4 py-2 rounded-lg transition-all shrink-0 ${
               activeTab === "injector"
                 ? "bg-[#FFC400] text-black shadow"
                 : "text-neutral-400 hover:text-white"
             }`}
           >
-            ⚡ حاسبة حقن الشورت الآمن
+            ⚡ حاسبة حقن الشورت
           </button>
         </div>
       </div>
