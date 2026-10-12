@@ -1,0 +1,178 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  TECH
+  TRADER
+  ADMIN
+}
+
+enum Subscription {
+  FREE
+  DIAG_12JOD
+  TRADER_25JOD
+  PRO_45JOD
+}
+
+enum BoardStatus {
+  AVAILABLE
+  SOLD
+  RESERVED
+}
+
+enum RepairStatus {
+  RECEIVED
+  IN_PROGRESS
+  DONE
+  DELIVERED
+}
+
+model User {
+  id           String       @id @default(auto()) @map("_id") @db.ObjectId
+  phone        String       @unique
+  name         String
+  role         Role         @default(TECH)
+  city         String       @default("عمان")
+  subscription Subscription @default(FREE)
+  rating       Float        @default(5.0)
+  whatsapp     String?
+  passwordHash String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  boards        DeadBoard[]
+  vaultEntries  CustomerVault[]
+}
+
+model Fault {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  brand           String
+  model           String
+  powerDraw       String
+  diagnosisAr     String
+  faultyComponent String
+  testPoint       String
+  successRate     Int
+  fixPriceJOD     Int
+  seenBy          Int      @default(0)
+  tags            String[]
+  createdAt       DateTime @default(now())
+
+  @@index([model, brand])
+  @@index([powerDraw])
+}
+
+model DeadBoard {
+  id           String      @id @default(auto()) @map("_id") @db.ObjectId
+  sellerId     String      @db.ObjectId
+  seller       User        @relation(fields: [sellerId], references: [id])
+  boardModel   String
+  brand        String
+  workingParts String[]
+  condition    String
+  priceJOD     Int
+  city         String
+  imageUrl     String
+  status       BoardStatus @default(AVAILABLE)
+  commission15 Boolean     @default(true)
+  views        Int         @default(0)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  @@index([status, city])
+  @@index([boardModel, brand])
+}
+
+model PriceList {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  model        String
+  brand        String
+  partType     String
+  buyJOD       Int
+  sellJOD      Int
+  marketAvgJOD Int?
+  lastUpdate   DateTime @default(now())
+
+  @@unique([model, brand, partType])
+}
+
+model CustomerVault {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  techId         String       @db.ObjectId
+  tech           User         @relation(fields: [techId], references: [id])
+  customerPhone  String?
+  customerName   String?
+  imei           String
+  deviceModel    String
+  faultDesc      String
+  beforeImageUrl String?
+  afterImageUrl  String?
+  status         RepairStatus @default(RECEIVED)
+  priceJOD       Int?
+  notes          String?
+  date           DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@index([imei])
+  @@index([techId])
+}
+
+model BoardComponent {
+  id         String  @id @default(auto()) @map("_id") @db.ObjectId
+  boardModel String
+  brand      String
+  refNumber  String
+  netName    String?
+  x          Float
+  y          Float
+  width      Float
+  height     Float
+  layer      String  @default("front")
+  notes      String?
+
+  @@index([boardModel, brand])
+  @@index([refNumber])
+  @@index([netName])
+}
+
+model Conversation {
+  id             String    @id @default(auto()) @map("_id") @db.ObjectId
+  itemType       String    @default("board") // "board" أو "wanted"
+  itemId         String?   // معرّف البوردة (boardId)
+  itemTitle      String    // عنوان المنتج مثل: Samsung Galaxy A12 (A125F)
+  itemPrice      Int?      // سعر المنتج (JOD)
+  itemImage      String?   // صورة البوردة في الهيدر
+  itemCity       String?   // مدينة البائع
+  buyerPhone     String    // رقم المشتري
+  sellerPhone    String    // رقم البائع
+  lastMessage    String?
+  lastMessageAt  DateTime  @default(now())
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  messages       Message[]
+
+  @@index([buyerPhone])
+  @@index([sellerPhone])
+  @@index([itemId])
+}
+
+model Message {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  conversationId String       @db.ObjectId
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  senderPhone    String
+  senderName     String
+  text           String
+  imageUrl       String?
+  isRead         Boolean      @default(false)
+  createdAt      DateTime     @default(now())
+
+  @@index([conversationId])
+}
