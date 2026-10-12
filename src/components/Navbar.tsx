@@ -201,19 +201,32 @@ export default function Navbar() {
           </Link>
         </nav>
 
-        {/* Right Section: Quick Action + Admin Badge + Mobile Menu Toggle */}
-        <div className="flex items-center gap-2.5 shrink-0">
+        {/* Right Section: Quick Action + Dashboard / Account + Admin + Mobile Menu */}
+        <div className="flex items-center gap-2 shrink-0">
+          {/* User Dashboard / Account Button */}
+          <Link
+            href="/dashboard"
+            className={`px-3 py-1.5 rounded-xl border text-xs font-black transition-all flex items-center gap-1.5 ${
+              pathname === "/dashboard"
+                ? "bg-[#FFC400] text-black border-[#FFC400] shadow-[0_0_15px_rgba(255,196,0,0.3)]"
+                : "bg-[#181818] border-neutral-700 text-neutral-200 hover:text-[#FFC400] hover:border-[#FFC400]/40"
+            }`}
+          >
+            <span>👤</span>
+            <span>حسابي / لوحة التحكم</span>
+          </Link>
+
           {/* Admin Link Button */}
           <Link
             href="/admin"
-            className={`px-3 py-1.5 rounded-xl border text-xs font-bold transition-all flex items-center gap-1.5 ${
+            className={`hidden sm:flex px-3 py-1.5 rounded-xl border text-xs font-bold transition-all items-center gap-1.5 ${
               pathname === "/admin"
                 ? "bg-amber-500/20 text-amber-300 border-amber-500/50 shadow"
                 : "border-neutral-800 text-neutral-400 hover:text-white hover:bg-neutral-900"
             }`}
           >
             <span>⚙️</span>
-            <span className="hidden sm:inline">لوحة الإدارة</span>
+            <span>الإدارة</span>
           </Link>
 
           {/* Quick Doctor CTA Button */}
