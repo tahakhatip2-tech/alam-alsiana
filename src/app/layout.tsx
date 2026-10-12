@@ -56,14 +56,19 @@ export default function RootLayout({
                 <span className="text-[11px] text-neutral-500">المنصة الشاملة لفنيي صيانة الهواتف الذكية في الأردن</span>
               </div>
             </div>
-            <div className="flex items-center gap-4 text-neutral-400">
-              <Link href="/admin" className="hover:text-[#FFC400] transition-colors">
-                لوحة التحكم الإدارية
-              </Link>
-              <span>•</span>
-              <span>دردشة صفقات فورية</span>
-              <span>•</span>
-              <span className="text-emerald-400">MongoDB Atlas Connected ✅</span>
+            <div className="flex flex-col sm:flex-row items-center gap-4 text-neutral-400">
+              <div className="flex items-center gap-3">
+                <Link href="/admin" className="hover:text-[#FFC400] transition-colors">
+                  لوحة التحكم الإدارية
+                </Link>
+                <span>•</span>
+                <span>دردشة صفقات فورية</span>
+                <span>•</span>
+                <span className="text-emerald-400">MongoDB Atlas Connected ✅</span>
+              </div>
+              <div className="px-3 py-1 rounded-full bg-neutral-900 border border-neutral-800 text-neutral-300 text-[11px] font-bold shadow-inner">
+                تمت البرمجة بواسطة <span className="text-[#FFC400]">الخطيب للبرمجيات</span>
+              </div>
             </div>
           </div>
         </footer>
