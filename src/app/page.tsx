@@ -17,6 +17,7 @@ import {
   ArrowLeft,
   Sparkles,
   Layers,
+  Building2,
 } from "lucide-react";
 
 function HomePageInner() {
@@ -123,6 +124,17 @@ function HomeContent({ onOpenAuth }: { onOpenAuth: () => void }) {
       color: "from-cyan-500/20 to-cyan-900/10",
       border: "border-cyan-500/30",
       accent: "text-cyan-400",
+    },
+    {
+      href: "/centers",
+      title: "دليل مراكز الصيانة",
+      badge: "ورش معتمدة PRO",
+      subtitle: "Verified Repair Centers - مراكز معتمدة في الأردن",
+      desc: "تصفح أفضل ورش ومراكز صيانة الهواتف المعتمدة بالمملكة، تواصل عبر واتساب أو الدردشة لطلب صيانة، فحص جهاز، أو شراء قطع.",
+      icon: <Building2 className="w-8 h-8 text-[#FFC400]" />,
+      color: "from-amber-500/20 to-neutral-900/10",
+      border: "border-[#FFC400]/40",
+      accent: "text-[#FFC400]",
     },
   ];
 
