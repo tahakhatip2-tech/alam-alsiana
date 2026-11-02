@@ -1,6 +1,15 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import {
+  Bot,
+  RotateCcw,
+  X,
+  Send,
+  MessageCircle,
+  Loader2,
+  Sparkles,
+} from "lucide-react";
 
 interface Message {
   id: string;
@@ -23,7 +32,7 @@ export default function AgentWidget() {
       id: "welcome",
       role: "model",
       content:
-        "هلا يا معلم! 👋 أنا **عامر**، موظفك الذكي في عالم الصيانة. أقدر أساعدك فوراً:\n• متابعة أجهزة الخزنة وحالاتها 📱\n• إشعار الزبائن عبر واتساب بضغطة واحدة 📲\n• إعطاء تقرير إيرادات وأداء المحل 📊\n• تنفيذ أي أمر على النظام مباشرة ⚡",
+        "هلا يا معلم! أنا **عامر**، موظفك الذكي في عالم الصيانة. أقدر أساعدك فوراً:\n• متابعة أجهزة الخزنة وحالاتها\n• إشعار الزبائن عبر واتساب بضغطة واحدة\n• إعطاء تقرير إيرادات وأداء المحل\n• تنفيذ أي أمر على النظام مباشرة",
       time: "الآن",
     },
   ]);
@@ -88,19 +97,19 @@ export default function AgentWidget() {
   };
 
   const quickCommands = [
-    { label: "📊 تقرير اليوم والأرباح", cmd: "اعطيني تقرير اليوم والأرباح المتوقعة" },
-    { label: "📋 الأجهزة المعلقة", cmd: "شو الأجهزة المعلقة اللي ما تسلمت؟" },
-    { label: "🔍 بحث عن جهاز محمد", cmd: "وين جهاز محمد العمري وشو حالته؟" },
-    { label: "✅ تحويل جهاز محمد لـ جاهز", cmd: "حول جهاز محمد العمري لـ جاهز للاستلام" },
+    { label: "تقرير اليوم والأرباح", cmd: "اعطيني تقرير اليوم والأرباح المتوقعة" },
+    { label: "الأجهزة المعلقة", cmd: "شو الأجهزة المعلقة اللي ما تسلمت؟" },
+    { label: "بحث عن جهاز محمد", cmd: "وين جهاز محمد العمري وشو حالته؟" },
+    { label: "تحويل جهاز محمد لـ جاهز", cmd: "حول جهاز محمد العمري لـ جاهز للاستلام" },
   ];
 
   return (
-    <div className="fixed bottom-4 left-4 sm:bottom-6 sm:left-6 z-50 print:hidden font-sans">
-      {/* Floating Circle Button */}
+    <div className="fixed bottom-20 left-3 sm:bottom-6 sm:left-6 z-50 print:hidden font-sans">
+      {/* Floating Circle Button - Outline Style */}
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="group relative flex items-center gap-2 sm:gap-3 bg-gradient-to-r from-[#FFC400] to-[#E0AC00] text-black px-3 py-2.5 sm:px-4 sm:py-3 rounded-full shadow-[0_0_30px_rgba(255,196,0,0.4)] hover:shadow-[0_0_40px_rgba(255,196,0,0.6)] hover:scale-105 active:scale-95 transition-all duration-200 border-2 border-black"
+          className="group relative flex items-center gap-2 sm:gap-3 bg-[#0E0E0E]/95 backdrop-blur-md text-[#FFC400] border-2 border-[#FFC400] px-3.5 py-2.5 sm:px-4 sm:py-3 rounded-full shadow-[0_0_25px_rgba(255,196,0,0.25)] hover:shadow-[0_0_35px_rgba(255,196,0,0.5)] hover:bg-[#FFC400] hover:text-black hover:scale-105 active:scale-95 transition-all duration-200"
           aria-label="تحدث مع عامر الوكيل الذكي"
         >
           {/* Animated ping dot */}
@@ -109,10 +118,10 @@ export default function AgentWidget() {
             <span className="relative inline-flex rounded-full h-3.5 w-3.5 sm:h-4 sm:w-4 bg-emerald-500 border-2 border-black"></span>
           </span>
 
-          <span className="text-xl sm:text-2xl animate-bounce">🤖</span>
+          <Bot className="w-5 h-5 sm:w-6 sm:h-6 transition-transform group-hover:scale-110" />
           <div className="flex flex-col text-right pr-0.5 sm:pr-1">
             <span className="text-xs font-black leading-tight">عامر | الوكيل الذكي</span>
-            <span className="text-[9px] sm:text-[10px] font-bold text-black/70 hidden sm:block">متصل بالخزنة والواتساب</span>
+            <span className="text-[9px] sm:text-[10px] font-bold text-neutral-400 group-hover:text-black/80 hidden sm:block">متصل بالخزنة والواتساب</span>
           </div>
         </button>
       )}
@@ -123,8 +132,8 @@ export default function AgentWidget() {
           {/* Header */}
           <div className="bg-gradient-to-r from-[#171717] to-[#121212] border-b border-[#262626] p-4 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="relative w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#FFC400] to-[#B38600] flex items-center justify-center text-xl shadow-md border border-[#FFC400]/40">
-                🤖
+              <div className="relative w-10 h-10 rounded-2xl bg-neutral-900 border-2 border-[#FFC400] flex items-center justify-center text-[#FFC400] shadow-md">
+                <Bot className="w-5 h-5 text-[#FFC400]" />
                 <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 border-2 border-[#121212] rounded-full"></span>
               </div>
               <div>
@@ -145,15 +154,15 @@ export default function AgentWidget() {
               <button
                 onClick={() => setMessages([messages[0]])}
                 title="مسح المحادثة"
-                className="w-8 h-8 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-neutral-400 hover:text-white text-xs flex items-center justify-center transition-colors"
+                className="w-8 h-8 rounded-xl border border-neutral-800 bg-neutral-900 hover:bg-neutral-800 text-neutral-400 hover:text-white text-xs flex items-center justify-center transition-colors"
               >
-                🔄
+                <RotateCcw className="w-3.5 h-3.5" />
               </button>
               <button
                 onClick={() => setIsOpen(false)}
-                className="w-8 h-8 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-neutral-400 hover:text-white text-base flex items-center justify-center transition-colors"
+                className="w-8 h-8 rounded-xl border border-neutral-800 bg-neutral-900 hover:bg-neutral-800 text-neutral-400 hover:text-white text-base flex items-center justify-center transition-colors"
               >
-                ✕
+                <X className="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -164,7 +173,7 @@ export default function AgentWidget() {
               <button
                 key={idx}
                 onClick={() => handleSend(q.cmd)}
-                className="text-[10px] whitespace-nowrap px-2.5 py-1 rounded-lg bg-neutral-900 hover:bg-[#FFC400]/20 text-neutral-300 hover:text-[#FFC400] border border-neutral-800 hover:border-[#FFC400]/40 transition-colors font-bold"
+                className="text-[10px] whitespace-nowrap px-2.5 py-1 rounded-lg border border-neutral-800 bg-neutral-900/60 hover:bg-[#FFC400]/10 text-neutral-300 hover:text-[#FFC400] hover:border-[#FFC400]/50 transition-colors font-bold"
               >
                 {q.label}
               </button>
@@ -183,7 +192,7 @@ export default function AgentWidget() {
                   <div
                     className={`max-w-[85%] rounded-2xl p-3 text-xs leading-relaxed ${
                       isUser
-                        ? "bg-[#FFC400] text-black font-semibold rounded-br-sm shadow-md"
+                        ? "bg-[#FFC400]/15 border-2 border-[#FFC400] text-[#FFC400] font-bold rounded-br-sm shadow-[0_0_15px_rgba(255,196,0,0.15)]"
                         : "bg-[#181818] border border-[#2B2B2B] text-neutral-200 rounded-bl-sm"
                     }`}
                   >
@@ -200,9 +209,10 @@ export default function AgentWidget() {
                                 href={act.data.url as string}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="flex items-center justify-center gap-1.5 w-full py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs transition-colors shadow"
+                                className="flex items-center justify-center gap-1.5 w-full py-2 px-3 rounded-xl border-2 border-emerald-500 text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500 hover:text-black font-black text-xs transition-colors shadow"
                               >
-                                <span>📲 إرسال واتساب للزبون ({act.data.phone as string})</span>
+                                <MessageCircle className="w-4 h-4" />
+                                <span>إرسال واتساب للزبون ({act.data.phone as string})</span>
                               </a>
                             );
                           }
@@ -213,9 +223,10 @@ export default function AgentWidget() {
                                 href={act.data.waLink as string}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="flex items-center justify-center gap-1.5 w-full py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs transition-colors shadow"
+                                className="flex items-center justify-center gap-1.5 w-full py-2 px-3 rounded-xl border-2 border-emerald-500 text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500 hover:text-black font-black text-xs transition-colors shadow"
                               >
-                                <span>📲 إشعار الزبون الآن عبر واتساب</span>
+                                <MessageCircle className="w-4 h-4" />
+                                <span>إشعار الزبون الآن عبر واتساب</span>
                               </a>
                             );
                           }
@@ -232,7 +243,7 @@ export default function AgentWidget() {
             {loading && (
               <div className="flex items-end space-y-1">
                 <div className="bg-[#181818] border border-[#2B2B2B] rounded-2xl rounded-bl-sm p-3 text-xs text-neutral-400 flex items-center gap-2">
-                  <span className="animate-spin text-sm">⚙️</span>
+                  <Loader2 className="w-4 h-4 animate-spin text-[#FFC400]" />
                   <span>عامر يراجع الخزنة ويتخذ الإجراء...</span>
                 </div>
               </div>
@@ -259,9 +270,10 @@ export default function AgentWidget() {
             <button
               type="submit"
               disabled={loading || !input.trim()}
-              className="px-4 py-2.5 rounded-xl bg-[#FFC400] text-black font-black text-xs hover:bg-[#E0AC00] disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow"
+              className="px-4 py-2.5 rounded-xl border-2 border-[#FFC400] text-[#FFC400] bg-[#FFC400]/10 hover:bg-[#FFC400] hover:text-black font-black text-xs disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-[0_0_15px_rgba(255,196,0,0.2)] flex items-center gap-1.5"
             >
-              إرسال 🚀
+              <span>إرسال</span>
+              <Send className="w-3.5 h-3.5" />
             </button>
           </form>
         </div>

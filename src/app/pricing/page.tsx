@@ -2,6 +2,15 @@
 
 import { useState, useEffect } from "react";
 import { PriceItem } from "@/lib/market-pricing-data";
+import {
+  Coins,
+  DoorOpen,
+  Calculator,
+  Smartphone,
+  AlertTriangle,
+  CheckCircle2,
+  Loader2,
+} from "lucide-react";
 
 export default function PricingPage() {
   const [prices, setPrices] = useState<PriceItem[]>([]);
@@ -36,12 +45,14 @@ export default function PricingPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#222] pb-6">
         <div>
-          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-purple-500/10 text-purple-400 text-xs font-bold mb-2">
-            <span>الباب الرابع 🚪</span>
-            <span>Price Doctor</span>
+          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-purple-500/10 text-purple-400 text-xs font-bold mb-2 border border-purple-500/20">
+            <DoorOpen className="w-3.5 h-3.5" />
+            <span>الباب الرابع</span>
+            <span className="text-purple-400/80">Price Doctor</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-white flex items-center gap-2">
-            <span>💰 دكتور الأسعار وهامش الربح الأردني</span>
+          <h1 className="text-2xl sm:text-3xl font-black text-white flex items-center gap-2.5">
+            <Coins className="w-7 h-7 text-[#FFC400]" />
+            <span>دكتور الأسعار وهامش الربح الأردني</span>
           </h1>
           <p className="text-neutral-400 text-xs sm:text-sm mt-1">
             جدول استرشادي لأسعار الشراء وهامش الربح المقترح (+7 دنانير) وتنبيه فوري إذا كان سعرك دون السوق
@@ -52,11 +63,12 @@ export default function PricingPage() {
       {/* Quick Interactive Profit Calculator Widget */}
       <div className="bg-gradient-to-r from-[#171717] to-[#111111] border border-[#262626] rounded-2xl p-6 shadow-xl space-y-4">
         <h2 className="text-sm font-black text-[#FFC400] flex items-center gap-2">
-          <span>🧮 حاسبة التسعير السريع للفني:</span>
+          <Calculator className="w-4 h-4 text-[#FFC400]" />
+          <span>حاسبة التسعير السريع للفني:</span>
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
           <div>
-            <label className="block text-neutral-400 mb-1">سعر شراء القطعة (JOD):</label>
+            <label className="block text-neutral-400 mb-1 font-bold">سعر شراء القطعة (JOD):</label>
             <input
               type="number"
               min="0"
@@ -68,7 +80,7 @@ export default function PricingPage() {
           </div>
 
           <div>
-            <label className="block text-neutral-400 mb-1">هامش ربح وأجرة اليد (JOD):</label>
+            <label className="block text-neutral-400 mb-1 font-bold">هامش ربح وأجرة اليد (JOD):</label>
             <input
               type="number"
               min="1"
@@ -79,30 +91,31 @@ export default function PricingPage() {
           </div>
 
           <div className="bg-[#141414] border border-[#2D2D2D] rounded-xl p-3 flex flex-col justify-center">
-            <span className="text-neutral-400 text-[11px]">السعر المقترح للزبون:</span>
+            <span className="text-neutral-400 text-[11px] font-bold">السعر المقترح للزبون:</span>
             <div className="flex items-baseline gap-1 mt-1">
               <span className="text-2xl font-black text-emerald-400">
                 {suggestedSell}
               </span>
-              <span className="text-xs text-neutral-400">JOD</span>
+              <span className="text-xs text-neutral-400 font-mono">JOD</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Filter by Model */}
+      {/* Filter by Model - Outline buttons */}
       <div className="flex items-center gap-2 overflow-x-auto pb-2">
-        <span className="text-xs font-bold text-neutral-400 ml-2 whitespace-nowrap">
-          📱 تصفية حسب الموديل:
+        <span className="text-xs font-bold text-neutral-400 ml-2 whitespace-nowrap flex items-center gap-1">
+          <Smartphone className="w-3.5 h-3.5 text-[#FFC400]" />
+          <span>تصفية حسب الموديل:</span>
         </span>
         {modelsList.map((m) => (
           <button
             key={m}
             onClick={() => setSelectedModel(m)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition-colors ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition-all ${
               selectedModel === m
-                ? "bg-[#FFC400] text-black"
-                : "bg-neutral-900 text-neutral-300 hover:bg-neutral-800 border border-neutral-800"
+                ? "border-2 border-[#FFC400] text-[#FFC400] bg-[#FFC400]/10 shadow-[0_0_10px_rgba(255,196,0,0.2)] font-black"
+                : "border border-neutral-800 bg-neutral-900/60 text-neutral-300 hover:border-neutral-600 hover:text-white"
             }`}
           >
             {m}
@@ -110,63 +123,124 @@ export default function PricingPage() {
         ))}
       </div>
 
-      {/* Price Table */}
+      {/* Price Table / Mobile Cards */}
       {loading ? (
-        <div className="text-center py-12 text-neutral-400">جارِ تحميل قائمة الأسعار... ⏳</div>
-      ) : (
-        <div className="bg-[#121212] border border-[#242424] rounded-2xl overflow-hidden shadow-xl">
-          <div className="overflow-x-auto">
-            <table className="w-full text-right text-xs">
-              <thead className="bg-[#181818] text-neutral-400 font-bold border-b border-neutral-800">
-                <tr>
-                  <th className="p-4">الموديل</th>
-                  <th className="p-4">القطعة</th>
-                  <th className="p-4">سعر الشراء (Buy)</th>
-                  <th className="p-4">سعر البيع المقترح (Sell = Buy + 7)</th>
-                  <th className="p-4">متوسط السوق</th>
-                  <th className="p-4">حالة التسعير والتحذير</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[#1F1F1F]">
-                {filteredPrices.map((item) => {
-                  const isBelowMarket = item.sellJOD < item.marketAvgJOD;
-
-                  return (
-                    <tr
-                      key={item.id}
-                      className="hover:bg-neutral-900/60 transition-colors"
-                    >
-                      <td className="p-4 font-bold text-white">
-                        {item.brand} {item.model}
-                      </td>
-                      <td className="p-4 text-neutral-300">{item.partType}</td>
-                      <td className="p-4 font-mono font-bold text-neutral-200">
-                        {item.buyJOD} JOD
-                      </td>
-                      <td className="p-4 font-mono font-bold text-[#FFC400]">
-                        {item.sellJOD} JOD
-                      </td>
-                      <td className="p-4 font-mono text-neutral-400">
-                        {item.marketAvgJOD} JOD
-                      </td>
-                      <td className="p-4">
-                        {isBelowMarket ? (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-[11px] font-bold">
-                            ⚠️ أقل من متوسط السوق (ميزة تنافسية)
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[11px] font-bold">
-                            ✓ سعر متوازن ومربح
-                          </span>
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+        <div className="text-center py-12 text-neutral-400 flex flex-col items-center justify-center gap-2">
+          <Loader2 className="w-6 h-6 animate-spin text-[#FFC400]" />
+          <span>جارِ تحميل قائمة الأسعار...</span>
         </div>
+      ) : (
+        <>
+          {/* Mobile Card Feed (md:hidden) */}
+          <div className="md:hidden space-y-3">
+            {filteredPrices.map((item) => {
+              const isBelowMarket = item.sellJOD < item.marketAvgJOD;
+
+              return (
+                <div
+                  key={`mobile-${item.id}`}
+                  className="bg-[#121212] border border-[#262626] rounded-2xl p-4 space-y-3 shadow-lg"
+                >
+                  <div className="flex items-start justify-between gap-2 border-b border-neutral-800 pb-2.5">
+                    <div>
+                      <span className="text-[10px] text-neutral-400 font-bold block">{item.brand}</span>
+                      <h3 className="font-black text-white text-sm">{item.model}</h3>
+                    </div>
+                    <span className="text-xs bg-neutral-900 border border-neutral-700 text-neutral-200 px-2.5 py-1 rounded-lg font-bold">
+                      {item.partType}
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-2 bg-[#171717] p-2.5 rounded-xl border border-neutral-800 text-center">
+                    <div>
+                      <span className="text-[10px] text-neutral-400 block">سعر الشراء</span>
+                      <span className="font-mono text-xs font-bold text-neutral-200">{item.buyJOD} JOD</span>
+                    </div>
+                    <div className="border-x border-neutral-700/60">
+                      <span className="text-[10px] text-[#FFC400] font-bold block">سعر البيع المقترح</span>
+                      <span className="font-mono text-sm font-black text-[#FFC400]">{item.sellJOD} JOD</span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-neutral-400 block">متوسط السوق</span>
+                      <span className="font-mono text-xs font-bold text-neutral-400">{item.marketAvgJOD} JOD</span>
+                    </div>
+                  </div>
+
+                  <div>
+                    {isBelowMarket ? (
+                      <span className="flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-[11px] font-bold">
+                        <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
+                        <span>أقل من متوسط السوق (ميزة تنافسية)</span>
+                      </span>
+                    ) : (
+                      <span className="flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[11px] font-bold">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                        <span>سعر متوازن ومربح</span>
+                      </span>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Desktop Classic Table (hidden md:block) */}
+          <div className="hidden md:block bg-[#121212] border border-[#242424] rounded-2xl overflow-hidden shadow-xl">
+            <div className="overflow-x-auto">
+              <table className="w-full text-right text-xs">
+                <thead className="bg-[#181818] text-neutral-400 font-bold border-b border-neutral-800">
+                  <tr>
+                    <th className="p-4">الموديل</th>
+                    <th className="p-4">القطعة</th>
+                    <th className="p-4">سعر الشراء (Buy)</th>
+                    <th className="p-4">سعر البيع المقترح (Sell = Buy + 7)</th>
+                    <th className="p-4">متوسط السوق</th>
+                    <th className="p-4">حالة التسعير والتحذير</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#1F1F1F]">
+                  {filteredPrices.map((item) => {
+                    const isBelowMarket = item.sellJOD < item.marketAvgJOD;
+
+                    return (
+                      <tr
+                        key={item.id}
+                        className="hover:bg-neutral-900/60 transition-colors"
+                      >
+                        <td className="p-4 font-bold text-white">
+                          {item.brand} {item.model}
+                        </td>
+                        <td className="p-4 text-neutral-300">{item.partType}</td>
+                        <td className="p-4 font-mono font-bold text-neutral-200">
+                          {item.buyJOD} JOD
+                        </td>
+                        <td className="p-4 font-mono font-bold text-[#FFC400]">
+                          {item.sellJOD} JOD
+                        </td>
+                        <td className="p-4 font-mono text-neutral-400">
+                          {item.marketAvgJOD} JOD
+                        </td>
+                        <td className="p-4">
+                          {isBelowMarket ? (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-[11px] font-bold">
+                              <AlertTriangle className="w-3 h-3 text-amber-400" />
+                              <span>أقل من متوسط السوق (ميزة تنافسية)</span>
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[11px] font-bold">
+                              <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+                              <span>سعر متوازن ومربح</span>
+                            </span>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </>
       )}
     </div>
   );

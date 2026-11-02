@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { Stethoscope, Cpu, Bot, Plus, Trash2, Search, X, Loader2, Layers, Activity, Shield, Phone, CheckCircle2 } from "lucide-react";
 import { FaultItem } from "@/lib/faults-data";
 import { BoardModelConfig, BoardTrack } from "@/lib/schematic-data";
 
@@ -266,7 +267,7 @@ export default function AdminDashboardPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#222] pb-6">
         <div>
           <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-[#FFC400]/15 text-[#FFC400] text-xs font-bold mb-2">
-            <span>لوحة التحكم الرئيسية ⚙️</span>
+            <span>لوحة التحكم الرئيسية</span>
             <span className="hidden sm:inline">Master Admin Control</span>
           </div>
           <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-white flex items-center gap-2">
@@ -305,7 +306,7 @@ export default function AdminDashboardPage() {
                 : "text-neutral-400 hover:text-white"
             }`}
           >
-            <span>🩺</span>
+            <Stethoscope className="w-5 h-5" />
             <span className="hidden sm:inline">الباب الأول: </span>
             <span>إدارة الدكتور الذكي</span>
             <span className="bg-black/30 px-1.5 py-0.5 rounded text-[10px]">{faults.length}</span>
@@ -319,7 +320,7 @@ export default function AdminDashboardPage() {
                 : "text-neutral-400 hover:text-white"
             }`}
           >
-            <span>🗺️</span>
+            <Layers className="w-5 h-5" />
             <span className="hidden sm:inline">الباب الثاني: </span>
             <span>المخططات واللوحات</span>
             <span className="bg-black/30 px-1.5 py-0.5 rounded text-[10px]">{boards.length}</span>
@@ -333,7 +334,7 @@ export default function AdminDashboardPage() {
                 : "text-neutral-400 hover:text-white"
             }`}
           >
-            <span>🤖</span>
+            <Bot className="w-5 h-5" />
             <span>الوكيل (عامر)</span>
             <span className="bg-emerald-400/20 text-emerald-400 px-1.5 py-0.5 rounded text-[10px] font-bold">AI</span>
           </button>
@@ -343,24 +344,27 @@ export default function AdminDashboardPage() {
         {activeTab === "hospital" ? (
           <button
             onClick={() => setShowAddFaultModal(true)}
-            className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-[#FFC400] text-black font-black text-xs hover:bg-[#E0AC00] transition-all shadow-[0_0_15px_rgba(255,196,0,0.25)] flex items-center justify-center gap-1.5 shrink-0"
+            className="w-full sm:w-auto px-4 py-2.5 rounded-xl border-2 border-[#FFC400] text-[#FFC400] bg-[#FFC400]/10 hover:bg-[#FFC400] hover:text-black transition-all shadow-[0_0_15px_rgba(255,196,0,0.25)] flex items-center justify-center gap-1.5 shrink-0 font-black text-xs"
           >
-            <span>+ إضافة عطل جديد للدكتور</span>
+            <Plus className="w-4 h-4" />
+            <span>إضافة عطل جديد للدكتور</span>
           </button>
         ) : activeTab === "schematic" ? (
           <div className="flex items-center gap-2 flex-wrap w-full sm:w-auto">
             <button
               onClick={() => setShowAddBoardModal(true)}
-              className="flex-1 sm:flex-initial px-3.5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-black text-xs transition-colors flex items-center justify-center gap-1.5"
+              className="flex-1 sm:flex-initial px-3.5 py-2.5 rounded-xl border-2 border-[#FFC400] text-[#FFC400] bg-[#FFC400]/10 hover:bg-[#FFC400] hover:text-black font-black text-xs transition-all flex items-center justify-center gap-1.5"
             >
-              <span>+ إضافة لوحة هاتف</span>
+              <Plus className="w-4 h-4" />
+              <span>إضافة لوحة هاتف</span>
             </button>
             <button
               onClick={() => setShowAddTrackModal(true)}
               disabled={!selectedBoardId}
-              className="flex-1 sm:flex-initial px-3.5 py-2.5 rounded-xl bg-[#FFC400] text-black font-black text-xs hover:bg-[#E0AC00] transition-colors disabled:opacity-50 flex items-center justify-center gap-1.5"
+              className="flex-1 sm:flex-initial px-3.5 py-2.5 rounded-xl border-2 border-[#FFC400] text-[#FFC400] bg-[#FFC400]/10 hover:bg-[#FFC400] hover:text-black font-black text-xs transition-all disabled:opacity-50 flex items-center justify-center gap-1.5"
             >
-              <span>+ إضافة مسار (Track)</span>
+              <Plus className="w-4 h-4" />
+              <span>إضافة مسار (Track)</span>
             </button>
           </div>
         ) : null}
@@ -385,66 +389,113 @@ export default function AdminDashboardPage() {
             </span>
           </div>
 
-          {/* Faults Table */}
-          <div className="bg-[#121212] border border-[#242424] rounded-2xl overflow-hidden shadow-xl">
-            <div className="overflow-x-auto">
-              <table className="w-full text-right text-xs">
-                <thead className="bg-[#181818] text-neutral-400 font-bold border-b border-neutral-800">
-                  <tr>
-                    <th className="p-4">الموديل / الشركة</th>
-                    <th className="p-4">سحبة الباور سبلاي</th>
-                    <th className="p-4">التشخيص بالعامية الأردنية</th>
-                    <th className="p-4">المكوّن التالف</th>
-                    <th className="p-4">نقطة الفحص (Test Point)</th>
-                    <th className="p-4">نسبة النجاح</th>
-                    <th className="p-4">السعر</th>
-                    <th className="p-4 text-center">إجراءات</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-[#1C1C1C]">
-                  {loadingFaults ? (
-                    <tr>
-                      <td colSpan={8} className="text-center py-10 text-neutral-500">
-                        جارِ تحميل الأعطال... ⏳
-                      </td>
-                    </tr>
-                  ) : filteredFaults.length === 0 ? (
-                    <tr>
-                      <td colSpan={8} className="text-center py-12 text-neutral-500">
-                        لا توجد أعطال مطابقة للبحث
-                      </td>
-                    </tr>
-                  ) : (
-                    filteredFaults.map((f) => (
-                      <tr key={f.id} className="hover:bg-neutral-900/50 transition-colors">
-                        <td className="p-4 font-bold text-white whitespace-nowrap">
-                          {f.brand} {f.model}
-                        </td>
-                        <td className="p-4 font-mono font-bold text-[#FFC400] whitespace-nowrap">
-                          {f.powerDraw}
-                        </td>
-                        <td className="p-4 text-neutral-300 max-w-xs">{f.diagnosisAr}</td>
-                        <td className="p-4 text-rose-400 font-semibold">{f.faultyComponent}</td>
-                        <td className="p-4 text-blue-300 text-[11px] max-w-xs">{f.testPoint}</td>
-                        <td className="p-4 font-bold text-emerald-400 font-mono">{f.successRate}%</td>
-                        <td className="p-4 font-bold text-[#FFC400] font-mono whitespace-nowrap">
-                          {f.fixPriceJOD} JOD
-                        </td>
-                        <td className="p-4 text-center whitespace-nowrap">
-                          <button
-                            onClick={() => handleDeleteFault(f.id)}
-                            className="px-2.5 py-1 rounded-lg bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white border border-rose-500/20 text-[11px] font-bold transition-colors"
-                          >
-                            حذف 🗑️
-                          </button>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
+          {/* Faults Mobile Cards & Desktop Table */}
+          {loadingFaults ? (
+            <div className="text-center py-10 text-neutral-500 text-xs flex items-center justify-center gap-2">
+              <Loader2 className="w-4 h-4 animate-spin text-[#FFC400]" />
+              <span>جارِ تحميل الأعطال...</span>
             </div>
-          </div>
+          ) : filteredFaults.length === 0 ? (
+            <div className="text-center py-12 text-neutral-500 text-xs bg-[#121212] rounded-2xl border border-[#242424]">
+              لا توجد أعطال مطابقة للبحث
+            </div>
+          ) : (
+            <>
+              {/* Mobile Card Feed (md:hidden) */}
+              <div className="md:hidden space-y-3">
+                {filteredFaults.map((f) => (
+                  <div
+                    key={`mobile-${f.id}`}
+                    className="bg-[#141414] border border-[#262626] rounded-2xl p-4 space-y-3 shadow-lg"
+                  >
+                    <div className="flex items-start justify-between gap-2 border-b border-neutral-800 pb-2.5">
+                      <div>
+                        <span className="text-[10px] text-neutral-400 font-bold block">{f.brand}</span>
+                        <h4 className="font-black text-white text-sm">{f.model}</h4>
+                      </div>
+                      <span className="font-mono text-xs font-bold text-[#FFC400] bg-black/60 px-2.5 py-1 rounded-lg border border-[#FFC400]/30">
+                        {f.powerDraw}
+                      </span>
+                    </div>
+
+                    <p className="text-xs text-neutral-200 bg-[#1A1A1A] p-2.5 rounded-xl border border-neutral-800 leading-relaxed font-bold">
+                      {f.diagnosisAr}
+                    </p>
+
+                    <div className="grid grid-cols-2 gap-2 text-[11px]">
+                      <div className="bg-[#181818] p-2 rounded-lg border border-neutral-800">
+                        <span className="text-neutral-400 block text-[10px]">المكوّن:</span>
+                        <span className="text-rose-400 font-bold">{f.faultyComponent}</span>
+                      </div>
+                      <div className="bg-[#181818] p-2 rounded-lg border border-neutral-800">
+                        <span className="text-neutral-400 block text-[10px]">السعر المقدر:</span>
+                        <span className="text-[#FFC400] font-black">{f.fixPriceJOD} JOD</span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-2 border-t border-neutral-800">
+                      <span className="text-[11px] text-emerald-400 font-bold">نسبة النجاح: {f.successRate}%</span>
+                      <button
+                        onClick={() => handleDeleteFault(f.id)}
+                        className="px-3 py-1.5 rounded-lg bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white border border-rose-500/20 text-xs font-bold transition-colors flex items-center gap-1.5"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                        <span>حذف العطل</span>
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Desktop Classic Table (hidden md:block) */}
+              <div className="hidden md:block bg-[#121212] border border-[#242424] rounded-2xl overflow-hidden shadow-xl">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-right text-xs">
+                    <thead className="bg-[#181818] text-neutral-400 font-bold border-b border-neutral-800">
+                      <tr>
+                        <th className="p-4">الموديل / الشركة</th>
+                        <th className="p-4">سحبة الباور سبلاي</th>
+                        <th className="p-4">التشخيص بالعامية الأردنية</th>
+                        <th className="p-4">المكوّن التالف</th>
+                        <th className="p-4">نقطة الفحص (Test Point)</th>
+                        <th className="p-4">نسبة النجاح</th>
+                        <th className="p-4">السعر</th>
+                        <th className="p-4 text-center">إجراءات</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-[#1C1C1C]">
+                      {filteredFaults.map((f) => (
+                        <tr key={f.id} className="hover:bg-neutral-900/50 transition-colors">
+                          <td className="p-4 font-bold text-white whitespace-nowrap">
+                            {f.brand} {f.model}
+                          </td>
+                          <td className="p-4 font-mono font-bold text-[#FFC400] whitespace-nowrap">
+                            {f.powerDraw}
+                          </td>
+                          <td className="p-4 text-neutral-300 max-w-xs">{f.diagnosisAr}</td>
+                          <td className="p-4 text-rose-400 font-semibold">{f.faultyComponent}</td>
+                          <td className="p-4 text-blue-300 text-[11px] max-w-xs">{f.testPoint}</td>
+                          <td className="p-4 font-bold text-emerald-400 font-mono">{f.successRate}%</td>
+                          <td className="p-4 font-bold text-[#FFC400] font-mono whitespace-nowrap">
+                            {f.fixPriceJOD} JOD
+                          </td>
+                          <td className="p-4 text-center whitespace-nowrap">
+                            <button
+                              onClick={() => handleDeleteFault(f.id)}
+                              className="px-2.5 py-1 rounded-lg bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white border border-rose-500/20 text-[11px] font-bold transition-colors flex items-center gap-1 mx-auto"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                              حذف
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </>
+          )}
         </div>
       )}
 
@@ -455,8 +506,8 @@ export default function AdminDashboardPage() {
         <div className="space-y-6">
           {/* Boards List & Selector */}
           <div className="flex items-center gap-2 overflow-x-auto pb-2">
-            <span className="text-xs font-bold text-neutral-400 ml-2 whitespace-nowrap">
-              📱 اختر اللوحة لتعديل مساراتها:
+            <span className="text-xs font-bold text-neutral-400 ml-2 whitespace-nowrap flex items-center gap-1">
+              <Cpu className="w-4 h-4" /> اختر اللوحة لتعديل مساراتها:
             </span>
             {boards.map((b) => (
               <button
@@ -511,22 +562,24 @@ export default function AdminDashboardPage() {
               <div className="lg:col-span-2 bg-[#121212] border border-[#242424] rounded-2xl p-5 space-y-4 shadow-xl">
                 <div className="flex items-center justify-between border-b border-neutral-800 pb-3">
                   <h3 className="text-sm font-black text-white flex items-center gap-2">
-                    <span>⚡ مسارات التغذية والشحن لهذه اللوحة</span>
+                    <Activity className="w-5 h-5 text-[#FFC400]" />
+                    <span>مسارات التغذية والشحن لهذه اللوحة</span>
                   </h3>
                   <button
                     onClick={() => setShowAddTrackModal(true)}
-                    className="px-3 py-1.5 rounded-lg bg-[#FFC400] text-black font-black text-xs hover:bg-[#E0AC00] transition-colors"
+                    className="px-3 py-1.5 rounded-lg border-2 border-[#FFC400] text-[#FFC400] bg-[#FFC400]/10 hover:bg-[#FFC400] hover:text-black font-black text-xs transition-all flex items-center gap-1"
                   >
-                    + إضافة مسار جديد
+                    <Plus className="w-4 h-4" />
+                    إضافة مسار جديد
                   </button>
                 </div>
 
                 {selectedBoard.tracks.length === 0 ? (
                   <div className="text-center py-12 text-neutral-500 text-xs space-y-2">
-                    <span className="text-3xl block">🗺️</span>
+                    <Layers className="w-10 h-10 mx-auto text-neutral-700" />
                     <p>لا توجد مسارات مرسومة لهذه اللوحة بعد</p>
                     <p className="text-[11px] text-neutral-600">
-                      اضغط على "+ إضافة مسار جديد" لرسم مسار SVG مع نقاط الفحص
+                      اضغط على &quot;+ إضافة مسار جديد&quot; لرسم مسار SVG مع نقاط الفحص
                     </p>
                   </div>
                 ) : (
@@ -560,9 +613,10 @@ export default function AdminDashboardPage() {
 
                         <button
                           onClick={() => handleDeleteTrack(selectedBoard.id, t.id)}
-                          className="px-2.5 py-1 rounded-lg bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white border border-rose-500/20 text-[11px] font-bold self-end sm:self-auto transition-colors"
+                          className="px-2.5 py-1 rounded-lg bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white border border-rose-500/20 text-[11px] font-bold self-end sm:self-auto transition-colors flex items-center gap-1"
                         >
-                          حذف المسار 🗑️
+                          <Trash2 className="w-4 h-4" />
+                          حذف المسار
                         </button>
                       </div>
                     ))}
@@ -584,8 +638,8 @@ export default function AdminDashboardPage() {
           {/* Hero Banner */}
           <div className="p-6 rounded-2xl bg-gradient-to-r from-emerald-950/40 via-neutral-900 to-black border border-emerald-500/30 flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-xl">
             <div className="flex items-center gap-4">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center text-3xl shadow-lg border border-emerald-400/40">
-                🤖
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center shadow-lg border border-emerald-400/40">
+                <Bot className="w-8 h-8 text-white" />
               </div>
               <div>
                 <div className="flex items-center gap-2">
@@ -614,7 +668,7 @@ export default function AdminDashboardPage() {
             {/* Card 1: WhatsApp Configuration */}
             <div className="bg-[#121212] border border-[#262626] rounded-2xl p-6 space-y-4 shadow-lg">
               <div className="flex items-center gap-3 border-b border-neutral-800 pb-3">
-                <span className="text-2xl">📲</span>
+                <Phone className="w-5 h-5 text-emerald-400" />
                 <div>
                   <h3 className="text-sm font-black text-white">ربط واتساب المحل (WhatsApp Business)</h3>
                   <p className="text-[11px] text-neutral-400">إعداد الرقم التلقائي لإرسال إشعارات جاهزية الأجهزة</p>
@@ -636,7 +690,10 @@ export default function AdminDashboardPage() {
                 <div className="p-3.5 rounded-xl bg-black/40 border border-neutral-800 space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-neutral-300 font-bold">نمط الإرسال المباشر (Direct wa.me):</span>
-                    <span className="text-emerald-400 font-bold text-[11px]">مفعل تلقائياً ✅</span>
+                    <span className="text-emerald-400 font-bold text-[11px] flex items-center gap-1">
+                      <span>مفعل تلقائياً</span>
+                      <CheckCircle2 className="w-3.5 h-3.5" />
+                    </span>
                   </div>
                   <p className="text-[11px] text-neutral-400 leading-relaxed">
                     يقوم عامر بإنشاء رابط رسالة واتساب مشفّرة ومصاغة باحترافية بضغطة زر واحدة دون الحاجة لاشتراكات مدفوعة.
@@ -655,7 +712,7 @@ export default function AdminDashboardPage() {
             {/* Card 2: AI Brain & Gemini Setup */}
             <div className="bg-[#121212] border border-[#262626] rounded-2xl p-6 space-y-4 shadow-lg">
               <div className="flex items-center gap-3 border-b border-neutral-800 pb-3">
-                <span className="text-2xl">🧠</span>
+                <Bot className="w-5 h-5 text-purple-400" />
                 <div>
                   <h3 className="text-sm font-black text-white">محرك الذكاء الاصطناعي (Gemini 2.0 Flash)</h3>
                   <p className="text-[11px] text-neutral-400">تفعيل Tool Calling والأوامر الصوتية والنصية الذكية</p>
@@ -678,7 +735,7 @@ export default function AdminDashboardPage() {
                       rel="noreferrer"
                       className="px-3.5 py-2.5 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-white font-bold transition-colors whitespace-nowrap"
                     >
-                      تغيير المفتاح 🔑
+                      تغيير المفتاح
                     </a>
                   </div>
                   <p className="text-[10px] text-neutral-500 mt-1">
@@ -690,19 +747,19 @@ export default function AdminDashboardPage() {
                   <span className="text-neutral-300 font-bold block">الصلاحيات الممنوحة لعامر:</span>
                   <div className="grid grid-cols-2 gap-2 text-[11px]">
                     <div className="flex items-center gap-1.5 text-neutral-300">
-                      <span className="text-emerald-400 font-bold">✓</span>
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 font-bold" />
                       <span>قراءة بيانات الخزنة والـ IMEI</span>
                     </div>
                     <div className="flex items-center gap-1.5 text-neutral-300">
-                      <span className="text-emerald-400 font-bold">✓</span>
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 font-bold" />
                       <span>تحديث حالة الأجهزة (DONE/IN_PROGRESS)</span>
                     </div>
                     <div className="flex items-center gap-1.5 text-neutral-300">
-                      <span className="text-emerald-400 font-bold">✓</span>
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 font-bold" />
                       <span>إعداد رسائل الواتساب الفورية</span>
                     </div>
                     <div className="flex items-center gap-1.5 text-neutral-300">
-                      <span className="text-emerald-400 font-bold">✓</span>
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 font-bold" />
                       <span>إحصاء الأرباح والتقارير اليومية</span>
                     </div>
                   </div>
@@ -711,9 +768,11 @@ export default function AdminDashboardPage() {
                 <div className="pt-2">
                   <a
                     href="/vault"
-                    className="w-full py-2.5 px-4 rounded-xl bg-[#FFC400] hover:bg-[#E0AC00] text-black font-black text-xs flex items-center justify-center gap-2 transition-colors shadow"
+                    className="w-full py-2.5 px-4 rounded-xl border-2 border-[#FFC400] text-[#FFC400] bg-[#FFC400]/10 hover:bg-[#FFC400] hover:text-black font-black text-xs flex items-center justify-center gap-2 transition-all shadow"
                   >
-                    <span>فتح الخزنة وتجربة عامر الآن 🤖🛡️</span>
+                    <Bot className="w-4 h-4" />
+                    <Shield className="w-4 h-4" />
+                    <span>فتح الخزنة وتجربة عامر الآن</span>
                   </a>
                 </div>
               </div>
@@ -730,7 +789,9 @@ export default function AdminDashboardPage() {
           <div className="bg-[#141414] border border-[#2B2B2B] rounded-2xl max-w-xl w-full p-6 space-y-4 animate-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between border-b border-neutral-800 pb-3">
               <h2 className="text-base font-black text-white">إضافة عطل جديد في الدكتور الذكي</h2>
-              <button onClick={() => setShowAddFaultModal(false)} className="text-neutral-400 hover:text-white">✕</button>
+              <button onClick={() => setShowAddFaultModal(false)} className="text-neutral-400 hover:text-white">
+                <X className="w-4 h-4" />
+              </button>
             </div>
 
             <form onSubmit={handleCreateFault} className="space-y-3.5 text-xs">
@@ -843,7 +904,7 @@ export default function AdminDashboardPage() {
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2 rounded-lg bg-[#FFC400] text-black font-black hover:bg-[#E0AC00]"
+                  className="px-6 py-2 rounded-lg border-2 border-[#FFC400] text-[#FFC400] bg-[#FFC400]/10 hover:bg-[#FFC400] hover:text-black font-black transition-all"
                 >
                   حفظ العطل في الدكتور
                 </button>
@@ -861,7 +922,9 @@ export default function AdminDashboardPage() {
           <div className="bg-[#141414] border border-[#2B2B2B] rounded-2xl max-w-md w-full p-6 space-y-4 animate-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between border-b border-neutral-800 pb-3">
               <h2 className="text-base font-black text-white">إضافة لوحة هاتف جديدة للمخططات</h2>
-              <button onClick={() => setShowAddBoardModal(false)} className="text-neutral-400 hover:text-white">✕</button>
+              <button onClick={() => setShowAddBoardModal(false)} className="text-neutral-400 hover:text-white">
+                <X className="w-4 h-4" />
+              </button>
             </div>
 
             <form onSubmit={handleCreateBoard} className="space-y-3.5 text-xs">
@@ -911,7 +974,7 @@ export default function AdminDashboardPage() {
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2 rounded-lg bg-blue-600 text-white font-black hover:bg-blue-500"
+                  className="px-6 py-2 rounded-lg border-2 border-[#FFC400] text-[#FFC400] bg-[#FFC400]/10 hover:bg-[#FFC400] hover:text-black font-black transition-all"
                 >
                   إضافة اللوحة
                 </button>
@@ -929,7 +992,9 @@ export default function AdminDashboardPage() {
           <div className="bg-[#141414] border border-[#2B2B2B] rounded-2xl max-w-lg w-full p-6 space-y-4 animate-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between border-b border-neutral-800 pb-3">
               <h2 className="text-base font-black text-white">إضافة مسار كهربائي (Net) للوحة</h2>
-              <button onClick={() => setShowAddTrackModal(false)} className="text-neutral-400 hover:text-white">✕</button>
+              <button onClick={() => setShowAddTrackModal(false)} className="text-neutral-400 hover:text-white">
+                <X className="w-4 h-4" />
+              </button>
             </div>
 
             <form onSubmit={handleAddTrack} className="space-y-3 text-xs">
@@ -1000,7 +1065,7 @@ export default function AdminDashboardPage() {
               </div>
 
               <div className="grid grid-cols-3 gap-2 bg-[#1A1A1A] p-2.5 rounded-xl border border-neutral-800">
-                <div className="col-span-3 font-bold text-neutral-300">📍 نقطة البداية (Start Point):</div>
+                <div className="col-span-3 font-bold text-neutral-300">نقطة البداية (Start Point):</div>
                 <input
                   type="text"
                   placeholder="تسمية (سوكت الشحن)"
@@ -1025,7 +1090,7 @@ export default function AdminDashboardPage() {
               </div>
 
               <div className="grid grid-cols-3 gap-2 bg-[#1A1A1A] p-2.5 rounded-xl border border-neutral-800">
-                <div className="col-span-3 font-bold text-neutral-300">🎯 نقطة النهاية (End Point):</div>
+                <div className="col-span-3 font-bold text-neutral-300">نقطة النهاية (End Point):</div>
                 <input
                   type="text"
                   placeholder="تسمية (آيسي الشحن)"
@@ -1059,7 +1124,7 @@ export default function AdminDashboardPage() {
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2 rounded-lg bg-[#FFC400] text-black font-black hover:bg-[#E0AC00]"
+                  className="px-6 py-2 rounded-lg border-2 border-[#FFC400] text-[#FFC400] bg-[#FFC400]/10 hover:bg-[#FFC400] hover:text-black font-black transition-all"
                 >
                   حفظ المسار
                 </button>

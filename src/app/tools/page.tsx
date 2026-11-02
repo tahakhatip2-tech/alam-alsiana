@@ -2,6 +2,17 @@
 
 import { useState, useEffect } from "react";
 import { ICReplacement } from "@/lib/ic-database";
+import {
+  Wrench,
+  DoorOpen,
+  Search,
+  Zap,
+  HelpCircle,
+  Smartphone,
+  Check,
+  Lightbulb,
+  Loader2,
+} from "lucide-react";
 
 export default function ToolsPage() {
   // Tabs: "ic" for IC Cross-Reference, "injector" for Safe Short Injector
@@ -31,14 +42,17 @@ export default function ToolsPage() {
     calculateInjector(3.8, 1.5);
   }, []);
 
-  const fetchICs = async (query = "") => {
+  const fetchICs = async (query?: string) => {
     setLoadingIc(true);
     try {
-      const res = await fetch(`/api/tools?q=${encodeURIComponent(query)}`);
+      const q = query !== undefined ? query : icQuery;
+      const res = await fetch(`/api/ic?q=${encodeURIComponent(q)}`);
       const json = await res.json();
-      if (json.data) setIcList(json.data);
+      if (json.data) {
+        setIcList(json.data);
+      }
     } catch {
-      // offline fallback
+      // fallback
     } finally {
       setLoadingIc(false);
     }
@@ -46,21 +60,35 @@ export default function ToolsPage() {
 
   const handleSearchIC = (e: React.FormEvent) => {
     e.preventDefault();
-    fetchICs(icQuery);
+    fetchICs();
   };
 
-  const calculateInjector = async (v: number, r: number) => {
-    try {
-      const res = await fetch("/api/tools", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ voltage: v, resistance: r }),
-      });
-      const json = await res.json();
-      if (json.data) setInjectorResult(json.data);
-    } catch {
-      // fallback
+  const calculateInjector = (v: number, r: number) => {
+    if (v <= 0 || r <= 0) return;
+    const current = Number((v / r).toFixed(2));
+    const power = Number((v * current).toFixed(2));
+
+    let risk = "آمن نسبياً (Green)";
+    let recommended = current;
+    let advice = "يمكنك الحقن بحذر مع المراقبة بالكاميرا الحرارية أو الروسين.";
+
+    if (current > 3.0) {
+      risk = "خطر مرتفع جداً (تدمير المسارات الداخلية)";
+      recommended = 2.0;
+      advice = "لا تحقن بتيار مفتوح! اضبط الباور سبلاي على أقصى حد 2.0 أمبير وفولتية لا تتجاوز 1.5V لتفادي حرق طبقات البوردة الداخلية.";
+    } else if (current > 1.8) {
+      risk = "متوسط إلى مرتفع (Yellow/Orange)";
+      recommended = 1.8;
+      advice = "ابدأ بجهد منخفض (1.2V) وتحسس حرارة البوردة باليد أو الكحول سريعاً.";
     }
+
+    setInjectorResult({
+      currentAmps: current,
+      powerWatts: power,
+      riskLevelAr: risk,
+      recommendedLimitAmps: recommended,
+      adviceAr: advice,
+    });
   };
 
   return (
@@ -68,39 +96,43 @@ export default function ToolsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#222] pb-6">
         <div>
-          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-amber-500/10 text-[#FFC400] text-xs font-bold mb-2">
-            <span>الباب السادس 🚪</span>
-            <span>Benchtop Tools</span>
+          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-amber-500/10 text-[#FFC400] text-xs font-bold mb-2 border border-amber-500/20">
+            <DoorOpen className="w-3.5 h-3.5" />
+            <span>الباب السادس</span>
+            <span className="text-amber-500/80">Benchtop Tools</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-white flex items-center gap-2">
-            <span>🧰 صندوق عدة الفني وحاسبة حقن الشورت</span>
+          <h1 className="text-2xl sm:text-3xl font-black text-white flex items-center gap-2.5">
+            <Wrench className="w-7 h-7 text-[#FFC400]" />
+            <span>صندوق عدة الفني وحاسبة حقن الشورت</span>
           </h1>
           <p className="text-neutral-400 text-xs sm:text-sm mt-1">
             دليل بدائل الآيسيات بين بوردات التشليح + حاسبة أقصى أمبير آمن لحقن الفولت لتفادي حرق طبقات البوردة
           </p>
         </div>
 
-        {/* Tab Switcher */}
-        <div className="flex items-center bg-[#141414] border border-[#2B2B2B] p-1.5 rounded-xl text-xs font-bold overflow-x-auto max-w-full">
+        {/* Tab Switcher - Crisp Outlines */}
+        <div className="flex items-center bg-[#141414] border border-[#2B2B2B] p-1.5 rounded-xl text-xs font-bold overflow-x-auto max-w-full gap-1">
           <button
             onClick={() => setActiveTab("ic")}
-            className={`px-3.5 sm:px-4 py-2 rounded-lg transition-all shrink-0 ${
+            className={`px-3.5 sm:px-4 py-2 rounded-lg transition-all shrink-0 flex items-center gap-1.5 ${
               activeTab === "ic"
-                ? "bg-[#FFC400] text-black shadow"
-                : "text-neutral-400 hover:text-white"
+                ? "border-2 border-[#FFC400] bg-[#FFC400]/10 text-[#FFC400] shadow-[0_0_15px_rgba(255,196,0,0.25)] font-black"
+                : "border border-transparent text-neutral-400 hover:text-white"
             }`}
           >
-            🔍 محول بدائل الآيسيات
+            <Search className="w-3.5 h-3.5" />
+            <span>محول بدائل الآيسيات</span>
           </button>
           <button
             onClick={() => setActiveTab("injector")}
-            className={`px-3.5 sm:px-4 py-2 rounded-lg transition-all shrink-0 ${
+            className={`px-3.5 sm:px-4 py-2 rounded-lg transition-all shrink-0 flex items-center gap-1.5 ${
               activeTab === "injector"
-                ? "bg-[#FFC400] text-black shadow"
-                : "text-neutral-400 hover:text-white"
+                ? "border-2 border-[#FFC400] bg-[#FFC400]/10 text-[#FFC400] shadow-[0_0_15px_rgba(255,196,0,0.25)] font-black"
+                : "border border-transparent text-neutral-400 hover:text-white"
             }`}
           >
-            ⚡ حاسبة حقن الشورت
+            <Zap className="w-3.5 h-3.5" />
+            <span>حاسبة حقن الشورت</span>
           </button>
         </div>
       </div>
@@ -119,9 +151,10 @@ export default function ToolsPage() {
             />
             <button
               type="submit"
-              className="px-6 py-3 rounded-xl bg-[#FFC400] hover:bg-[#E0AC00] text-black font-black text-xs transition-colors"
+              className="px-6 py-3 rounded-xl border-2 border-[#FFC400] text-[#FFC400] bg-[#FFC400]/10 hover:bg-[#FFC400] hover:text-black font-black text-xs transition-all shadow-[0_0_15px_rgba(255,196,0,0.2)] flex items-center gap-1.5"
             >
-              بحث في البدائل 🔍
+              <Search className="w-4 h-4" />
+              <span>بحث في البدائل</span>
             </button>
           </form>
 
@@ -144,10 +177,13 @@ export default function ToolsPage() {
 
           {/* Results Grid */}
           {loadingIc ? (
-            <div className="text-center py-12 text-neutral-400">جارِ البحث في قاعدة بيانات المخططات... ⏳</div>
+            <div className="text-center py-12 text-neutral-400 flex flex-col items-center justify-center gap-2">
+              <Loader2 className="w-6 h-6 animate-spin text-[#FFC400]" />
+              <span>جارِ البحث في قاعدة بيانات المخططات...</span>
+            </div>
           ) : icList.length === 0 ? (
             <div className="text-center py-16 bg-[#121212] rounded-2xl border border-[#222]">
-              <span className="text-4xl block mb-2">🤔</span>
+              <HelpCircle className="w-12 h-12 text-neutral-600 mx-auto mb-2" />
               <p className="text-sm font-bold text-white mb-1">لم نجد بدائل مطابقة لهذا الآيسي حالياً</p>
               <p className="text-xs text-neutral-400">تأكد من كتابة الرقم بدقة أو جرب كتابة اسم الموديل</p>
             </div>
@@ -175,16 +211,18 @@ export default function ToolsPage() {
 
                     {/* Compatible Models */}
                     <div>
-                      <span className="text-[11px] font-bold text-neutral-400 block mb-2">
-                        📱 يتوفر في بوردات التشليح التالية:
+                      <span className="text-[11px] font-bold text-neutral-400 block mb-2 flex items-center gap-1">
+                        <Smartphone className="w-3.5 h-3.5 text-[#FFC400]" />
+                        <span>يتوفر في بوردات التشليح التالية:</span>
                       </span>
                       <div className="flex flex-wrap gap-1.5">
                         {item.compatibleModels.map((cm, cidx) => (
                           <span
                             key={cidx}
-                            className="text-[11px] bg-neutral-900 border border-neutral-800 text-emerald-400 px-2 py-1 rounded-lg font-medium"
+                            className="text-[11px] bg-neutral-900 border border-neutral-800 text-emerald-400 px-2 py-1 rounded-lg font-medium flex items-center gap-1"
                           >
-                            ✓ {cm}
+                            <Check className="w-3 h-3 text-emerald-400" />
+                            <span>{cm}</span>
                           </span>
                         ))}
                       </div>
@@ -193,8 +231,9 @@ export default function ToolsPage() {
 
                   {/* Notes */}
                   <div className="pt-3 border-t border-neutral-850">
-                    <p className="text-[11px] text-amber-300/90 bg-amber-500/10 p-2.5 rounded-xl border border-amber-500/20 leading-relaxed">
-                      💡 {item.notesAr}
+                    <p className="text-[11px] text-amber-300/90 bg-amber-500/10 p-2.5 rounded-xl border border-amber-500/20 leading-relaxed flex items-start gap-1.5">
+                      <Lightbulb className="w-4 h-4 text-[#FFC400] shrink-0 mt-0.5" />
+                      <span>{item.notesAr}</span>
                     </p>
                   </div>
                 </div>
@@ -210,7 +249,8 @@ export default function ToolsPage() {
           <div className="bg-[#121212] border border-[#262626] rounded-2xl p-6 shadow-xl space-y-6">
             <div>
               <h2 className="text-lg font-black text-white flex items-center gap-2">
-                <span>⚡ حاسبة فولتية وأمبير حقن الشورت الآمن</span>
+                <Zap className="w-5 h-5 text-[#FFC400]" />
+                <span>حاسبة فولتية وأمبير حقن الشورت الآمن</span>
               </h2>
               <p className="text-xs text-neutral-400 mt-1">
                 تساعدك على تحديد أقصى أمبير تضبطه على الباور سبلاي عند حقن خط شورت، حتى تسخن القطعة التالفة (مكثف/آيسي) دون تدمير المسارات النحاسية الداخلية للوحة.
@@ -294,8 +334,9 @@ export default function ToolsPage() {
                     <span className="text-neutral-400">مستوى الخطورة:</span>
                     <span className="text-amber-400">{injectorResult.riskLevelAr}</span>
                   </div>
-                  <p className="text-xs text-neutral-200 bg-[#202020] p-3 rounded-lg border border-neutral-700 leading-relaxed">
-                    💡 <strong className="text-[#FFC400]">نصيحة المهندس:</strong> {injectorResult.adviceAr}
+                  <p className="text-xs text-neutral-200 bg-[#202020] p-3 rounded-lg border border-neutral-700 leading-relaxed flex items-start gap-2">
+                    <Lightbulb className="w-4 h-4 text-[#FFC400] shrink-0 mt-0.5" />
+                    <span><strong className="text-[#FFC400]">نصيحة المهندس:</strong> {injectorResult.adviceAr}</span>
                   </p>
                 </div>
               </div>

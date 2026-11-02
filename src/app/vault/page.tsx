@@ -2,6 +2,22 @@
 
 import { useState, useEffect } from "react";
 import { VaultRecord } from "@/app/api/vault/route";
+import {
+  ShieldCheck,
+  Plus,
+  Search,
+  Printer,
+  Globe,
+  MessageCircle,
+  X,
+  CheckCircle2,
+  Clock,
+  Wrench,
+  PackageCheck,
+  DoorOpen,
+  Smartphone,
+  AlertTriangle,
+} from "lucide-react";
 
 export default function VaultPage() {
   const [records, setRecords] = useState<VaultRecord[]>([]);
@@ -43,7 +59,7 @@ export default function VaultPage() {
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!imei || !deviceModel || !faultDesc) {
-      alert("الرجاء ملء الـ IMEI والموديل ووصف العطل");
+      alert("الرجاء إدخال رقم IMEI ونوع الجهاز ووصف العطل");
       return;
     }
 
@@ -71,7 +87,7 @@ export default function VaultPage() {
         setFaultDesc("");
         setPriceJOD("");
         fetchRecords();
-        setSelectedReceipt(json.data); // Open receipt directly for printing
+        setSelectedReceipt(json.data);
       }
     } catch {
       alert("حدث خطأ أثناء حفظ الجهاز");
@@ -105,11 +121,13 @@ export default function VaultPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#222] pb-6 print:hidden">
         <div>
           <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-rose-500/10 text-rose-400 text-xs font-bold mb-2">
-            <span>الباب الخامس 🚪</span>
+            <DoorOpen className="w-3.5 h-3.5" />
+            <span>الباب الخامس</span>
             <span>Customer Vault & Receipts</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-white flex items-center gap-2">
-            <span>🛡️ خزنة الزبائن وسندات الاستلام الحرارية</span>
+            <ShieldCheck className="w-8 h-8 text-[#FFC400]" />
+            <span>خزنة الزبائن وسندات الاستلام الحرارية</span>
           </h1>
           <p className="text-neutral-400 text-xs sm:text-sm mt-1">
             توثيق قانوني للأجهزة بالـ IMEI مع طباعة إيصال حراري (80mm/58mm) وبصيغة PDF يحتوي على QR كود لتتبع الزبون
@@ -118,9 +136,10 @@ export default function VaultPage() {
 
         <button
           onClick={() => setShowAddModal(true)}
-          className="px-5 py-2.5 rounded-xl bg-[#FFC400] text-black font-black text-xs hover:bg-[#E0AC00] transition-all shadow-[0_0_20px_rgba(255,196,0,0.25)] flex items-center gap-2 self-start sm:self-auto"
+          className="px-5 py-2.5 rounded-xl border-2 border-[#FFC400] text-[#FFC400] bg-[#FFC400]/10 hover:bg-[#FFC400] hover:text-black font-black text-xs transition-all shadow-[0_0_20px_rgba(255,196,0,0.25)] flex items-center gap-2 self-start sm:self-auto"
         >
-          <span>+ استلام وتوثيق جهاز جديد</span>
+          <Plus className="w-4 h-4" />
+          <span>استلام وتوثيق جهاز جديد</span>
         </button>
       </div>
 
@@ -135,18 +154,22 @@ export default function VaultPage() {
         />
         <button
           type="submit"
-          className="px-6 py-3 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-white font-bold text-xs transition-colors"
+          className="px-6 py-3 rounded-xl border-2 border-[#FFC400] text-[#FFC400] bg-[#FFC400]/10 hover:bg-[#FFC400] hover:text-black font-bold text-xs transition-all flex items-center gap-2"
         >
-          بحث فوري 🔍
+          <Search className="w-4 h-4" />
+          <span>بحث فوري</span>
         </button>
       </form>
 
       {/* Vault Cards */}
       {loading ? (
-        <div className="text-center py-12 text-neutral-400 print:hidden">جارِ فتح سجلات الخزنة... ⏳</div>
+        <div className="text-center py-12 text-neutral-400 print:hidden flex items-center justify-center gap-2">
+          <Clock className="w-5 h-5 animate-spin text-[#FFC400]" />
+          <span>جارِ فتح سجلات الخزنة...</span>
+        </div>
       ) : records.length === 0 ? (
-        <div className="text-center py-16 bg-[#121212] rounded-2xl border border-[#222] print:hidden">
-          <span className="text-4xl block mb-2">🛡️</span>
+        <div className="text-center py-16 bg-[#121212] rounded-2xl border border-[#222] print:hidden space-y-2">
+          <ShieldCheck className="w-12 h-12 mx-auto text-neutral-600 mb-2" />
           <p className="text-sm font-bold text-white mb-1">لا يوجد أجهزة مسجلة بهذا الرقم</p>
           <p className="text-xs text-neutral-400">أدخل جهازاً جديداً الآن لحماية حقوق الورشة وإصدار سند استلام</p>
         </div>
@@ -165,7 +188,10 @@ export default function VaultPage() {
                 <div className="space-y-4">
                   <div className="flex items-start justify-between gap-3 border-b border-neutral-800/80 pb-3">
                     <div>
-                      <h3 className="text-base font-black text-white">{rec.deviceModel}</h3>
+                      <h3 className="text-base font-black text-white flex items-center gap-2">
+                        <Smartphone className="w-4 h-4 text-[#FFC400]" />
+                        {rec.deviceModel}
+                      </h3>
                       <div className="flex items-center gap-2 mt-1">
                         <span className="text-xs text-neutral-400">IMEI:</span>
                         <span className="font-mono text-xs font-bold text-[#FFC400] bg-black/60 px-2 py-0.5 rounded border border-neutral-800">
@@ -176,7 +202,7 @@ export default function VaultPage() {
 
                     <div className="flex items-center gap-2">
                       <span
-                        className={`text-[11px] font-bold px-2.5 py-1 rounded-full border ${
+                        className={`text-[11px] font-bold px-2.5 py-1 rounded-full border flex items-center gap-1.5 ${
                           rec.status === "DELIVERED"
                             ? "bg-purple-500/10 text-purple-400 border-purple-500/30"
                             : rec.status === "DONE"
@@ -186,13 +212,27 @@ export default function VaultPage() {
                             : "bg-blue-500/10 text-blue-400 border-blue-500/30"
                         }`}
                       >
-                        {rec.status === "DELIVERED"
-                          ? "🤝 تم التسليم"
-                          : rec.status === "DONE"
-                          ? "✓ جاهز للتسليم"
-                          : rec.status === "IN_PROGRESS"
-                          ? "⚙️ قيد الفحص والإصلاح"
-                          : "📥 تم الاستلام"}
+                        {rec.status === "DELIVERED" ? (
+                          <>
+                            <PackageCheck className="w-3.5 h-3.5" />
+                            <span>تم التسليم</span>
+                          </>
+                        ) : rec.status === "DONE" ? (
+                          <>
+                            <CheckCircle2 className="w-3.5 h-3.5" />
+                            <span>جاهز للتسليم</span>
+                          </>
+                        ) : rec.status === "IN_PROGRESS" ? (
+                          <>
+                            <Wrench className="w-3.5 h-3.5" />
+                            <span>قيد الفحص والإصلاح</span>
+                          </>
+                        ) : (
+                          <>
+                            <Clock className="w-3.5 h-3.5" />
+                            <span>تم الاستلام</span>
+                          </>
+                        )}
                       </span>
                     </div>
                   </div>
@@ -232,35 +272,38 @@ export default function VaultPage() {
                         }
                         className="bg-[#171717] border border-neutral-700 text-neutral-200 text-xs rounded-lg px-2 py-1 outline-none focus:border-[#FFC400]"
                       >
-                        <option value="RECEIVED">📥 تم الاستلام</option>
-                        <option value="IN_PROGRESS">⚙️ قيد الفحص والإصلاح</option>
-                        <option value="DONE">✓ جاهز للتسليم</option>
-                        <option value="DELIVERED">🤝 تم التسليم</option>
+                        <option value="RECEIVED">تم الاستلام</option>
+                        <option value="IN_PROGRESS">قيد الفحص والإصلاح</option>
+                        <option value="DONE">جاهز للتسليم</option>
+                        <option value="DELIVERED">تم التسليم</option>
                       </select>
                     </div>
 
                     {rec.status === "RECEIVED" && (
                       <button
                         onClick={() => handleStatusChange(rec.id, "IN_PROGRESS")}
-                        className="text-xs font-bold px-3 py-1 rounded-lg bg-amber-500/20 text-amber-400 hover:bg-amber-500/30 border border-amber-500/40 transition-colors"
+                        className="text-xs font-bold px-3 py-1 rounded-lg border-2 border-amber-500 text-amber-400 bg-amber-500/10 hover:bg-amber-500 hover:text-black transition-all flex items-center gap-1.5"
                       >
-                        بدء الفحص ⚙️
+                        <Wrench className="w-3.5 h-3.5" />
+                        <span>بدء الفحص</span>
                       </button>
                     )}
                     {rec.status === "IN_PROGRESS" && (
                       <button
                         onClick={() => handleStatusChange(rec.id, "DONE")}
-                        className="text-xs font-bold px-3 py-1 rounded-lg bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 border border-emerald-500/40 transition-colors"
+                        className="text-xs font-bold px-3 py-1 rounded-lg border-2 border-emerald-500 text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500 hover:text-black transition-all flex items-center gap-1.5"
                       >
-                        إتمام الصيانة ✅
+                        <CheckCircle2 className="w-3.5 h-3.5" />
+                        <span>إتمام الصيانة</span>
                       </button>
                     )}
                     {rec.status === "DONE" && (
                       <button
                         onClick={() => handleStatusChange(rec.id, "DELIVERED")}
-                        className="text-xs font-bold px-3 py-1 rounded-lg bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 border border-purple-500/40 transition-colors"
+                        className="text-xs font-bold px-3 py-1 rounded-lg border-2 border-purple-500 text-purple-400 bg-purple-500/10 hover:bg-purple-500 hover:text-white transition-all flex items-center gap-1.5"
                       >
-                        تسليم للزبون 🤝
+                        <PackageCheck className="w-3.5 h-3.5" />
+                        <span>تسليم للزبون</span>
                       </button>
                     )}
                   </div>
@@ -280,18 +323,20 @@ export default function VaultPage() {
                   <div className="grid grid-cols-3 gap-2">
                     <button
                       onClick={() => setSelectedReceipt(rec)}
-                      className="py-2.5 px-2 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-neutral-200 font-bold text-xs flex items-center justify-center gap-1 transition-colors border border-neutral-700"
+                      className="py-2.5 px-2 rounded-xl border-2 border-neutral-700 text-neutral-300 hover:border-[#FFC400] hover:text-[#FFC400] bg-transparent font-bold text-xs flex items-center justify-center gap-1.5 transition-all"
                     >
-                      <span>🖨️ سند / PDF</span>
+                      <Printer className="w-3.5 h-3.5" />
+                      <span>سند / PDF</span>
                     </button>
 
                     <a
                       href={`/track?id=${rec.id}`}
                       target="_blank"
                       rel="noreferrer"
-                      className="py-2.5 px-2 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-amber-400 border border-amber-500/30 font-bold text-xs flex items-center justify-center gap-1 transition-colors text-center"
+                      className="py-2.5 px-2 rounded-xl border-2 border-amber-500/40 text-amber-400 hover:border-amber-400 hover:bg-amber-500/10 font-bold text-xs flex items-center justify-center gap-1.5 transition-all text-center"
                     >
-                      <span>🌐 تتبع الزبون</span>
+                      <Globe className="w-3.5 h-3.5" />
+                      <span>تتبع الزبون</span>
                     </a>
 
                     {rec.customerPhone ? (
@@ -299,9 +344,10 @@ export default function VaultPage() {
                         href={`https://wa.me/962${rec.customerPhone.replace(/^0/, "")}?text=${waReadyText}`}
                         target="_blank"
                         rel="noreferrer"
-                        className="py-2.5 px-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-1 transition-colors text-center"
+                        className="py-2.5 px-2 rounded-xl border-2 border-emerald-500 text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500 hover:text-black font-bold text-xs flex items-center justify-center gap-1.5 transition-all text-center"
                       >
-                        <span>📲 واتساب</span>
+                        <MessageCircle className="w-3.5 h-3.5" />
+                        <span>واتساب</span>
                       </a>
                     ) : (
                       <span className="py-2.5 px-2 text-center text-[11px] text-neutral-500 bg-neutral-900 rounded-xl flex items-center justify-center">
@@ -318,28 +364,29 @@ export default function VaultPage() {
 
       {/* Thermal & PDF Receipt Print Modal / Sheet */}
       {selectedReceipt && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#141414] border border-[#2B2B2B] rounded-2xl max-w-md w-full p-6 space-y-5 animate-in zoom-in-95 duration-150">
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
+          <div className="bg-[#141414] border border-[#2B2B2B] rounded-t-3xl sm:rounded-2xl max-w-md w-full p-4 sm:p-6 space-y-4 max-h-[92vh] overflow-y-auto animate-in slide-in-from-bottom sm:zoom-in-95 duration-200">
             {/* Modal Controls (Hidden in actual print) */}
             <div className="flex items-center justify-between border-b border-neutral-800 pb-3 print:hidden">
               <h2 className="text-base font-black text-white">معاينة سند الاستلام</h2>
               <div className="flex items-center gap-2">
                 <button
                   onClick={handlePrintReceipt}
-                  className="px-4 py-1.5 rounded-lg bg-[#FFC400] text-black font-black text-xs hover:bg-[#E0AC00] transition-colors"
+                  className="px-4 py-1.5 rounded-lg border-2 border-[#FFC400] text-[#FFC400] bg-[#FFC400]/10 hover:bg-[#FFC400] hover:text-black font-black text-xs transition-all flex items-center gap-1.5"
                 >
-                  طباعة فورية 🖨️
+                  <Printer className="w-3.5 h-3.5" />
+                  <span>طباعة فورية</span>
                 </button>
                 <button
                   onClick={() => setSelectedReceipt(null)}
-                  className="text-neutral-400 hover:text-white px-2 py-1 text-sm"
+                  className="text-neutral-400 hover:text-white p-1 text-sm rounded-lg hover:bg-neutral-800 transition-colors"
                 >
-                  ✕
+                  <X className="w-4 h-4" />
                 </button>
               </div>
             </div>
 
-            {/* The Actual Receipt Document (Designed for 80mm/58mm thermal rolls & PDF) */}
+            {/* The Actual Receipt Document */}
             <div
               id="thermal-receipt"
               className="bg-white text-black p-5 rounded-lg font-sans text-xs space-y-3.5 shadow-2xl border border-neutral-300"
@@ -399,7 +446,6 @@ export default function VaultPage() {
               {/* QR Code For Customer Tracking */}
               <div className="text-center pt-1 pb-1 space-y-1">
                 <div className="inline-block p-1.5 bg-white border border-gray-300 rounded shadow-sm">
-                  {/* Google Chart API QR Generator */}
                   <img
                     src={`https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=${encodeURIComponent(
                       `${typeof window !== "undefined" ? window.location.origin : ""}/track?id=${selectedReceipt.id}`
@@ -431,15 +477,15 @@ export default function VaultPage() {
 
       {/* Add Record Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#141414] border border-[#2B2B2B] rounded-2xl max-w-lg w-full p-6 space-y-5">
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
+          <div className="bg-[#141414] border border-[#2B2B2B] rounded-t-3xl sm:rounded-2xl max-w-lg w-full p-5 sm:p-6 space-y-4 max-h-[92vh] overflow-y-auto animate-in slide-in-from-bottom sm:zoom-in-95 duration-200">
             <div className="flex items-center justify-between border-b border-neutral-800 pb-3">
               <h2 className="text-lg font-black text-white">توثيق جهاز واستخراج سند استلام</h2>
               <button
                 onClick={() => setShowAddModal(false)}
-                className="text-neutral-400 hover:text-white text-lg"
+                className="text-neutral-400 hover:text-white p-1 rounded-lg hover:bg-neutral-800 transition-colors"
               >
-                ✕
+                <X className="w-5 h-5" />
               </button>
             </div>
 
@@ -532,13 +578,13 @@ export default function VaultPage() {
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="px-4 py-2 rounded-lg bg-neutral-800 text-neutral-300 font-bold hover:bg-neutral-700"
+                  className="px-4 py-2 rounded-lg bg-neutral-800 text-neutral-300 font-bold hover:bg-neutral-700 transition-colors"
                 >
                   إلغاء
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2 rounded-lg bg-[#FFC400] text-black font-black hover:bg-[#E0AC00]"
+                  className="px-6 py-2 rounded-lg border-2 border-[#FFC400] text-[#FFC400] bg-[#FFC400]/10 hover:bg-[#FFC400] hover:text-black font-black transition-all"
                 >
                   حفظ وطباعة السند فوراً
                 </button>

@@ -3,7 +3,20 @@
 import { useState, useEffect, useRef, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { ChatConversation, ChatMessage } from "@/lib/chat-data";
+import { ChatConversation } from "@/lib/chat-data";
+import {
+  MessageSquare,
+  MessageCircle,
+  Smartphone,
+  MapPin,
+  Send,
+  ShoppingCart,
+  ShieldCheck,
+  CheckCheck,
+  Inbox,
+  Loader2,
+  ArrowRight,
+} from "lucide-react";
 
 function ChatContent() {
   const searchParams = useSearchParams();
@@ -90,16 +103,20 @@ function ChatContent() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-6 w-full flex-1 flex flex-col h-[calc(100vh-5rem)]">
+    <div className="max-w-7xl mx-auto px-2 sm:px-4 py-2 sm:py-6 w-full flex-1 flex flex-col h-[calc(100dvh-8rem)] sm:h-[calc(100vh-5rem)]">
       {/* Container with Modern Dual Pane */}
       <div className="bg-[#101010] border border-[#222] rounded-2xl flex-1 flex flex-col md:flex-row overflow-hidden shadow-2xl">
-        {/* RIGHT PANE: Conversations List */}
-        <div className="w-full md:w-80 lg:w-96 border-b md:border-b-0 md:border-l border-[#222] flex flex-col bg-[#0D0D0D]">
+        {/* RIGHT PANE: Conversations List (Hidden on mobile if a chat is active) */}
+        <div
+          className={`w-full md:w-80 lg:w-96 border-b md:border-b-0 md:border-l border-[#222] flex-col bg-[#0D0D0D] ${
+            activeConvId ? "hidden md:flex" : "flex"
+          }`}
+        >
           {/* Header */}
-          <div className="p-4 border-b border-[#222] flex items-center justify-between">
+          <div className="p-3.5 sm:p-4 border-b border-[#222] flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="text-xl">💬</span>
-              <h2 className="font-black text-white text-base">المحادثات وصفقات السوق</h2>
+              <MessageSquare className="w-5 h-5 text-[#FFC400]" />
+              <h2 className="font-black text-white text-sm sm:text-base">المحادثات وصفقات السوق</h2>
             </div>
             <span className="text-[11px] bg-neutral-900 text-[#FFC400] font-bold px-2 py-0.5 rounded-full border border-neutral-800">
               {conversations.length} محادثة
@@ -109,19 +126,23 @@ function ChatContent() {
           {/* Conversations Scrollable List */}
           <div className="flex-1 overflow-y-auto divide-y divide-[#1A1A1A]">
             {loading ? (
-              <div className="text-center py-10 text-neutral-500 text-xs">جارِ تحميل المحادثات... ⏳</div>
+              <div className="text-center py-10 text-neutral-500 text-xs flex items-center justify-center gap-2">
+                <Loader2 className="w-4 h-4 animate-spin text-[#FFC400]" />
+                <span>جارِ تحميل المحادثات...</span>
+              </div>
             ) : conversations.length === 0 ? (
               <div className="text-center py-12 px-4 text-neutral-500 text-xs space-y-2">
-                <span className="text-3xl block">📭</span>
-                <p>لا توجد محادثات نشطة حالياً</p>
-                <p className="text-[11px] text-neutral-600">
+                <Inbox className="w-10 h-10 text-neutral-600 mx-auto mb-2" />
+                <p className="font-bold text-white">لا توجد محادثات نشطة حالياً</p>
+                <p className="text-[11px] text-neutral-400">
                   تصفح السوق واضغط "مراسلة البائع" لبدء التفاوض
                 </p>
                 <Link
                   href="/market"
-                  className="inline-block mt-2 px-3 py-1.5 rounded-lg bg-[#FFC400] text-black font-bold text-xs"
+                  className="inline-flex items-center gap-1.5 mt-2 px-4 py-2 rounded-xl border-2 border-[#FFC400] text-[#FFC400] bg-[#FFC400]/10 hover:bg-[#FFC400] hover:text-black font-black text-xs transition-all shadow-[0_0_15px_rgba(255,196,0,0.2)]"
                 >
-                  الذهاب للسوق 🛒
+                  <ShoppingCart className="w-3.5 h-3.5" />
+                  <span>الذهاب للسوق</span>
                 </Link>
               </div>
             ) : (
@@ -146,8 +167,8 @@ function ChatContent() {
                           className="w-full h-full object-cover"
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center text-lg">
-                          📱
+                        <div className="w-full h-full flex items-center justify-center text-neutral-600">
+                          <Smartphone className="w-5 h-5" />
                         </div>
                       )}
                     </div>
@@ -170,7 +191,10 @@ function ChatContent() {
                       </p>
 
                       <div className="flex items-center justify-between mt-1 text-[10px] text-neutral-500">
-                        <span>📍 {conv.itemCity || "عمان"}</span>
+                        <span className="flex items-center gap-1">
+                          <MapPin className="w-3 h-3 text-[#FFC400]" />
+                          <span>{conv.itemCity || "عمان"}</span>
+                        </span>
                         <span>{new Date(conv.lastMessageAt).toLocaleTimeString("ar-JO", { hour: "2-digit", minute: "2-digit" })}</span>
                       </div>
                     </div>
@@ -181,15 +205,29 @@ function ChatContent() {
           </div>
         </div>
 
-        {/* LEFT PANE: Active Chat Room */}
-        <div className="flex-1 flex flex-col bg-[#111111]">
+        {/* LEFT PANE: Active Chat Room (Only visible on mobile if a chat is active, always on desktop) */}
+        <div
+          className={`flex-1 flex-col bg-[#111111] ${
+            activeConvId ? "flex" : "hidden md:flex"
+          }`}
+        >
           {activeConversation ? (
             <>
-              {/* Product Header (مثل السوق المفتوح تماماً) */}
-              <div className="bg-[#161616] border-b border-[#262626] p-3.5 flex items-center justify-between z-10 shadow-md">
-                <div className="flex items-center gap-3.5">
+              {/* Product Header */}
+              <div className="bg-[#161616] border-b border-[#262626] p-2.5 sm:p-3.5 flex items-center justify-between z-10 shadow-md">
+                <div className="flex items-center gap-2 sm:gap-3.5 min-w-0">
+                  {/* Mobile Back Button */}
+                  <button
+                    onClick={() => setActiveConvId(null)}
+                    className="md:hidden p-2 rounded-xl bg-neutral-900 border border-neutral-700 text-neutral-300 hover:text-white shrink-0 active:scale-95 transition-all"
+                    title="رجوع للمحادثات"
+                    aria-label="رجوع لقائمة المحادثات"
+                  >
+                    <ArrowRight className="w-4 h-4 text-[#FFC400]" />
+                  </button>
+
                   {/* Item Image */}
-                  <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-neutral-900 border border-neutral-700 shrink-0 shadow">
+                  <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-xl overflow-hidden bg-neutral-900 border border-neutral-700 shrink-0 shadow">
                     {activeConversation.itemImage ? (
                       <img
                         src={activeConversation.itemImage}
@@ -197,34 +235,33 @@ function ChatContent() {
                         className="w-full h-full object-cover"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-lg">
-                        📱
+                      <div className="w-full h-full flex items-center justify-center text-neutral-600">
+                        <Smartphone className="w-5 h-5" />
                       </div>
                     )}
                   </div>
 
-                  {/* Item Title & Price & City (OpenSooq Style Header) */}
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-[10px] bg-amber-500/20 text-[#FFC400] font-bold px-1.5 py-0.5 rounded border border-amber-500/30">
-                        المنتج المتفاوض عليه
+                  {/* Item Title & Price & City */}
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-1.5 sm:gap-2">
+                      <span className="text-[9px] sm:text-[10px] bg-amber-500/20 text-[#FFC400] font-bold px-1.5 py-0.5 rounded border border-amber-500/30 shrink-0">
+                        المنتج
                       </span>
-                      <h3 className="font-black text-white text-sm sm:text-base">
+                      <h3 className="font-black text-white text-xs sm:text-base truncate">
                         {activeConversation.itemTitle}
                       </h3>
                     </div>
 
-                    <div className="flex items-center gap-3 mt-1 text-xs text-neutral-400">
+                    <div className="flex items-center gap-2 sm:gap-3 mt-0.5 sm:mt-1 text-[11px] sm:text-xs text-neutral-400 truncate">
                       {activeConversation.itemPrice && (
-                        <span className="font-mono font-black text-emerald-400 text-sm">
-                          {activeConversation.itemPrice} دينار أردني
+                        <span className="font-mono font-black text-emerald-400 text-xs sm:text-sm shrink-0">
+                          {activeConversation.itemPrice} JOD
                         </span>
                       )}
                       <span>•</span>
-                      <span>📍 {activeConversation.itemCity || "عمان"}</span>
-                      <span>•</span>
-                      <span className="font-mono text-neutral-400">
-                        البائع: {activeConversation.sellerPhone}
+                      <span className="flex items-center gap-1 shrink-0">
+                        <MapPin className="w-3 h-3 text-[#FFC400]" />
+                        <span>{activeConversation.itemCity || "عمان"}</span>
                       </span>
                     </div>
                   </div>
@@ -236,16 +273,17 @@ function ChatContent() {
                     href={`https://wa.me/962${activeConversation.sellerPhone.replace(/^0/, "")}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1.5 transition-colors"
+                    className="px-3 py-1.5 rounded-lg border-2 border-emerald-500 text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500 hover:text-black font-bold text-xs flex items-center gap-1.5 transition-all shadow-[0_0_15px_rgba(16,185,129,0.2)]"
                   >
+                    <MessageCircle className="w-3.5 h-3.5" />
                     <span>واتساب</span>
-                    <span>💬</span>
                   </a>
                   <Link
                     href="/market"
-                    className="px-3 py-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-300 font-bold text-xs transition-colors"
+                    className="px-3 py-1.5 rounded-lg border border-neutral-700 bg-transparent hover:border-[#FFC400] text-neutral-300 hover:text-[#FFC400] font-bold text-xs transition-colors flex items-center gap-1.5"
                   >
-                    السوق
+                    <ShoppingCart className="w-3.5 h-3.5" />
+                    <span>السوق</span>
                   </Link>
                 </div>
               </div>
@@ -254,7 +292,10 @@ function ChatContent() {
               <div className="flex-1 p-4 sm:p-6 overflow-y-auto space-y-4">
                 {/* Security and Trade Notice */}
                 <div className="bg-amber-500/10 border border-amber-500/20 text-amber-300/90 rounded-xl p-3 text-center text-xs space-y-0.5 max-w-lg mx-auto">
-                  <span className="font-bold block">🛡️ نصيحة أمان صفقات عالم الصيانة:</span>
+                  <span className="font-bold flex items-center justify-center gap-1.5">
+                    <ShieldCheck className="w-4 h-4 text-amber-400" />
+                    <span>نصيحة أمان صفقات عالم الصيانة:</span>
+                  </span>
                   <p className="text-[11px] text-neutral-300">
                     اتفق مع الفني على فحص البوردة على الباور سبلاي والتأكد من سلامة الآيسيات قبل الدفع النهائي.
                   </p>
@@ -282,7 +323,7 @@ function ChatContent() {
                       <div
                         className={`max-w-[85%] sm:max-w-md p-3.5 rounded-2xl text-xs sm:text-sm leading-relaxed shadow-md ${
                           isMe
-                            ? "bg-[#FFC400] text-black font-semibold rounded-br-none"
+                            ? "bg-[#FFC400]/15 border-2 border-[#FFC400] text-[#FFC400] font-bold rounded-br-none shadow-[0_0_15px_rgba(255,196,0,0.15)]"
                             : "bg-[#1E1E1E] text-neutral-100 border border-[#2E2E2E] rounded-bl-none"
                         }`}
                       >
@@ -300,8 +341,9 @@ function ChatContent() {
                       </div>
 
                       {isMe && (
-                        <span className="text-[10px] text-neutral-500 mt-0.5 px-1 font-mono">
-                          تم الإرسال ✓✓
+                        <span className="text-[10px] text-neutral-500 mt-0.5 px-1 font-mono flex items-center gap-1">
+                          <span>تم الإرسال</span>
+                          <CheckCheck className="w-3.5 h-3.5 text-emerald-400" />
                         </span>
                       )}
                     </div>
@@ -326,14 +368,17 @@ function ChatContent() {
                 <button
                   type="submit"
                   disabled={!inputText.trim() || sending}
-                  className="px-6 py-3 rounded-xl bg-[#FFC400] hover:bg-[#E0AC00] disabled:opacity-50 text-black font-black text-xs sm:text-sm transition-all shadow-[0_0_15px_rgba(255,196,0,0.25)] flex items-center gap-1.5 shrink-0"
+                  className="px-6 py-3 rounded-xl border-2 border-[#FFC400] text-[#FFC400] bg-[#FFC400]/10 hover:bg-[#FFC400] hover:text-black disabled:opacity-40 disabled:cursor-not-allowed font-black text-xs sm:text-sm transition-all shadow-[0_0_15px_rgba(255,196,0,0.2)] flex items-center gap-1.5 shrink-0"
                 >
                   {sending ? (
-                    <span>جارِ الإرسال...</span>
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>جارِ الإرسال...</span>
+                    </>
                   ) : (
                     <>
                       <span>إرسال</span>
-                      <span>✈️</span>
+                      <Send className="w-3.5 h-3.5" />
                     </>
                   )}
                 </button>
@@ -341,7 +386,7 @@ function ChatContent() {
             </>
           ) : (
             <div className="flex-1 flex flex-col items-center justify-center p-8 text-center text-neutral-500 space-y-3">
-              <span className="text-5xl">💬</span>
+              <MessageSquare className="w-12 h-12 text-neutral-600 mb-1" />
               <h3 className="text-base font-bold text-white">اختر محادثة لبدء الدردشة</h3>
               <p className="text-xs max-w-sm">
                 يمكنك التحدث مع بائعي اللوحات والتفاوض على الأسعار مع ظهور عنوان المنتج في أعلى المحادثة
@@ -356,7 +401,7 @@ function ChatContent() {
 
 export default function ChatPage() {
   return (
-    <Suspense fallback={<div className="text-center py-20 text-neutral-400">جارِ تجهيز غرفة الدردشة... ⏳</div>}>
+    <Suspense fallback={<div className="text-center py-20 text-neutral-400">جارِ تجهيز غرفة الدردشة...</div>}>
       <ChatContent />
     </Suspense>
   );

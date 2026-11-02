@@ -8,6 +8,28 @@ import {
   PhoneListingItem,
   INITIAL_PHONES,
 } from "@/lib/market-pricing-data";
+import {
+  ShoppingCart,
+  DoorOpen,
+  Smartphone,
+  Package,
+  Search,
+  MapPin,
+  Sparkles,
+  Store,
+  Wrench,
+  HardDrive,
+  BatteryCharging,
+  Palette,
+  MessageSquare,
+  MessageCircle,
+  Check,
+  Plus,
+  X,
+  Send,
+  Loader2,
+  Filter,
+} from "lucide-react";
 
 export default function MarketPage() {
   const router = useRouter();
@@ -344,42 +366,47 @@ export default function MarketPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#222] pb-6">
         <div>
-          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-emerald-500/10 text-emerald-400 text-xs font-bold mb-2">
-            <span>الباب الثالث 🚪</span>
-            <span>The Market & In-App Chat</span>
+          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-emerald-500/10 text-emerald-400 text-xs font-bold mb-2 border border-emerald-500/20">
+            <DoorOpen className="w-3.5 h-3.5" />
+            <span>الباب الثالث</span>
+            <span className="text-emerald-500/80">The Market & In-App Chat</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-white flex items-center gap-2">
-            <span>🛒 السوق الشامل للهواتف واللوحات وقطع الغيار</span>
+          <h1 className="text-2xl sm:text-3xl font-black text-white flex items-center gap-2.5">
+            <ShoppingCart className="w-7 h-7 text-[#FFC400]" />
+            <span>السوق الشامل للهواتف واللوحات وقطع الغيار</span>
           </h1>
           <p className="text-neutral-400 text-xs sm:text-sm mt-1">
             سوق مفتوح ومتخصص للهواتف الذكية (جديد ومستعمل)، بوردات التشليح، وطلبات الشراء في الأردن مع محادثة مباشرة وواتساب
           </p>
         </div>
 
-        {/* Action Buttons */}
+        {/* Action Buttons - High-tech Outlines */}
         <div className="flex items-center gap-2 flex-wrap">
           <button
             onClick={() => setShowAddPhoneModal(true)}
-            className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#FFC400] to-[#E0AC00] text-black font-black text-xs hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(255,196,0,0.3)] flex items-center gap-1.5"
+            className="px-4 py-2.5 rounded-xl border-2 border-[#FFC400] text-[#FFC400] bg-[#FFC400]/10 hover:bg-[#FFC400] hover:text-black font-black text-xs hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(255,196,0,0.25)] flex items-center gap-1.5"
           >
-            <span>+ بيع هاتف</span>
-            <span>📱</span>
+            <Plus className="w-4 h-4" />
+            <span>بيع هاتف</span>
+            <Smartphone className="w-4 h-4" />
           </button>
 
           <button
             onClick={() => setShowAddBoardModal(true)}
-            className="px-3.5 py-2.5 rounded-xl bg-neutral-900 border border-neutral-700 hover:border-[#FFC400]/40 text-neutral-200 font-bold text-xs transition-colors flex items-center gap-1.5"
+            className="px-3.5 py-2.5 rounded-xl border border-neutral-700 bg-neutral-900/50 hover:border-[#FFC400] text-neutral-200 hover:text-[#FFC400] font-bold text-xs transition-all flex items-center gap-1.5"
           >
-            <span>+ عرض بوردة</span>
-            <span>📦</span>
+            <Plus className="w-3.5 h-3.5" />
+            <span>عرض بوردة</span>
+            <Package className="w-4 h-4" />
           </button>
 
           <button
             onClick={() => setShowAddWantedModal(true)}
-            className="px-3.5 py-2.5 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-400 font-bold text-xs hover:bg-amber-500/25 transition-colors flex items-center gap-1.5"
+            className="px-3.5 py-2.5 rounded-xl border border-amber-500/40 bg-amber-500/10 hover:border-amber-400 hover:bg-amber-500/20 text-amber-400 font-bold text-xs transition-all flex items-center gap-1.5"
           >
-            <span>+ طلب شراء</span>
-            <span>🔍</span>
+            <Plus className="w-3.5 h-3.5" />
+            <span>طلب شراء</span>
+            <Search className="w-4 h-4" />
           </button>
         </div>
       </div>
@@ -387,57 +414,61 @@ export default function MarketPage() {
       {/* Main Tabs Switcher */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         {/* Tabs Bar */}
-        <div className="flex items-center bg-[#141414] border border-[#2B2B2B] p-1.5 rounded-xl text-xs font-bold overflow-x-auto max-w-full">
+        <div className="flex items-center bg-[#141414] border border-[#2B2B2B] p-1.5 rounded-xl text-xs font-bold overflow-x-auto max-w-full gap-1">
           <button
             onClick={() => setActiveTab("phones")}
             className={`px-4 py-2 rounded-lg transition-all flex items-center gap-1.5 shrink-0 ${
               activeTab === "phones"
-                ? "bg-[#FFC400] text-black shadow font-black"
-                : "text-neutral-400 hover:text-white"
+                ? "border-2 border-[#FFC400] bg-[#FFC400]/10 text-[#FFC400] shadow-[0_0_15px_rgba(255,196,0,0.25)] font-black"
+                : "border border-transparent text-neutral-400 hover:text-white"
             }`}
           >
-            <span>📱 سوق الهواتف</span>
-            <span className="bg-black/30 px-1.5 py-0.5 rounded text-[10px]">({phones.length})</span>
+            <Smartphone className="w-4 h-4" />
+            <span>سوق الهواتف</span>
+            <span className="bg-black/50 border border-current/20 px-1.5 py-0.5 rounded text-[10px]">({phones.length})</span>
           </button>
 
           <button
             onClick={() => setActiveTab("boards")}
             className={`px-4 py-2 rounded-lg transition-all flex items-center gap-1.5 shrink-0 ${
               activeTab === "boards"
-                ? "bg-[#FFC400] text-black shadow font-black"
-                : "text-neutral-400 hover:text-white"
+                ? "border-2 border-[#FFC400] bg-[#FFC400]/10 text-[#FFC400] shadow-[0_0_15px_rgba(255,196,0,0.25)] font-black"
+                : "border border-transparent text-neutral-400 hover:text-white"
             }`}
           >
-            <span>📦 بوردات وقطع تشليح</span>
-            <span className="bg-black/30 px-1.5 py-0.5 rounded text-[10px]">({boards.length})</span>
+            <Package className="w-4 h-4" />
+            <span>بوردات وقطع تشليح</span>
+            <span className="bg-black/50 border border-current/20 px-1.5 py-0.5 rounded text-[10px]">({boards.length})</span>
           </button>
 
           <button
             onClick={() => setActiveTab("wanted")}
             className={`px-4 py-2 rounded-lg transition-all flex items-center gap-1.5 shrink-0 ${
               activeTab === "wanted"
-                ? "bg-amber-500 text-black shadow font-black"
-                : "text-neutral-400 hover:text-white"
+                ? "border-2 border-amber-400 bg-amber-400/10 text-amber-400 shadow-[0_0_15px_rgba(251,191,36,0.25)] font-black"
+                : "border border-transparent text-neutral-400 hover:text-white"
             }`}
           >
-            <span>🔍 مطلوب أجهزة وقطع</span>
-            <span className="bg-black/30 px-1.5 py-0.5 rounded text-[10px]">({wantedList.length})</span>
+            <Search className="w-4 h-4" />
+            <span>مطلوب أجهزة وقطع</span>
+            <span className="bg-black/50 border border-current/20 px-1.5 py-0.5 rounded text-[10px]">({wantedList.length})</span>
           </button>
         </div>
 
         {/* City Filter */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 max-w-full">
-          <span className="text-xs font-bold text-neutral-400 ml-1 whitespace-nowrap">
-            📍 المدينة:
+        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1 max-w-full touch-pan-x snap-x">
+          <span className="text-xs font-bold text-neutral-400 ml-1 whitespace-nowrap flex items-center gap-1">
+            <MapPin className="w-3.5 h-3.5 text-[#FFC400]" />
+            <span>المدينة:</span>
           </span>
           {jordanCities.map((c) => (
             <button
               key={c}
               onClick={() => setCityFilter(c)}
-              className={`px-2.5 py-1 rounded-lg text-xs font-bold whitespace-nowrap transition-colors shrink-0 ${
+              className={`px-2.5 py-1 rounded-lg text-xs font-bold whitespace-nowrap transition-all shrink-0 ${
                 cityFilter === c
-                  ? "bg-[#FFC400] text-black"
-                  : "bg-neutral-900 text-neutral-300 hover:bg-neutral-800 border border-neutral-800"
+                  ? "border-2 border-[#FFC400] text-[#FFC400] bg-[#FFC400]/10 shadow-[0_0_10px_rgba(255,196,0,0.2)] font-black"
+                  : "border border-neutral-800 bg-neutral-900/60 text-neutral-300 hover:border-neutral-600 hover:text-white"
               }`}
             >
               {c}
@@ -453,16 +484,19 @@ export default function MarketPage() {
         <div className="space-y-6">
           {/* Brand Sub-filter for phones */}
           <div className="flex items-center justify-between gap-3 flex-wrap bg-[#111] p-3 rounded-2xl border border-neutral-800">
-            <div className="flex items-center gap-2 overflow-x-auto">
-              <span className="text-xs font-bold text-neutral-400 whitespace-nowrap">الماركة:</span>
+            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar max-w-full touch-pan-x snap-x">
+              <span className="text-xs font-bold text-neutral-400 whitespace-nowrap flex items-center gap-1">
+                <Filter className="w-3.5 h-3.5 text-[#FFC400]" />
+                <span>الماركة:</span>
+              </span>
               {phoneBrands.map((b) => (
                 <button
                   key={b}
                   onClick={() => setPhoneBrandFilter(b)}
-                  className={`px-3 py-1 rounded-lg text-xs font-bold transition-colors whitespace-nowrap ${
+                  className={`px-3 py-1 rounded-lg text-xs font-bold transition-all whitespace-nowrap ${
                     phoneBrandFilter === b
-                      ? "bg-white text-black font-black"
-                      : "bg-[#1A1A1A] text-neutral-300 hover:text-white border border-neutral-800"
+                      ? "border-2 border-white text-white bg-white/10 font-black shadow"
+                      : "border border-neutral-800 bg-[#1A1A1A]/80 text-neutral-300 hover:text-white hover:border-neutral-600"
                   }`}
                 >
                   {b}
@@ -476,15 +510,18 @@ export default function MarketPage() {
           </div>
 
           {loadingPhones ? (
-            <div className="text-center py-12 text-neutral-400">جارِ تحميل سوق الهواتف... ⏳</div>
+            <div className="text-center py-12 text-neutral-400 flex flex-col items-center justify-center gap-2">
+              <Loader2 className="w-6 h-6 animate-spin text-[#FFC400]" />
+              <span>جارِ تحميل سوق الهواتف...</span>
+            </div>
           ) : filteredPhones.length === 0 ? (
             <div className="text-center py-16 bg-[#121212] rounded-2xl border border-[#222]">
-              <span className="text-4xl block mb-2">📱</span>
+              <Smartphone className="w-12 h-12 text-neutral-600 mx-auto mb-3" />
               <p className="text-sm font-bold text-white mb-1">لا توجد هواتف معروضة بهذه التصفية حالياً</p>
               <p className="text-xs text-neutral-400">كن أول من ينشر إعلان بيع لهاتفك واجذب الزبائن والفنيين فوراً!</p>
               <button
                 onClick={() => setShowAddPhoneModal(true)}
-                className="mt-4 px-5 py-2.5 rounded-xl bg-[#FFC400] text-black font-bold text-xs"
+                className="mt-4 px-5 py-2.5 rounded-xl border-2 border-[#FFC400] text-[#FFC400] bg-[#FFC400]/10 hover:bg-[#FFC400] hover:text-black font-black text-xs transition-all shadow-[0_0_15px_rgba(255,196,0,0.2)]"
               >
                 + نشر إعلان بيع هاتف الآن
               </button>
@@ -499,7 +536,7 @@ export default function MarketPage() {
                 return (
                   <div
                     key={phoneItem.id}
-                    className="bg-[#121212] border border-[#242424] rounded-2xl overflow-hidden hover:border-[#FFC400]/40 transition-all shadow-xl flex flex-col justify-between group"
+                    className="bg-[#121212] border border-[#242424] rounded-2xl overflow-hidden hover:border-[#FFC400]/50 transition-all shadow-xl flex flex-col justify-between group"
                   >
                     <div>
                       {/* Image + Top Badges */}
@@ -513,18 +550,20 @@ export default function MarketPage() {
 
                         {/* Top Badges */}
                         <div className="absolute top-3 right-3 flex items-center gap-1.5">
-                          <span className="px-2.5 py-1 rounded-full bg-black/80 backdrop-blur border border-white/10 text-white text-[11px] font-bold">
-                            📍 {phoneItem.city}
+                          <span className="px-2.5 py-1 rounded-full bg-black/80 backdrop-blur border border-white/15 text-white text-[11px] font-bold flex items-center gap-1">
+                            <MapPin className="w-3 h-3 text-[#FFC400]" />
+                            <span>{phoneItem.city}</span>
                           </span>
-                          <span className="px-2.5 py-1 rounded-full bg-emerald-500/90 text-black text-[11px] font-black shadow">
+                          <span className="px-2.5 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/50 text-emerald-400 text-[11px] font-black shadow">
                             {phoneItem.priceJOD} JOD
                           </span>
                         </div>
 
                         {/* Condition Badge */}
                         <div className="absolute bottom-3 right-3">
-                          <span className="px-2 py-0.5 rounded bg-black/80 text-[#FFC400] border border-[#FFC400]/40 text-[10px] font-bold">
-                            ✨ {phoneItem.condition}
+                          <span className="px-2 py-0.5 rounded bg-black/80 text-[#FFC400] border border-[#FFC400]/40 text-[10px] font-bold flex items-center gap-1">
+                            <Sparkles className="w-3 h-3" />
+                            <span>{phoneItem.condition}</span>
                           </span>
                         </div>
                       </div>
@@ -537,13 +576,15 @@ export default function MarketPage() {
                             <h3 className="font-black text-white text-base leading-snug">{phoneItem.title}</h3>
                           </div>
                           {phoneItem.sellerRole === "TRADER" && (
-                            <span className="text-[9px] bg-blue-500/20 text-blue-400 border border-blue-500/40 px-2 py-0.5 rounded-full font-bold shrink-0">
-                              🏬 تاجر
+                            <span className="text-[9px] bg-blue-500/15 text-blue-400 border border-blue-500/40 px-2 py-0.5 rounded-full font-bold shrink-0 flex items-center gap-1">
+                              <Store className="w-3 h-3" />
+                              <span>تاجر</span>
                             </span>
                           )}
                           {phoneItem.sellerRole === "TECH" && (
-                            <span className="text-[9px] bg-[#FFC400]/20 text-[#FFC400] border border-[#FFC400]/40 px-2 py-0.5 rounded-full font-bold shrink-0">
-                              🛠️ فني
+                            <span className="text-[9px] bg-[#FFC400]/15 text-[#FFC400] border border-[#FFC400]/40 px-2 py-0.5 rounded-full font-bold shrink-0 flex items-center gap-1">
+                              <Wrench className="w-3 h-3" />
+                              <span>فني</span>
                             </span>
                           )}
                         </div>
@@ -551,18 +592,21 @@ export default function MarketPage() {
                         {/* Specs Pills */}
                         <div className="flex items-center gap-2 flex-wrap text-[11px]">
                           {phoneItem.storage && (
-                            <span className="px-2 py-0.5 rounded-md bg-neutral-900 border border-neutral-800 text-neutral-300 font-bold">
-                              💾 {phoneItem.storage}
+                            <span className="px-2 py-0.5 rounded-md bg-neutral-900 border border-neutral-800 text-neutral-300 font-bold flex items-center gap-1">
+                              <HardDrive className="w-3 h-3 text-neutral-400" />
+                              <span>{phoneItem.storage}</span>
                             </span>
                           )}
                           {phoneItem.battery && (
-                            <span className="px-2 py-0.5 rounded-md bg-emerald-950/60 border border-emerald-500/30 text-emerald-400 font-bold">
-                              🔋 بطارية {phoneItem.battery}%
+                            <span className="px-2 py-0.5 rounded-md bg-emerald-950/60 border border-emerald-500/30 text-emerald-400 font-bold flex items-center gap-1">
+                              <BatteryCharging className="w-3 h-3 text-emerald-400" />
+                              <span>بطارية {phoneItem.battery}%</span>
                             </span>
                           )}
                           {phoneItem.color && (
-                            <span className="px-2 py-0.5 rounded-md bg-neutral-900 border border-neutral-800 text-neutral-400">
-                              🎨 {phoneItem.color}
+                            <span className="px-2 py-0.5 rounded-md bg-neutral-900 border border-neutral-800 text-neutral-400 flex items-center gap-1">
+                              <Palette className="w-3 h-3 text-neutral-400" />
+                              <span>{phoneItem.color}</span>
                             </span>
                           )}
                         </div>
@@ -574,24 +618,24 @@ export default function MarketPage() {
                       </div>
                     </div>
 
-                    {/* Bottom Action Footer */}
-                    <div className="p-4 bg-[#0F0F0F] border-t border-[#1F1F1F] flex items-center gap-2">
+                    {/* Bottom Action Footer - Crisp Outline Buttons */}
+                    <div className="p-4 bg-[#0F0F0F] border-t border-[#1F1F1F] flex items-center gap-2.5">
                       <button
                         onClick={() => handleOpenChatForPhone(phoneItem)}
-                        className="flex-1 py-2.5 rounded-xl bg-[#FFC400] hover:bg-[#E0AC00] text-black font-black text-xs flex items-center justify-center gap-1.5 transition-all shadow"
+                        className="flex-1 py-2.5 rounded-xl border-2 border-[#FFC400] text-[#FFC400] bg-[#FFC400]/10 hover:bg-[#FFC400] hover:text-black font-black text-xs flex items-center justify-center gap-1.5 transition-all shadow-[0_0_15px_rgba(255,196,0,0.15)] hover:shadow-[0_0_20px_rgba(255,196,0,0.4)]"
                       >
+                        <MessageSquare className="w-4 h-4" />
                         <span>دردشة فورية</span>
-                        <span>💬</span>
                       </button>
 
                       <a
                         href={`https://wa.me/962${phoneItem.sellerPhone.replace(/^0/, "")}?text=${waText}`}
                         target="_blank"
                         rel="noreferrer"
-                        className="flex-1 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs flex items-center justify-center gap-1.5 transition-colors shadow"
+                        className="flex-1 py-2.5 rounded-xl border-2 border-emerald-500 text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500 hover:text-black font-black text-xs flex items-center justify-center gap-1.5 transition-all shadow-[0_0_15px_rgba(16,185,129,0.15)] hover:shadow-[0_0_20px_rgba(16,185,129,0.4)]"
                       >
+                        <MessageCircle className="w-4 h-4" />
                         <span>واتساب</span>
-                        <span>📲</span>
                       </a>
                     </div>
                   </div>
@@ -608,10 +652,13 @@ export default function MarketPage() {
       {activeTab === "boards" && (
         <div>
           {loadingBoards ? (
-            <div className="text-center py-12 text-neutral-400">جارِ تحميل اللوحات المعروضة... ⏳</div>
+            <div className="text-center py-12 text-neutral-400 flex flex-col items-center justify-center gap-2">
+              <Loader2 className="w-6 h-6 animate-spin text-[#FFC400]" />
+              <span>جارِ تحميل اللوحات المعروضة...</span>
+            </div>
           ) : filteredBoards.length === 0 ? (
             <div className="text-center py-16 bg-[#121212] rounded-2xl border border-[#222]">
-              <span className="text-4xl block mb-2">📦</span>
+              <Package className="w-12 h-12 text-neutral-600 mx-auto mb-3" />
               <p className="text-sm font-bold text-white mb-1">لا توجد بوردات معروضة في هذه المدينة حالياً</p>
               <p className="text-xs text-neutral-400">كن أول من يعرض لوحة للاستفادة منها!</p>
             </div>
@@ -627,7 +674,7 @@ export default function MarketPage() {
                 return (
                   <div
                     key={board.id}
-                    className="bg-[#121212] border border-[#242424] rounded-2xl overflow-hidden hover:border-[#FFC400]/40 transition-colors shadow-lg flex flex-col justify-between"
+                    className="bg-[#121212] border border-[#242424] rounded-2xl overflow-hidden hover:border-[#FFC400]/50 transition-colors shadow-lg flex flex-col justify-between"
                   >
                     <div>
                       {/* Image Header */}
@@ -638,10 +685,11 @@ export default function MarketPage() {
                           className="w-full h-full object-cover"
                         />
                         <div className="absolute top-3 right-3 flex items-center gap-2">
-                          <span className="px-2.5 py-1 rounded-full bg-black/75 backdrop-blur border border-white/10 text-white text-[11px] font-bold">
-                            📍 {board.sellerCity}
+                          <span className="px-2.5 py-1 rounded-full bg-black/75 backdrop-blur border border-white/10 text-white text-[11px] font-bold flex items-center gap-1">
+                            <MapPin className="w-3 h-3 text-[#FFC400]" />
+                            <span>{board.sellerCity}</span>
                           </span>
-                          <span className="px-2.5 py-1 rounded-full bg-emerald-500 text-black text-[11px] font-black">
+                          <span className="px-2.5 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/50 text-emerald-400 text-[11px] font-black">
                             {board.priceJOD} JOD
                           </span>
                         </div>
@@ -665,7 +713,7 @@ export default function MarketPage() {
                                 key={i}
                                 className="px-2 py-1 rounded-md bg-emerald-950/40 border border-emerald-500/30 text-emerald-300 text-[10px] font-bold flex items-center gap-1"
                               >
-                                <span>✓</span>
+                                <Check className="w-3 h-3 text-emerald-400" />
                                 <span>{part}</span>
                               </span>
                             ))}
@@ -680,24 +728,24 @@ export default function MarketPage() {
                       </div>
                     </div>
 
-                    {/* Actions */}
-                    <div className="p-4 bg-[#0F0F0F] border-t border-[#1C1C1C] flex items-center gap-2">
+                    {/* Actions - Outlines */}
+                    <div className="p-4 bg-[#0F0F0F] border-t border-[#1C1C1C] flex items-center gap-2.5">
                       <button
                         onClick={() => handleOpenChatForBoard(board)}
-                        className="flex-1 py-2.5 rounded-xl bg-[#FFC400] hover:bg-[#E0AC00] text-black font-black text-xs flex items-center justify-center gap-1.5 transition-colors shadow"
+                        className="flex-1 py-2.5 rounded-xl border-2 border-[#FFC400] text-[#FFC400] bg-[#FFC400]/10 hover:bg-[#FFC400] hover:text-black font-black text-xs flex items-center justify-center gap-1.5 transition-all shadow-[0_0_15px_rgba(255,196,0,0.15)] hover:shadow-[0_0_20px_rgba(255,196,0,0.4)]"
                       >
+                        <MessageSquare className="w-4 h-4" />
                         <span>مراسلة في التطبيق</span>
-                        <span>💬</span>
                       </button>
 
                       <a
                         href={`https://wa.me/962${board.sellerPhone.replace(/^0/, "")}?text=${waText}`}
                         target="_blank"
                         rel="noreferrer"
-                        className="flex-1 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs flex items-center justify-center gap-1.5 transition-colors shadow"
+                        className="flex-1 py-2.5 rounded-xl border-2 border-emerald-500 text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500 hover:text-black font-black text-xs flex items-center justify-center gap-1.5 transition-all shadow-[0_0_15px_rgba(16,185,129,0.15)] hover:shadow-[0_0_20px_rgba(16,185,129,0.4)]"
                       >
+                        <MessageCircle className="w-4 h-4" />
                         <span>واتساب</span>
-                        <span>📲</span>
                       </a>
                     </div>
                   </div>
@@ -714,10 +762,13 @@ export default function MarketPage() {
       {activeTab === "wanted" && (
         <div>
           {loadingWanted ? (
-            <div className="text-center py-12 text-neutral-400">جارِ تحميل طلبات الشراء... ⏳</div>
+            <div className="text-center py-12 text-neutral-400 flex flex-col items-center justify-center gap-2">
+              <Loader2 className="w-6 h-6 animate-spin text-[#FFC400]" />
+              <span>جارِ تحميل طلبات الشراء...</span>
+            </div>
           ) : filteredWanted.length === 0 ? (
             <div className="text-center py-16 bg-[#121212] rounded-2xl border border-[#222]">
-              <span className="text-4xl block mb-2">🔍</span>
+              <Search className="w-12 h-12 text-neutral-600 mx-auto mb-3" />
               <p className="text-sm font-bold text-white mb-1">لا توجد طلبات شراء مسجلة حالياً</p>
               <p className="text-xs text-neutral-400">إذا كنت تبحث عن جهاز أو بوردة نادرة، انشر طلبك هنا ليصل لجميع الفنيين!</p>
             </div>
@@ -759,8 +810,11 @@ export default function MarketPage() {
                         </div>
                       )}
 
-                      <div className="flex items-center justify-between text-[11px] text-neutral-400 pt-2 border-t border-neutral-850">
-                        <span>📍 {item.requesterCity}</span>
+                      <div className="flex items-center justify-between text-[11px] text-neutral-400 pt-2 border-t border-neutral-800">
+                        <span className="flex items-center gap-1">
+                          <MapPin className="w-3 h-3 text-amber-400" />
+                          <span>{item.requesterCity}</span>
+                        </span>
                         <span>{new Date(item.createdAt).toLocaleDateString("ar-JO")}</span>
                       </div>
                     </div>
@@ -769,10 +823,10 @@ export default function MarketPage() {
                   <div className="flex items-center gap-2 pt-2">
                     <button
                       onClick={() => handleOpenChatForWanted(item)}
-                      className="flex-1 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black text-xs flex items-center justify-center gap-1.5 transition-colors shadow"
+                      className="flex-1 py-2.5 rounded-xl border-2 border-amber-400 text-amber-400 bg-amber-400/10 hover:bg-amber-400 hover:text-black font-black text-xs flex items-center justify-center gap-1.5 transition-all shadow-[0_0_15px_rgba(251,191,36,0.15)] hover:shadow-[0_0_20px_rgba(251,191,36,0.4)]"
                     >
+                      <MessageSquare className="w-4 h-4" />
                       <span>دردشة (متوفر عندي)</span>
-                      <span>💬</span>
                     </button>
                     <a
                       href={`https://wa.me/962${item.requesterPhone.replace(/^0/, "")}?text=${encodeURIComponent(
@@ -780,9 +834,9 @@ export default function MarketPage() {
                       )}`}
                       target="_blank"
                       rel="noreferrer"
-                      className="p-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs"
+                      className="p-2.5 rounded-xl border-2 border-emerald-500 text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500 hover:text-black font-bold text-xs flex items-center justify-center transition-all shadow-[0_0_15px_rgba(16,185,129,0.15)]"
                     >
-                      📲
+                      <MessageCircle className="w-4 h-4" />
                     </a>
                   </div>
                 </div>
@@ -796,18 +850,18 @@ export default function MarketPage() {
       {/* MODAL 1: ADD PHONE FOR SALE */}
       {/* ======================================================== */}
       {showAddPhoneModal && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#141414] border border-[#2B2B2B] rounded-2xl max-w-lg w-full p-6 space-y-4 animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
+          <div className="bg-[#141414] border border-[#2B2B2B] rounded-t-3xl sm:rounded-2xl max-w-lg w-full p-5 sm:p-6 space-y-4 animate-in slide-in-from-bottom sm:zoom-in-95 duration-200 max-h-[92vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-neutral-800 pb-3">
               <div className="flex items-center gap-2">
-                <span className="text-xl">📱</span>
+                <Smartphone className="w-5 h-5 text-[#FFC400]" />
                 <h2 className="text-base font-black text-white">إضافة هاتف للبيع في السوق</h2>
               </div>
               <button
                 onClick={() => setShowAddPhoneModal(false)}
-                className="text-neutral-400 hover:text-white text-lg"
+                className="w-8 h-8 rounded-full border border-neutral-800 bg-neutral-900/50 hover:bg-neutral-800 text-neutral-400 hover:text-white flex items-center justify-center transition-colors"
               >
-                ✕
+                <X className="w-4 h-4" />
               </button>
             </div>
 
@@ -978,15 +1032,16 @@ export default function MarketPage() {
                 <button
                   type="button"
                   onClick={() => setShowAddPhoneModal(false)}
-                  className="px-4 py-2 rounded-lg bg-neutral-800 text-neutral-300 font-bold hover:bg-neutral-700"
+                  className="px-4 py-2 rounded-lg border border-neutral-700 bg-transparent text-neutral-300 font-bold hover:border-neutral-500 hover:text-white transition-colors"
                 >
                   إلغاء
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2 rounded-lg bg-[#FFC400] text-black font-black hover:bg-[#E0AC00] shadow"
+                  className="px-6 py-2 rounded-lg border-2 border-[#FFC400] text-[#FFC400] bg-[#FFC400]/10 hover:bg-[#FFC400] hover:text-black font-black shadow-[0_0_20px_rgba(255,196,0,0.25)] transition-all flex items-center gap-2"
                 >
-                  نشر إعلان الهاتف فوراً 🚀
+                  <Send className="w-4 h-4" />
+                  <span>نشر إعلان الهاتف فوراً</span>
                 </button>
               </div>
             </form>
@@ -998,15 +1053,18 @@ export default function MarketPage() {
       {/* MODAL 2: ADD BOARD FOR SALE */}
       {/* ======================================================== */}
       {showAddBoardModal && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#141414] border border-[#2B2B2B] rounded-2xl max-w-lg w-full p-6 space-y-4 animate-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
+          <div className="bg-[#141414] border border-[#2B2B2B] rounded-t-3xl sm:rounded-2xl max-w-lg w-full p-5 sm:p-6 space-y-4 animate-in slide-in-from-bottom sm:zoom-in-95 duration-200 max-h-[92vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-neutral-800 pb-3">
-              <h2 className="text-base font-black text-white">عرض لوحة جديدة للبيع (تشليح)</h2>
+              <div className="flex items-center gap-2">
+                <Package className="w-5 h-5 text-[#FFC400]" />
+                <h2 className="text-base font-black text-white">عرض لوحة جديدة للبيع (تشليح)</h2>
+              </div>
               <button
                 onClick={() => setShowAddBoardModal(false)}
-                className="text-neutral-400 hover:text-white text-lg"
+                className="w-8 h-8 rounded-full border border-neutral-800 bg-neutral-900/50 hover:bg-neutral-800 text-neutral-400 hover:text-white flex items-center justify-center transition-colors"
               >
-                ✕
+                <X className="w-4 h-4" />
               </button>
             </div>
 
@@ -1114,15 +1172,16 @@ export default function MarketPage() {
                 <button
                   type="button"
                   onClick={() => setShowAddBoardModal(false)}
-                  className="px-4 py-2 rounded-lg bg-neutral-800 text-neutral-300 font-bold hover:bg-neutral-700"
+                  className="px-4 py-2 rounded-lg border border-neutral-700 bg-transparent text-neutral-300 font-bold hover:border-neutral-500 hover:text-white transition-colors"
                 >
                   إلغاء
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2 rounded-lg bg-[#FFC400] text-black font-black hover:bg-[#E0AC00]"
+                  className="px-6 py-2 rounded-lg border-2 border-[#FFC400] text-[#FFC400] bg-[#FFC400]/10 hover:bg-[#FFC400] hover:text-black font-black shadow-[0_0_20px_rgba(255,196,0,0.25)] transition-all flex items-center gap-2"
                 >
-                  نشر الإعلان فوراً
+                  <Send className="w-4 h-4" />
+                  <span>نشر الإعلان فوراً</span>
                 </button>
               </div>
             </form>
@@ -1134,15 +1193,18 @@ export default function MarketPage() {
       {/* MODAL 3: ADD WANTED REQUEST */}
       {/* ======================================================== */}
       {showAddWantedModal && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#141414] border border-[#2B2B2B] rounded-2xl max-w-lg w-full p-6 space-y-4 animate-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
+          <div className="bg-[#141414] border border-[#2B2B2B] rounded-t-3xl sm:rounded-2xl max-w-lg w-full p-5 sm:p-6 space-y-4 animate-in slide-in-from-bottom sm:zoom-in-95 duration-200 max-h-[92vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-neutral-800 pb-3">
-              <h2 className="text-base font-black text-white">إضافة طلب شراء (أبحث عن جهاز أو قطعة)</h2>
+              <div className="flex items-center gap-2">
+                <Search className="w-5 h-5 text-amber-400" />
+                <h2 className="text-base font-black text-white">إضافة طلب شراء (أبحث عن جهاز أو قطعة)</h2>
+              </div>
               <button
                 onClick={() => setShowAddWantedModal(false)}
-                className="text-neutral-400 hover:text-white text-lg"
+                className="w-8 h-8 rounded-full border border-neutral-800 bg-neutral-900/50 hover:bg-neutral-800 text-neutral-400 hover:text-white flex items-center justify-center transition-colors"
               >
-                ✕
+                <X className="w-4 h-4" />
               </button>
             </div>
 
@@ -1242,15 +1304,16 @@ export default function MarketPage() {
                 <button
                   type="button"
                   onClick={() => setShowAddWantedModal(false)}
-                  className="px-4 py-2 rounded-lg bg-neutral-800 text-neutral-300 font-bold hover:bg-neutral-700"
+                  className="px-4 py-2 rounded-lg border border-neutral-700 bg-transparent text-neutral-300 font-bold hover:border-neutral-500 hover:text-white transition-colors"
                 >
                   إلغاء
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2 rounded-lg bg-amber-500 text-black font-black hover:bg-amber-400"
+                  className="px-6 py-2 rounded-lg border-2 border-amber-400 text-amber-400 bg-amber-400/10 hover:bg-amber-400 hover:text-black font-black shadow-[0_0_20px_rgba(251,191,36,0.25)] transition-all flex items-center gap-2"
                 >
-                  نشر طلب الشراء
+                  <Send className="w-4 h-4" />
+                  <span>نشر طلب الشراء</span>
                 </button>
               </div>
             </form>
