@@ -16,7 +16,6 @@ import {
   Coins,
   User,
   Settings,
-  Zap,
   Menu,
   X,
   ChevronDown,
@@ -102,18 +101,18 @@ export default function Navbar() {
             {/* Maintenance-only tools */}
             {isMaintenance && (
               <>
-                {/* Group 1: التشخيص والمخططات */}
+                {/* Group 1: التشخيص */}
                 <div className="relative" ref={diagRef}>
                   <button
                     onClick={() => { setDiagOpen(!diagOpen); setShopOpen(false); }}
-                    className={`px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition-all ${
+                    className={`px-3 py-2 rounded-xl flex items-center gap-1.5 transition-all ${
                       isDiagActive || diagOpen
                         ? "bg-[#181818] text-[#FFC400] border border-[#FFC400]/30"
                         : "text-neutral-300 hover:text-white hover:bg-neutral-900 border border-transparent"
                     }`}
                   >
                     <Wrench className="w-3.5 h-3.5 text-[#FFC400]" />
-                    <span>التشخيص والمخططات</span>
+                    <span>التشخيص</span>
                     <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${diagOpen ? "rotate-180" : ""}`} />
                   </button>
                   {diagOpen && (
@@ -136,18 +135,18 @@ export default function Navbar() {
                   )}
                 </div>
 
-                {/* Group 2: إدارة الورشة */}
+                {/* Group 2: إدارة المحل */}
                 <div className="relative" ref={shopRef}>
                   <button
                     onClick={() => { setShopOpen(!shopOpen); setDiagOpen(false); }}
-                    className={`px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition-all ${
+                    className={`px-3 py-2 rounded-xl flex items-center gap-1.5 transition-all ${
                       isShopActive || shopOpen
                         ? "bg-[#181818] text-[#FFC400] border border-[#FFC400]/30"
                         : "text-neutral-300 hover:text-white hover:bg-neutral-900 border border-transparent"
                     }`}
                   >
                     <ShieldCheck className="w-3.5 h-3.5 text-[#FFC400]" />
-                    <span>إدارة المحل والزبائن</span>
+                    <span>إدارة المحل</span>
                     <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${shopOpen ? "rotate-180" : ""}`} />
                   </button>
                   {shopOpen && (
@@ -173,25 +172,25 @@ export default function Navbar() {
 
             {/* Shared Links for all */}
             <Link href="/track"
-              className={`px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition-colors ${pathname === "/track" ? "bg-emerald-500 text-black font-black shadow" : "text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10 border border-emerald-500/20"}`}>
+              className={`px-3 py-2 rounded-xl flex items-center gap-1.5 transition-colors ${pathname === "/track" ? "bg-emerald-500 text-black font-black shadow" : "text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10 border border-emerald-500/20"}`}>
               <Search className="w-3.5 h-3.5" />
-              <span>استعلام عن جهاز</span>
+              <span>الاستعلام</span>
             </Link>
 
             <Link href="/market"
-              className={`px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition-colors ${pathname === "/market" ? "bg-[#FFC400] text-black font-black shadow" : "text-neutral-300 hover:text-white hover:bg-neutral-900"}`}>
+              className={`px-3 py-2 rounded-xl flex items-center gap-1.5 transition-colors ${pathname === "/market" ? "bg-[#FFC400] text-black font-black shadow" : "text-neutral-300 hover:text-white hover:bg-neutral-900"}`}>
               <ShoppingBag className="w-3.5 h-3.5" />
               <span>السوق</span>
             </Link>
 
             <Link href="/centers"
-              className={`px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition-colors ${pathname === "/centers" ? "bg-[#FFC400] text-black font-black shadow" : "text-neutral-300 hover:text-white hover:bg-neutral-900"}`}>
+              className={`px-3 py-2 rounded-xl flex items-center gap-1.5 transition-colors ${pathname === "/centers" ? "bg-[#FFC400] text-black font-black shadow" : "text-neutral-300 hover:text-white hover:bg-neutral-900"}`}>
               <Building2 className="w-3.5 h-3.5 text-[#FFC400]" />
-              <span>مراكز الصيانة</span>
+              <span>المراكز</span>
             </Link>
 
             <Link href="/chat"
-              className={`px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition-colors relative ${pathname === "/chat" ? "bg-[#FFC400] text-black font-black shadow" : "text-neutral-300 hover:text-white hover:bg-neutral-900"}`}>
+              className={`px-3 py-2 rounded-xl flex items-center gap-1.5 transition-colors relative ${pathname === "/chat" ? "bg-[#FFC400] text-black font-black shadow" : "text-neutral-300 hover:text-white hover:bg-neutral-900"}`}>
               <MessageSquare className="w-3.5 h-3.5" />
               <span>المحادثات</span>
               <span className="w-1.5 h-1.5 rounded-full bg-[#FFC400] animate-pulse" />
@@ -262,16 +261,6 @@ export default function Navbar() {
               </button>
             )}
 
-            {isMaintenance && (
-              <Link
-                href="/hospital"
-                className="hidden sm:flex px-3.5 py-2 rounded-xl border-2 border-[#FFC400] text-[#FFC400] bg-[#FFC400]/10 hover:bg-[#FFC400] hover:text-black font-black text-xs hover:scale-105 active:scale-95 transition-all shadow-[0_0_15px_rgba(255,196,0,0.2)] items-center gap-1.5"
-              >
-                <span>فحص سريع</span>
-                <Zap className="w-3.5 h-3.5 fill-black" />
-              </Link>
-            )}
-
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="lg:hidden w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-neutral-900 border border-neutral-800 flex items-center justify-center text-white text-base hover:bg-neutral-800 transition-colors shrink-0"
@@ -288,7 +277,7 @@ export default function Navbar() {
             {isMaintenance && (
               <>
                 <div className="space-y-1">
-                  <span className="text-[10px] text-neutral-500 font-bold px-2 block">أدوات التشخيص والمخططات</span>
+                  <span className="text-[10px] text-neutral-500 font-bold px-2 block">أدوات التشخيص</span>
                   <div className="grid grid-cols-2 gap-2">
                     <Link href="/hospital" className="p-2.5 rounded-xl bg-neutral-900 border border-neutral-800 text-xs font-bold text-neutral-200 flex items-center gap-2">
                       <Stethoscope className="w-4 h-4 text-amber-400" />
@@ -306,7 +295,7 @@ export default function Navbar() {
                 </div>
 
                 <div className="space-y-1">
-                  <span className="text-[10px] text-neutral-500 font-bold px-2 block">إدارة المحل والورشة</span>
+                  <span className="text-[10px] text-neutral-500 font-bold px-2 block">إدارة المحل</span>
                   <div className="grid grid-cols-2 gap-2">
                     <Link href="/vault" className="p-2.5 rounded-xl bg-neutral-900 border border-neutral-800 text-xs font-bold text-neutral-200 flex items-center gap-2">
                       <ShieldCheck className="w-4 h-4 text-rose-400" />
@@ -326,7 +315,7 @@ export default function Navbar() {
               <div className="grid grid-cols-2 gap-2">
                 <Link href="/track" className="p-2.5 rounded-xl bg-neutral-900 border border-neutral-800 text-xs font-bold text-emerald-400 flex items-center gap-2 col-span-2">
                   <Search className="w-4 h-4" />
-                  <span>استعلام عن جهاز</span>
+                  <span>الاستعلام</span>
                 </Link>
                 <Link href="/market" className="p-2.5 rounded-xl bg-neutral-900 border border-neutral-800 text-xs font-bold text-neutral-200 flex items-center gap-2">
                   <ShoppingBag className="w-4 h-4 text-[#FFC400]" />
@@ -334,7 +323,7 @@ export default function Navbar() {
                 </Link>
                 <Link href="/centers" className="p-2.5 rounded-xl bg-neutral-900 border border-neutral-800 text-xs font-bold text-neutral-200 flex items-center gap-2">
                   <Building2 className="w-4 h-4 text-[#FFC400]" />
-                  <span>مراكز الصيانة</span>
+                  <span>المراكز</span>
                 </Link>
                 <Link href="/chat" className="p-2.5 rounded-xl bg-neutral-900 border border-neutral-800 text-xs font-bold text-neutral-200 flex items-center gap-2">
                   <MessageSquare className="w-4 h-4 text-cyan-400" />

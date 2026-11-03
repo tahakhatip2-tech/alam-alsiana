@@ -7,8 +7,6 @@ import {
   WantedBoardItem,
   PhoneListingItem,
   INITIAL_PHONES,
-  INITIAL_BOARDS,
-  INITIAL_WANTED_BOARDS,
 } from "@/lib/market-pricing-data";
 import {
   ShoppingCart,
@@ -33,39 +31,22 @@ import {
   Filter,
 } from "lucide-react";
 
-function getSafeBoardImage(board: DeadBoardItem): string {
-  if (board.id === "brd-001" || board.boardModel?.includes("A12")) return "/boards/board-a12.jpg";
-  if (board.id === "brd-002" || board.boardModel?.includes("Note 11")) return "/boards/board-note11.jpg";
-  if (board.id === "brd-003" || board.boardModel?.includes("A32")) return "/boards/board-a32.jpg";
-  if (!board.imageUrl || board.imageUrl.includes("unsplash.com")) return "/boards/default-board.svg";
-  return board.imageUrl;
-}
-
-function getSafePhoneImage(phone: PhoneListingItem): string {
-  if (phone.id === "ph-001" || phone.model?.includes("13 Pro Max")) return "/phones/iphone13promax.jpg";
-  if (phone.id === "ph-002" || phone.model?.includes("S23 Ultra")) return "/phones/s23ultra.jpg";
-  if (phone.id === "ph-003" || phone.model?.includes("Note 13 Pro")) return "/phones/redmi-note13.jpg";
-  if (phone.id === "ph-004" || phone.model?.includes("iPhone 11")) return "/phones/iphone11.jpg";
-  if (!phone.imageUrl || phone.imageUrl.includes("unsplash.com")) return "/phones/default-phone.svg";
-  return phone.imageUrl;
-}
-
 export default function MarketPage() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<"phones" | "boards" | "wanted">("phones");
 
-  // Phones State - Initialized immediately with bundled local data
-  const [phones, setPhones] = useState<PhoneListingItem[]>(INITIAL_PHONES);
-  const [loadingPhones, setLoadingPhones] = useState(false);
+  // Phones State
+  const [phones, setPhones] = useState<PhoneListingItem[]>([]);
+  const [loadingPhones, setLoadingPhones] = useState(true);
   const [phoneBrandFilter, setPhoneBrandFilter] = useState("الكل");
 
-  // Available Boards State - Initialized immediately with bundled local data
-  const [boards, setBoards] = useState<DeadBoardItem[]>(INITIAL_BOARDS);
-  const [loadingBoards, setLoadingBoards] = useState(false);
+  // Available Boards State
+  const [boards, setBoards] = useState<DeadBoardItem[]>([]);
+  const [loadingBoards, setLoadingBoards] = useState(true);
 
-  // Wanted State - Initialized immediately with bundled local data
-  const [wantedList, setWantedList] = useState<WantedBoardItem[]>(INITIAL_WANTED_BOARDS);
-  const [loadingWanted, setLoadingWanted] = useState(false);
+  // Wanted State
+  const [wantedList, setWantedList] = useState<WantedBoardItem[]>([]);
+  const [loadingWanted, setLoadingWanted] = useState(true);
 
   // Global City Filter
   const [cityFilter, setCityFilter] = useState("الكل");
@@ -121,7 +102,7 @@ export default function MarketPage() {
   // Fetch data
   const fetchPhones = async () => {
     try {
-      const res = await fetch("/api/boards?type=phones", { cache: "no-store" });
+      const res = await fetch("/api/boards?type=phones");
       const json = await res.json();
       if (json.data && json.data.length > 0) {
         setPhones(json.data);
@@ -137,15 +118,11 @@ export default function MarketPage() {
 
   const fetchBoards = async () => {
     try {
-      const res = await fetch("/api/boards", { cache: "no-store" });
+      const res = await fetch("/api/boards");
       const json = await res.json();
-      if (json.data && json.data.length > 0) {
-        setBoards(json.data);
-      } else {
-        setBoards(INITIAL_BOARDS);
-      }
+      if (json.data) setBoards(json.data);
     } catch {
-      setBoards(INITIAL_BOARDS);
+      // fallback
     } finally {
       setLoadingBoards(false);
     }
@@ -153,15 +130,11 @@ export default function MarketPage() {
 
   const fetchWanted = async () => {
     try {
-      const res = await fetch("/api/boards?type=wanted", { cache: "no-store" });
+      const res = await fetch("/api/boards?type=wanted");
       const json = await res.json();
-      if (json.data && json.data.length > 0) {
-        setWantedList(json.data);
-      } else {
-        setWantedList(INITIAL_WANTED_BOARDS);
-      }
+      if (json.data) setWantedList(json.data);
     } catch {
-      setWantedList(INITIAL_WANTED_BOARDS);
+      // fallback
     } finally {
       setLoadingWanted(false);
     }
@@ -569,7 +542,7 @@ export default function MarketPage() {
                       {/* Image + Top Badges */}
                       <div className="relative h-52 bg-black overflow-hidden">
                         <img
-                          src={getSafePhoneImage(phoneItem)}
+                          src={phoneItem.imageUrl || "/phones/default-phone.svg"}
                           alt={phoneItem.title}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                           onError={(e) => {
@@ -711,7 +684,7 @@ export default function MarketPage() {
                       {/* Image Header */}
                       <div className="relative h-44 bg-black overflow-hidden">
                         <img
-                          src={getSafeBoardImage(board)}
+                          src={board.imageUrl || "/boards/default-board.svg"}
                           alt={board.boardModel}
                           className="w-full h-full object-cover"
                           onError={(e) => {

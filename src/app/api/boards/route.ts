@@ -35,12 +35,6 @@ export async function GET(req: NextRequest) {
   const city = searchParams.get("city");
   const model = searchParams.get("model");
 
-  const noStoreHeaders = {
-    "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
-    Pragma: "no-cache",
-    Expires: "0",
-  };
-
   if (type === "phones") {
     let phonesList = memoryPhones;
     if (city && city !== "الكل") {
@@ -52,10 +46,7 @@ export async function GET(req: NextRequest) {
         p.model.toLowerCase().includes(model.toLowerCase())
       );
     }
-    return NextResponse.json(
-      { success: true, count: phonesList.length, data: phonesList.map(normalizePhone) },
-      { headers: noStoreHeaders }
-    );
+    return NextResponse.json({ success: true, count: phonesList.length, data: phonesList.map(normalizePhone) });
   }
 
   if (type === "wanted") {
@@ -66,10 +57,7 @@ export async function GET(req: NextRequest) {
     if (model) {
       wantedList = wantedList.filter((w) => w.requestedModel.toLowerCase().includes(model.toLowerCase()));
     }
-    return NextResponse.json(
-      { success: true, count: wantedList.length, data: wantedList },
-      { headers: noStoreHeaders }
-    );
+    return NextResponse.json({ success: true, count: wantedList.length, data: wantedList });
   }
 
   let result = memoryBoards;
@@ -80,10 +68,7 @@ export async function GET(req: NextRequest) {
     result = result.filter((b) => b.boardModel.toLowerCase().includes(model.toLowerCase()));
   }
 
-  return NextResponse.json(
-    { success: true, count: result.length, data: result.map(normalizeBoard) },
-    { headers: noStoreHeaders }
-  );
+  return NextResponse.json({ success: true, count: result.length, data: result.map(normalizeBoard) });
 }
 
 export async function POST(req: NextRequest) {
