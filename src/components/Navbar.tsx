@@ -186,7 +186,7 @@ export default function Navbar() {
             <Link href="/centers"
               className={`px-3 py-2 rounded-xl flex items-center gap-1.5 transition-colors ${pathname === "/centers" ? "bg-[#FFC400] text-black font-black shadow" : "text-neutral-300 hover:text-white hover:bg-neutral-900"}`}>
               <Building2 className="w-3.5 h-3.5 text-[#FFC400]" />
-              <span>المراكز</span>
+              <span>مراكز الصيانة</span>
             </Link>
 
             <Link href="/chat"
@@ -323,7 +323,7 @@ export default function Navbar() {
                 </Link>
                 <Link href="/centers" className="p-2.5 rounded-xl bg-neutral-900 border border-neutral-800 text-xs font-bold text-neutral-200 flex items-center gap-2">
                   <Building2 className="w-4 h-4 text-[#FFC400]" />
-                  <span>المراكز</span>
+                  <span>مراكز الصيانة</span>
                 </Link>
                 <Link href="/chat" className="p-2.5 rounded-xl bg-neutral-900 border border-neutral-800 text-xs font-bold text-neutral-200 flex items-center gap-2">
                   <MessageSquare className="w-4 h-4 text-cyan-400" />

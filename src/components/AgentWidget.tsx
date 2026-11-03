@@ -32,7 +32,7 @@ export default function AgentWidget() {
       id: "welcome",
       role: "model",
       content:
-        "هلا يا معلم! أنا **عامر**، موظفك الذكي في عالم الصيانة. أقدر أساعدك فوراً:\n• متابعة أجهزة الخزنة وحالاتها\n• إشعار الزبائن عبر واتساب بضغطة واحدة\n• إعطاء تقرير إيرادات وأداء المحل\n• تنفيذ أي أمر على النظام مباشرة",
+        "هلا يا معلم! أنا **الوكيل الذكي** في عالم الصيانة. أقدر أساعدك فوراً:\n• متابعة أجهزة الخزنة وحالاتها\n• إشعار الزبائن عبر واتساب بضغطة واحدة\n• إعطاء تقرير إيرادات وأداء المحل\n• تنفيذ أي أمر على النظام مباشرة",
       time: "الآن",
     },
   ]);
@@ -110,7 +110,7 @@ export default function AgentWidget() {
         <button
           onClick={() => setIsOpen(true)}
           className="group relative flex items-center gap-2 sm:gap-3 bg-[#0E0E0E]/95 backdrop-blur-md text-[#FFC400] border-2 border-[#FFC400] px-3.5 py-2.5 sm:px-4 sm:py-3 rounded-full shadow-[0_0_25px_rgba(255,196,0,0.25)] hover:shadow-[0_0_35px_rgba(255,196,0,0.5)] hover:bg-[#FFC400] hover:text-black hover:scale-105 active:scale-95 transition-all duration-200"
-          aria-label="تحدث مع عامر الوكيل الذكي"
+          aria-label="تحدث مع الوكيل الذكي"
         >
           {/* Animated ping dot */}
           <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5 sm:h-4 sm:w-4">
@@ -120,7 +120,7 @@ export default function AgentWidget() {
 
           <Bot className="w-5 h-5 sm:w-6 sm:h-6 transition-transform group-hover:scale-110" />
           <div className="flex flex-col text-right pr-0.5 sm:pr-1">
-            <span className="text-xs font-black leading-tight">عامر | الوكيل الذكي</span>
+            <span className="text-xs font-black leading-tight">الوكيل الذكي</span>
             <span className="text-[9px] sm:text-[10px] font-bold text-neutral-400 group-hover:text-black/80 hidden sm:block">متصل بالخزنة والواتساب</span>
           </div>
         </button>
@@ -138,7 +138,7 @@ export default function AgentWidget() {
               </div>
               <div>
                 <div className="flex items-center gap-1.5">
-                  <h3 className="font-black text-white text-sm">عامر (Amer AI)</h3>
+                  <h3 className="font-black text-white text-sm">الوكيل الذكي</h3>
                   <span className="text-[9px] bg-[#FFC400]/20 text-[#FFC400] px-1.5 py-0.5 rounded font-black border border-[#FFC400]/30">
                     مدير المحل
                   </span>
@@ -244,7 +244,7 @@ export default function AgentWidget() {
               <div className="flex items-end space-y-1">
                 <div className="bg-[#181818] border border-[#2B2B2B] rounded-2xl rounded-bl-sm p-3 text-xs text-neutral-400 flex items-center gap-2">
                   <Loader2 className="w-4 h-4 animate-spin text-[#FFC400]" />
-                  <span>عامر يراجع الخزنة ويتخذ الإجراء...</span>
+                  <span>الوكيل الذكي يراجع الخزنة ويتخذ الإجراء...</span>
                 </div>
               </div>
             )}
@@ -264,7 +264,7 @@ export default function AgentWidget() {
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="اطلب من عامر: تقرير، تحديث جهاز، رسالة واتساب..."
+              placeholder="اطلب من الوكيل الذكي: تقرير، تحديث جهاز، رسالة واتساب..."
               className="flex-1 bg-black border border-neutral-800 focus:border-[#FFC400] rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-neutral-500 outline-none transition-colors"
             />
             <button

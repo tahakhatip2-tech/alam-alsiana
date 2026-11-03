@@ -335,7 +335,7 @@ export default function AdminDashboardPage() {
             }`}
           >
             <Bot className="w-5 h-5" />
-            <span>الوكيل (عامر)</span>
+            <span>الوكيل الذكي</span>
             <span className="bg-emerald-400/20 text-emerald-400 px-1.5 py-0.5 rounded text-[10px] font-bold">AI</span>
           </button>
         </div>
@@ -631,7 +631,7 @@ export default function AdminDashboardPage() {
       )}
 
       {/* ======================================================== */}
-      {/* TAB 3: AGENT SETTINGS & WHATSAPP INTEGRATION (عامر)      */}
+      {/* TAB 3: AGENT SETTINGS & WHATSAPP INTEGRATION             */}
       {/* ======================================================== */}
       {activeTab === "agent" && (
         <div className="space-y-6">
@@ -643,13 +643,13 @@ export default function AdminDashboardPage() {
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h2 className="text-xl font-black text-white">إعدادات الوكيل الذكي (عامر)</h2>
+                  <h2 className="text-xl font-black text-white">إعدادات الوكيل الذكي</h2>
                   <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold border border-emerald-500/30">
                     نشط وفعّال
                   </span>
                 </div>
                 <p className="text-xs text-neutral-400 mt-1 max-w-xl">
-                  عامر يعمل كمساعد شخصي ومدير رقمي لمحل الصيانة. يستطيع قراءة الخزنة، تحديث حالات الأجهزة، وإصدار روابط واتساب لإشعار الزبائن فوراً.
+                  يعمل الوكيل الذكي كمساعد شخصي ومدير رقمي لمحل الصيانة. يستطيع قراءة الخزنة، تحديث حالات الأجهزة، وإصدار روابط واتساب لإشعار الزبائن فوراً.
                 </p>
               </div>
             </div>
@@ -696,7 +696,7 @@ export default function AdminDashboardPage() {
                     </span>
                   </div>
                   <p className="text-[11px] text-neutral-400 leading-relaxed">
-                    يقوم عامر بإنشاء رابط رسالة واتساب مشفّرة ومصاغة باحترافية بضغطة زر واحدة دون الحاجة لاشتراكات مدفوعة.
+                    يقوم الوكيل الذكي بإنشاء رابط رسالة واتساب مشفّرة ومصاغة باحترافية بضغطة زر واحدة دون الحاجة لاشتراكات مدفوعة.
                   </p>
                 </div>
 
@@ -744,7 +744,7 @@ export default function AdminDashboardPage() {
                 </div>
 
                 <div className="p-3.5 rounded-xl bg-black/40 border border-neutral-800 space-y-2">
-                  <span className="text-neutral-300 font-bold block">الصلاحيات الممنوحة لعامر:</span>
+                  <span className="text-neutral-300 font-bold block">الصلاحيات الممنوحة للوكيل الذكي:</span>
                   <div className="grid grid-cols-2 gap-2 text-[11px]">
                     <div className="flex items-center gap-1.5 text-neutral-300">
                       <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 font-bold" />
@@ -772,7 +772,7 @@ export default function AdminDashboardPage() {
                   >
                     <Bot className="w-4 h-4" />
                     <Shield className="w-4 h-4" />
-                    <span>فتح الخزنة وتجربة عامر الآن</span>
+                    <span>فتح الخزنة وتجربة الوكيل الذكي الآن</span>
                   </a>
                 </div>
               </div>
