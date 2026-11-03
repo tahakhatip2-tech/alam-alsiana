@@ -395,9 +395,13 @@ export default function CentersDirectoryPage() {
                     className="block relative h-48 w-full overflow-hidden bg-neutral-900 cursor-pointer"
                   >
                     <img
-                      src={center.coverImage}
+                      src={center.coverImage || "/centers/gardens-cover.jpg"}
                       alt={center.name}
                       className="w-full h-full object-cover filter brightness-75 group-hover:scale-105 transition-transform duration-500"
+                      onError={(e) => {
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src = "/centers/gardens-cover.jpg";
+                      }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#121212] via-transparent to-black/60" />
 
@@ -429,9 +433,16 @@ export default function CentersDirectoryPage() {
                       </span>
                     </div>
 
-                    {/* Center Logo Thumbnail */}
                     <div className="absolute -bottom-3 right-4 w-16 h-16 rounded-2xl overflow-hidden border-2 border-[#FFC400] bg-black shadow-xl">
-                      <img src={center.logo} alt={center.name} className="w-full h-full object-cover" />
+                      <img
+                        src={center.logo || "/centers/gardens-logo.jpg"}
+                        alt={center.name}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.currentTarget.onerror = null;
+                          e.currentTarget.src = "/centers/gardens-logo.jpg";
+                        }}
+                      />
                     </div>
                   </Link>
 

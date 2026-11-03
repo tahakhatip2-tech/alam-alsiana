@@ -8,15 +8,41 @@ import {
   PhoneListingItem,
 } from "@/lib/market-pricing-data";
 
-let memoryBoards: DeadBoardItem[] = [...INITIAL_BOARDS];
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
+function normalizeBoard(b: DeadBoardItem): DeadBoardItem {
+  if (b.id === "brd-001" || b.boardModel?.includes("A12")) return { ...b, imageUrl: "/boards/board-a12.jpg" };
+  if (b.id === "brd-002" || b.boardModel?.includes("Note 11")) return { ...b, imageUrl: "/boards/board-note11.jpg" };
+  if (b.id === "brd-003" || b.boardModel?.includes("A32")) return { ...b, imageUrl: "/boards/board-a32.jpg" };
+  if (!b.imageUrl || b.imageUrl.includes("unsplash.com")) return { ...b, imageUrl: "/boards/default-board.svg" };
+  return b;
+}
+
+function normalizePhone(p: PhoneListingItem): PhoneListingItem {
+  if (p.id === "ph-001" || p.model?.includes("13 Pro Max")) return { ...p, imageUrl: "/phones/iphone13promax.jpg" };
+  if (p.id === "ph-002" || p.model?.includes("S23 Ultra")) return { ...p, imageUrl: "/phones/s23ultra.jpg" };
+  if (p.id === "ph-003" || p.model?.includes("Note 13 Pro")) return { ...p, imageUrl: "/phones/redmi-note13.jpg" };
+  if (p.id === "ph-004" || p.model?.includes("iPhone 11")) return { ...p, imageUrl: "/phones/iphone11.jpg" };
+  if (!p.imageUrl || p.imageUrl.includes("unsplash.com")) return { ...p, imageUrl: "/phones/default-phone.svg" };
+  return p;
+}
+
+let memoryBoards: DeadBoardItem[] = INITIAL_BOARDS.map(normalizeBoard);
 let memoryWanted: WantedBoardItem[] = [...INITIAL_WANTED_BOARDS];
-let memoryPhones: PhoneListingItem[] = [...INITIAL_PHONES];
+let memoryPhones: PhoneListingItem[] = INITIAL_PHONES.map(normalizePhone);
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const type = searchParams.get("type"); // "wanted", "phones", or undefined
   const city = searchParams.get("city");
   const model = searchParams.get("model");
+
+  const noStoreHeaders = {
+    "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+    Pragma: "no-cache",
+    Expires: "0",
+  };
 
   if (type === "phones") {
     let phonesList = memoryPhones;
@@ -29,7 +55,10 @@ export async function GET(req: NextRequest) {
         p.model.toLowerCase().includes(model.toLowerCase())
       );
     }
-    return NextResponse.json({ success: true, count: phonesList.length, data: phonesList });
+    return NextResponse.json(
+      { success: true, count: phonesList.length, data: phonesList.map(normalizePhone) },
+      { headers: noStoreHeaders }
+    );
   }
 
   if (type === "wanted") {
@@ -40,7 +69,10 @@ export async function GET(req: NextRequest) {
     if (model) {
       wantedList = wantedList.filter((w) => w.requestedModel.toLowerCase().includes(model.toLowerCase()));
     }
-    return NextResponse.json({ success: true, count: wantedList.length, data: wantedList });
+    return NextResponse.json(
+      { success: true, count: wantedList.length, data: wantedList },
+      { headers: noStoreHeaders }
+    );
   }
 
   let result = memoryBoards;
@@ -51,7 +83,10 @@ export async function GET(req: NextRequest) {
     result = result.filter((b) => b.boardModel.toLowerCase().includes(model.toLowerCase()));
   }
 
-  return NextResponse.json({ success: true, count: result.length, data: result });
+  return NextResponse.json(
+    { success: true, count: result.length, data: result.map(normalizeBoard) },
+    { headers: noStoreHeaders }
+  );
 }
 
 export async function POST(req: NextRequest) {
@@ -92,7 +127,7 @@ export async function POST(req: NextRequest) {
         storage: storage || "128GB",
         color: color || "أساسي",
         description: description || "هاتف معروض للبيع بحالة ممتازة",
-        imageUrl: imageUrl || "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=600&auto=format&fit=crop&q=80",
+        imageUrl: imageUrl || "/phones/default-phone.svg",
         sellerPhone: sellerPhone.trim(),
         sellerRole: sellerRole || "TECH",
         createdAt: new Date().toISOString(),
@@ -139,7 +174,7 @@ export async function POST(req: NextRequest) {
       workingParts: Array.isArray(workingParts) ? workingParts : [],
       condition: condition || "لوحة قطع غيار",
       priceJOD: Number(priceJOD),
-      imageUrl: imageUrl || "https://images.unsplash.com/photo-1518770660439-4636190af475?w=500&auto=format&fit=crop&q=60",
+      imageUrl: imageUrl || "/boards/default-board.svg",
       status: "AVAILABLE",
       commission15: true,
       createdAt: new Date().toISOString(),

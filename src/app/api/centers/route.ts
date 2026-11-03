@@ -9,13 +9,34 @@ if (!global.__alam_centers) {
   global.__alam_centers = [...INITIAL_MAINTENANCE_CENTERS];
 }
 
+function normalizeCenter(c: MaintenanceCenter): MaintenanceCenter {
+  let cover = c.coverImage;
+  let logo = c.logo;
+
+  if (c.id === "center-gardens-pro") {
+    cover = "/centers/gardens-cover.jpg";
+    logo = "/centers/gardens-logo.jpg";
+  } else if (c.id === "center-irbid-tech") {
+    cover = "/centers/irbid-cover.jpg";
+    logo = "/centers/irbid-logo.jpg";
+  } else if (c.id === "center-sweifieh-elite") {
+    cover = "/centers/sweifieh-cover.jpg";
+    logo = "/centers/sweifieh-logo.jpg";
+  } else {
+    if (!cover || cover.includes("unsplash.com")) cover = "/centers/default-center-cover.jpg";
+    if (!logo || logo.includes("unsplash.com")) logo = "/centers/default-center-logo.jpg";
+  }
+
+  return { ...c, coverImage: cover, logo };
+}
+
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const city = searchParams.get("city");
     const q = searchParams.get("q");
 
-    let list = global.__alam_centers || INITIAL_MAINTENANCE_CENTERS;
+    let list = (global.__alam_centers || INITIAL_MAINTENANCE_CENTERS).map(normalizeCenter);
 
     if (city && city !== "الكل") {
       list = list.filter((c) => c.city.includes(city));

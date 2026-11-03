@@ -211,9 +211,13 @@ export default function CenterDetailsPage() {
         {/* Cover Background */}
         <div className="relative h-56 sm:h-80 w-full overflow-hidden bg-neutral-900">
           <img
-            src={center.coverImage}
+            src={center.coverImage || "/centers/gardens-cover.jpg"}
             alt={center.name}
             className="w-full h-full object-cover filter brightness-70"
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = "/centers/gardens-cover.jpg";
+            }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#0E0E0E] via-black/40 to-black/60" />
 
@@ -253,7 +257,15 @@ export default function CenterDetailsPage() {
             {/* Logo and Titles */}
             <div className="flex items-end gap-4 sm:gap-6">
               <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-3xl overflow-hidden border-4 border-[#FFC400] bg-black shadow-[0_10px_35px_rgba(255,196,0,0.3)] shrink-0">
-                <img src={center.logo} alt={center.name} className="w-full h-full object-cover" />
+                <img
+                  src={center.logo || "/centers/gardens-logo.jpg"}
+                  alt={center.name}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = "/centers/gardens-logo.jpg";
+                  }}
+                />
               </div>
 
               <div className="space-y-1.5">
