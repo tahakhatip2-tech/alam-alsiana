@@ -82,7 +82,7 @@ export default function HospitalPage() {
             <span>AI Doctor</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-white flex items-center gap-2">
-            <span>مستشفى الأجهزة الذكي</span>
+            <span>تشخيص الأعطال</span>
             <span className="text-xs bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-500/30">
               Offline Ready
             </span>

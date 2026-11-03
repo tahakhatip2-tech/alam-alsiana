@@ -50,9 +50,9 @@ function HomeContent({ onOpenAuth }: { onOpenAuth: () => void }) {
   const doors = [
     {
       href: "/hospital",
-      title: "الدكتور الذكي",
+      title: "تشخيص الأعطال",
       badge: "القلب النابض",
-      subtitle: "AI Doctor - تشخيص فوري لسحبات الباور سبلاي",
+      subtitle: "تشخيص فوري لسحبات الباور سبلاي",
       desc: "اكتب سحبة الباور للموديل (مثل 0.80->0) واعرف فوراً الآيسي التالف، نسبة النجاح، ونقطة الفحص بالعامية الأردنية.",
       icon: <Stethoscope className="w-8 h-8 text-[#FFC400]" />,
       color: "from-amber-500/20 to-amber-900/10",
@@ -172,7 +172,7 @@ function HomeContent({ onOpenAuth }: { onOpenAuth: () => void }) {
               href="/hospital"
               className="px-6 py-3 rounded-xl border-2 border-[#FFC400] text-[#FFC400] bg-[#FFC400]/10 hover:bg-[#FFC400] hover:text-black font-extrabold text-sm transition-all shadow-[0_0_20px_rgba(255,196,0,0.2)] hover:shadow-[0_0_30px_rgba(255,196,0,0.45)] hover:scale-105 flex items-center gap-2"
             >
-              <span>الدكتور الذكي</span>
+              <span>تشخيص الأعطال</span>
               <Stethoscope className="w-4 h-4" />
             </Link>
             <button

@@ -47,7 +47,7 @@ export default function BottomNav() {
     },
     {
       href: "/hospital",
-      label: "الدكتور",
+      label: "التشخيص",
       icon: Stethoscope,
       isActive: pathname.startsWith("/hospital") || pathname.startsWith("/schematic"),
     },
