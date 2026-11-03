@@ -8,9 +8,6 @@ import {
   PhoneListingItem,
 } from "@/lib/market-pricing-data";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
-
 function normalizeBoard(b: DeadBoardItem): DeadBoardItem {
   if (b.id === "brd-001" || b.boardModel?.includes("A12")) return { ...b, imageUrl: "/boards/board-a12.jpg" };
   if (b.id === "brd-002" || b.boardModel?.includes("Note 11")) return { ...b, imageUrl: "/boards/board-note11.jpg" };
