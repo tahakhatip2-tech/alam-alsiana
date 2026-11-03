@@ -27,6 +27,7 @@ import {
   ChevronDown,
   Building2,
   Check,
+  ArrowRight,
 } from "lucide-react";
 
 export default function CentersDirectoryPage() {
@@ -381,16 +382,18 @@ export default function CentersDirectoryPage() {
             const waDefaultText = encodeURIComponent(
               `مرحباً ${center.name} (${center.ownerName})، أود الاستفسار عن فحص وصيانة جهاز لدي عبر تطبيق عالم الصيانة.`
             );
-            const isServicesExpanded = !!expandedServices[center.id];
 
             return (
               <div
                 key={center.id}
-                className="bg-[#121212] border border-[#262626] hover:border-[#FFC400]/50 rounded-3xl overflow-hidden shadow-xl hover:shadow-[0_10px_35px_rgba(255,196,0,0.15)] transition-all flex flex-col justify-between group"
+                className="bg-[#121212] border border-[#242424] hover:border-[#FFC400]/50 rounded-3xl overflow-hidden shadow-xl hover:shadow-[0_10px_35px_rgba(255,196,0,0.15)] transition-all flex flex-col justify-between group"
               >
                 <div>
-                  {/* Card Cover & Visual Badges */}
-                  <div className="relative h-40 w-full overflow-hidden bg-neutral-900">
+                  {/* 1. Cover & Visual Badges */}
+                  <Link
+                    href={`/centers/${center.id}`}
+                    className="block relative h-48 w-full overflow-hidden bg-neutral-900 cursor-pointer"
+                  >
                     <img
                       src={center.coverImage}
                       alt={center.name}
@@ -427,133 +430,62 @@ export default function CentersDirectoryPage() {
                     </div>
 
                     {/* Center Logo Thumbnail */}
-                    <div className="absolute -bottom-4 right-4 w-16 h-16 rounded-2xl overflow-hidden border-2 border-[#FFC400] bg-black shadow-xl">
+                    <div className="absolute -bottom-3 right-4 w-16 h-16 rounded-2xl overflow-hidden border-2 border-[#FFC400] bg-black shadow-xl">
                       <img src={center.logo} alt={center.name} className="w-full h-full object-cover" />
                     </div>
-                  </div>
+                  </Link>
 
-                  {/* Card Main Info */}
-                  <div className="pt-6 px-5 pb-4 space-y-4">
+                  {/* 2. Core Card Information: Name, Tech, Address, Hours */}
+                  <div className="pt-6 px-5 pb-3 space-y-3">
                     <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="text-[10px] font-bold text-neutral-400 flex items-center gap-1">
-                          <MapPin className="w-3 h-3 text-[#FFC400]" />
-                          <span>{center.city} • {center.area}</span>
-                        </span>
+                      <div className="flex items-center gap-1.5 text-neutral-400 text-xs font-bold mb-1">
+                        <MapPin className="w-3.5 h-3.5 text-[#FFC400]" />
+                        <span>{center.city} • {center.area}</span>
                       </div>
-                      <h3 className="font-black text-white text-base leading-snug group-hover:text-[#FFC400] transition-colors">
-                        {center.name}
-                      </h3>
-                      <p className="text-xs text-neutral-300 font-semibold mt-0.5">
-                        بإشراف: <span className="text-white font-bold">{center.ownerName}</span> ({center.leadTechTitle})
+                      <Link href={`/centers/${center.id}`}>
+                        <h3 className="font-black text-white text-base leading-snug group-hover:text-[#FFC400] transition-colors line-clamp-1">
+                          {center.name}
+                        </h3>
+                      </Link>
+                    </div>
+
+                    {/* Technician & Supervisor Box */}
+                    <div className="p-2.5 rounded-xl bg-neutral-900/60 border border-neutral-800 space-y-1">
+                      <p className="text-xs text-neutral-300 font-semibold flex items-center justify-between">
+                        <span className="text-neutral-400">بإشراف:</span>
+                        <span className="text-white font-bold">{center.ownerName}</span>
+                      </p>
+                      <p className="text-[10px] text-neutral-400 truncate">
+                        {center.leadTechTitle}
                       </p>
                     </div>
 
-                    {/* Bio Snippet */}
-                    <p className="text-neutral-400 text-xs leading-relaxed line-clamp-2">
-                      {center.bio}
-                    </p>
-
-                    {/* Specialties Pills */}
-                    <div className="space-y-1.5">
-                      <span className="text-[10px] text-neutral-500 font-bold block uppercase tracking-wider">
-                        التخصصات الرئيسية:
-                      </span>
-                      <div className="flex flex-wrap gap-1.5">
-                        {center.specialties.map((spec, i) => (
-                          <span
-                            key={i}
-                            className="text-[11px] bg-neutral-900 border border-neutral-800 text-neutral-300 px-2 py-0.5 rounded-lg font-bold"
-                          >
-                            {spec}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Features list */}
-                    <div className="grid grid-cols-2 gap-1.5 text-[10px] text-neutral-300 pt-1">
-                      {center.features.slice(0, 4).map((feat, i) => (
-                        <div key={i} className="flex items-center gap-1 text-neutral-300">
-                          <Check className="w-3 h-3 text-emerald-400 shrink-0" />
-                          <span className="truncate">{feat}</span>
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Services Accordion Snippet */}
-                    {center.services && center.services.length > 0 && (
-                      <div className="pt-2 border-t border-neutral-800/80">
-                        <button
-                          onClick={() =>
-                            setExpandedServices((prev) => ({
-                              ...prev,
-                              [center.id]: !prev[center.id],
-                            }))
-                          }
-                          className="w-full flex items-center justify-between text-xs font-bold text-neutral-400 hover:text-white py-1 transition-colors"
-                        >
-                          <span className="flex items-center gap-1">
-                            <Wrench className="w-3.5 h-3.5 text-[#FFC400]" />
-                            <span>خدمات وأسعار الصيانة ({center.services.length})</span>
-                          </span>
-                          <ChevronDown
-                            className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                              isServicesExpanded ? "rotate-180" : ""
-                            }`}
-                          />
-                        </button>
-
-                        {isServicesExpanded && (
-                          <div className="mt-2 space-y-2 bg-[#181818] p-3 rounded-xl border border-neutral-800 animate-in fade-in duration-150 text-xs">
-                            {center.services.map((srv, idx) => (
-                              <div key={idx} className="border-b border-neutral-800/80 last:border-none pb-2 last:pb-0">
-                                <div className="flex items-center justify-between">
-                                  <span className="font-bold text-white text-[11px]">{srv.title}</span>
-                                  {srv.priceStartingFrom && (
-                                    <span className="font-mono text-emerald-400 font-bold text-[11px]">
-                                      يبدأ من {srv.priceStartingFrom} د.أ
-                                    </span>
-                                  )}
-                                </div>
-                                <p className="text-[10px] text-neutral-400 mt-0.5">{srv.description}</p>
-                                {srv.estimatedTime && (
-                                  <span className="text-[9px] text-amber-400 font-mono block mt-0.5">
-                                    الوقت: {srv.estimatedTime}
-                                  </span>
-                                )}
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    )}
-
-                    {/* Stock snippet */}
-                    <div className="p-2.5 rounded-xl bg-black/40 border border-neutral-800/80 flex items-center justify-between text-[11px] text-neutral-400">
+                    {/* Quick Working Hours & Stock */}
+                    <div className="flex items-center justify-between text-[11px] text-neutral-400 pt-0.5">
                       <span className="flex items-center gap-1">
                         <Clock className="w-3 h-3 text-[#FFC400]" />
                         <span>{center.workingHours}</span>
                       </span>
-                      <span className="text-[#FFC400] font-mono text-[10px]">
+                      <span className="text-emerald-400 font-mono text-[10px] font-bold">
                         {center.availableStockSnippet.boardsCount} بوردة متاحة
                       </span>
                     </div>
                   </div>
                 </div>
 
-                {/* Card Action Footer - 100% Outline Buttons */}
+                {/* 3. Action Buttons */}
                 <div className="p-4 bg-[#0D0D0D] border-t border-[#1F1F1F] space-y-2.5">
-                  {/* Primary Action: Direct Repair Request */}
-                  <button
-                    onClick={() => setSelectedCenterForRepair(center)}
+                  {/* Primary Link: View Details & Request Repair */}
+                  <Link
+                    href={`/centers/${center.id}`}
                     className="w-full py-2.5 rounded-xl border-2 border-[#FFC400] text-[#FFC400] bg-[#FFC400]/10 hover:bg-[#FFC400] hover:text-black font-black text-xs flex items-center justify-center gap-2 transition-all shadow-[0_0_15px_rgba(255,196,0,0.15)] hover:shadow-[0_0_20px_rgba(255,196,0,0.4)] active:scale-98"
                   >
                     <Wrench className="w-4 h-4" />
-                    <span>طلب صيانة أو فحص لجهازك</span>
-                  </button>
+                    <span>عرض التفاصيل وحجز صيانة</span>
+                    <ArrowRight className="w-3.5 h-3.5 rotate-180" />
+                  </Link>
 
-                  {/* Secondary Actions Row: Chat + WhatsApp + Map + Call */}
+                  {/* Secondary Actions Row: Chat + WhatsApp + Call */}
                   <div className="flex items-center gap-2">
                     {/* In-app Chat */}
                     <button

@@ -326,3 +326,20 @@ export const INITIAL_MAINTENANCE_CENTERS: MaintenanceCenter[] = [
     bio: "خدمة أهالي السلط الكرام بأعلى معايير الصيانة الشفافة. نوفر شاشات وبطاريات وقطع أصلية بأسعار مدروسة وبضمان حقيقي.",
   },
 ];
+
+export function getCenterById(id: string): MaintenanceCenter | undefined {
+  if (typeof global !== "undefined" && (global as any).__alam_centers) {
+    const found = ((global as any).__alam_centers as MaintenanceCenter[]).find((c) => c.id === id);
+    if (found) return found;
+  }
+  return INITIAL_MAINTENANCE_CENTERS.find((c) => c.id === id);
+}
+
+export function getAllCenters(): MaintenanceCenter[] {
+  if (typeof global !== "undefined" && (global as any).__alam_centers) {
+    return (global as any).__alam_centers as MaintenanceCenter[];
+  }
+  return INITIAL_MAINTENANCE_CENTERS;
+}
+
+
