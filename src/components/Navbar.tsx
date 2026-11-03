@@ -38,12 +38,14 @@ export default function Navbar() {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [showRolePicker, setShowRolePicker] = useState(false);
   const [user, setUser] = useState<UserSession | null>(null);
+  const [mounted, setMounted] = useState(false);
 
   const diagRef = useRef<HTMLDivElement>(null);
   const shopRef = useRef<HTMLDivElement>(null);
   const userMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    setMounted(true);
     setUser(getSession());
   }, [pathname]);
 
@@ -71,7 +73,7 @@ export default function Navbar() {
     router.push("/");
   }, [router]);
 
-  const isMaintenance = isMaintenanceRole(user?.role);
+  const isMaintenance = mounted && isMaintenanceRole(user?.role);
   const isDiagActive = pathname === "/hospital" || pathname === "/schematic" || pathname === "/tools";
   const isShopActive = pathname === "/vault" || pathname === "/pricing" || pathname === "/track";
 
@@ -199,7 +201,7 @@ export default function Navbar() {
           {/* ── Right Section ── */}
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
 
-            {user ? (
+            {mounted && user ? (
               <div className="relative" ref={userMenuRef}>
                 <button
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
@@ -341,7 +343,7 @@ export default function Navbar() {
               </div>
             </div>
 
-            {user ? (
+            {mounted && user ? (
               <div className="pt-2 border-t border-neutral-800 flex items-center justify-between">
                 <div>
                   <p className="text-xs font-black text-white">{user.name}</p>

@@ -16,13 +16,15 @@ import {
 export default function BottomNav() {
   const pathname = usePathname();
   const [user, setUser] = useState<UserSession | null>(null);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     setUser(getSession());
   }, [pathname]);
 
   // Don't show bottom nav inside print views
-  const isMaintenance = isMaintenanceRole(user?.role);
+  const isMaintenance = mounted && isMaintenanceRole(user?.role);
 
   const navItems = [
     {
