@@ -7,7 +7,6 @@ import { getSession, clearSession, isMaintenanceRole, UserSession } from "@/lib/
 import RolePickerModal from "./RolePickerModal";
 import {
   Wrench,
-  Stethoscope,
   Cpu,
   Search,
   ShoppingBag,
@@ -26,6 +25,7 @@ import {
   MapPin,
   Building2,
 } from "lucide-react";
+import CrossedTools from "@/components/icons/CrossedTools";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -111,14 +111,14 @@ export default function Navbar() {
                         : "text-neutral-300 hover:text-white hover:bg-neutral-900 border border-transparent"
                     }`}
                   >
-                    <Wrench className="w-3.5 h-3.5 text-[#FFC400]" />
+                    <CrossedTools className="w-3.5 h-3.5 text-[#FFC400]" />
                     <span>التشخيص</span>
                     <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${diagOpen ? "rotate-180" : ""}`} />
                   </button>
                   {diagOpen && (
                     <div className="absolute top-full right-0 mt-2 w-64 bg-[#121212] border border-[#2B2B2B] rounded-2xl shadow-2xl p-2 space-y-1 animate-in fade-in zoom-in-95 duration-150 z-50">
                       {[
-                        { href: "/hospital", icon: <Stethoscope className="w-5 h-5 text-amber-400" />, title: "تشخيص الأعطال", desc: "تشخيص أعطال سحب الباور سبلاي" },
+                        { href: "/hospital", icon: <CrossedTools className="w-5 h-5 text-amber-400" />, title: "تشخيص الأعطال", desc: "تشخيص أعطال سحب الباور سبلاي" },
                         { href: "/schematic", icon: <Cpu className="w-5 h-5 text-blue-400" />, title: "عارض اللوحات (ZXW)", desc: "تتبع مسارات البوردات ونقاط الفحص" },
                         { href: "/tools", icon: <Sliders className="w-5 h-5 text-cyan-400" />, title: "صندوق العدة والبدائل", desc: "حاسبة الحقن وبدائل الآيسيات" },
                       ].map((item) => (
@@ -280,7 +280,7 @@ export default function Navbar() {
                   <span className="text-[10px] text-neutral-500 font-bold px-2 block">أدوات التشخيص</span>
                   <div className="grid grid-cols-2 gap-2">
                     <Link href="/hospital" className="p-2.5 rounded-xl bg-neutral-900 border border-neutral-800 text-xs font-bold text-neutral-200 flex items-center gap-2">
-                      <Stethoscope className="w-4 h-4 text-amber-400" />
+                      <CrossedTools className="w-4 h-4 text-amber-400" />
                       <span>تشخيص الأعطال</span>
                     </Link>
                     <Link href="/schematic" className="p-2.5 rounded-xl bg-neutral-900 border border-neutral-800 text-xs font-bold text-neutral-200 flex items-center gap-2">

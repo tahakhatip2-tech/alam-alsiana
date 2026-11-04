@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Stethoscope, Cpu, Bot, Plus, Trash2, Search, X, Loader2, Layers, Activity, Shield, Phone, CheckCircle2 } from "lucide-react";
+import { Cpu, Bot, Plus, Trash2, Search, X, Loader2, Layers, Activity, Shield, Phone, CheckCircle2 } from "lucide-react";
+import CrossedTools from "@/components/icons/CrossedTools";
 import { FaultItem } from "@/lib/faults-data";
 import { BoardModelConfig, BoardTrack } from "@/lib/schematic-data";
 
@@ -306,9 +307,9 @@ export default function AdminDashboardPage() {
                 : "text-neutral-400 hover:text-white"
             }`}
           >
-            <Stethoscope className="w-5 h-5" />
+            <CrossedTools className="w-5 h-5" />
             <span className="hidden sm:inline">الباب الأول: </span>
-            <span>إدارة الدكتور الذكي</span>
+            <span>إدارة تشخيص الأعطال</span>
             <span className="bg-black/30 px-1.5 py-0.5 rounded text-[10px]">{faults.length}</span>
           </button>
 

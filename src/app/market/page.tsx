@@ -29,10 +29,72 @@ import {
   Send,
   Loader2,
   Filter,
+  Cpu,
 } from "lucide-react";
+import { getSession, UserSession } from "@/lib/auth";
+
+function PhoneCardImage({ src, alt }: { src?: string; alt: string }) {
+  const [error, setError] = useState(false);
+
+  if (error || !src) {
+    return (
+      <div className="w-full h-full bg-gradient-to-br from-[#161616] via-[#101010] to-[#0a0a0a] border-b border-[#262626] flex flex-col items-center justify-center p-4 text-center relative overflow-hidden">
+        <div className="relative w-12 h-12 rounded-2xl bg-black/60 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.2)] mb-2">
+          <Smartphone className="w-6 h-6" />
+        </div>
+        <span className="text-xs font-black text-white/90 relative truncate max-w-full px-2">{alt}</span>
+        <span className="text-[10px] text-[#FFC400] font-bold relative mt-0.5">هاتف معتمد للبيع</span>
+      </div>
+    );
+  }
+
+  return (
+    <img
+      src={src}
+      alt={alt}
+      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+      onError={() => setError(true)}
+    />
+  );
+}
+
+function BoardCardImage({ src, alt }: { src?: string; alt: string }) {
+  const [error, setError] = useState(false);
+
+  if (error || !src) {
+    return (
+      <div className="w-full h-full bg-gradient-to-br from-[#161616] via-[#101010] to-[#0a0a0a] border-b border-[#262626] flex flex-col items-center justify-center p-4 text-center relative overflow-hidden">
+        <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#FFC400_1px,transparent_1px)] [background-size:16px_16px]" />
+        <div className="relative w-12 h-12 rounded-2xl bg-black/60 border border-[#FFC400]/40 flex items-center justify-center text-[#FFC400] shadow-[0_0_20px_rgba(255,196,0,0.2)] mb-2">
+          <Cpu className="w-6 h-6" />
+        </div>
+        <span className="text-xs font-black text-white/90 relative truncate max-w-full px-2">{alt}</span>
+        <span className="text-[10px] text-emerald-400 font-bold relative mt-0.5">لوحة تشليح أصلية</span>
+      </div>
+    );
+  }
+
+  return (
+    <img
+      src={src}
+      alt={alt}
+      className="w-full h-full object-cover"
+      onError={() => setError(true)}
+    />
+  );
+}
 
 export default function MarketPage() {
   const router = useRouter();
+  const [user, setUser] = useState<UserSession | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    setUser(getSession());
+  }, []);
+
+  const isCustomer = mounted && user?.role === "CUSTOMER";
   const [activeTab, setActiveTab] = useState<"phones" | "boards" | "wanted">("phones");
 
   // Phones State
@@ -391,14 +453,16 @@ export default function MarketPage() {
             <Smartphone className="w-4 h-4" />
           </button>
 
-          <button
-            onClick={() => setShowAddBoardModal(true)}
-            className="px-3.5 py-2.5 rounded-xl border border-neutral-700 bg-neutral-900/50 hover:border-[#FFC400] text-neutral-200 hover:text-[#FFC400] font-bold text-xs transition-all flex items-center gap-1.5"
-          >
-            <Plus className="w-3.5 h-3.5" />
-            <span>عرض بوردة</span>
-            <Package className="w-4 h-4" />
-          </button>
+          {!isCustomer && (
+            <button
+              onClick={() => setShowAddBoardModal(true)}
+              className="px-3.5 py-2.5 rounded-xl border border-neutral-700 bg-neutral-900/50 hover:border-[#FFC400] text-neutral-200 hover:text-[#FFC400] font-bold text-xs transition-all flex items-center gap-1.5"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              <span>عرض بوردة</span>
+              <Package className="w-4 h-4" />
+            </button>
+          )}
 
           <button
             onClick={() => setShowAddWantedModal(true)}
@@ -541,16 +605,8 @@ export default function MarketPage() {
                     <div>
                       {/* Image + Top Badges */}
                       <div className="relative h-52 bg-black overflow-hidden">
-                        <img
-                          src={phoneItem.imageUrl || "/phones/default-phone.svg"}
-                          alt={phoneItem.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          onError={(e) => {
-                            e.currentTarget.onerror = null;
-                            e.currentTarget.src = "/phones/default-phone.svg";
-                          }}
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                        <PhoneCardImage src={phoneItem.imageUrl} alt={phoneItem.title} />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none"></div>
 
                         {/* Top Badges */}
                         <div className="absolute top-3 right-3 flex items-center gap-1.5">
@@ -683,15 +739,7 @@ export default function MarketPage() {
                     <div>
                       {/* Image Header */}
                       <div className="relative h-44 bg-black overflow-hidden">
-                        <img
-                          src={board.imageUrl || "/boards/default-board.svg"}
-                          alt={board.boardModel}
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            e.currentTarget.onerror = null;
-                            e.currentTarget.src = "/boards/default-board.svg";
-                          }}
-                        />
+                        <BoardCardImage src={board.imageUrl} alt={board.boardModel} />
                         <div className="absolute top-3 right-3 flex items-center gap-2">
                           <span className="px-2.5 py-1 rounded-full bg-black/75 backdrop-blur border border-white/10 text-white text-[11px] font-bold flex items-center gap-1">
                             <MapPin className="w-3 h-3 text-[#FFC400]" />

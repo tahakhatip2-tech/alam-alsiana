@@ -10,7 +10,6 @@ import {
   ShoppingBag,
   MessageSquare,
   ShieldCheck,
-  Stethoscope,
   Cpu,
   Sliders,
   Coins,
@@ -29,6 +28,7 @@ import {
   Loader2,
   Sparkles,
 } from "lucide-react";
+import CrossedTools from "@/components/icons/CrossedTools";
 
 interface ListingItem {
   id: string;
@@ -199,7 +199,7 @@ function MaintenanceDashboard({
 }) {
   const techLinks = [
     { href: "/vault", icon: <ShieldCheck className="w-6 h-6 text-rose-400" />, title: "خزنة وسندات الاستلام", desc: "توثيق IMEI وطباعة إيصالات QR", accent: "hover:border-[#FFC400]/40 group-hover:text-[#FFC400]" },
-    { href: "/hospital", icon: <Stethoscope className="w-6 h-6 text-amber-400" />, title: "تشخيص الأعطال", desc: "تشخيص سحبات الباور سبلاي", accent: "hover:border-rose-500/40 group-hover:text-rose-400" },
+    { href: "/hospital", icon: <CrossedTools className="w-6 h-6 text-amber-400" />, title: "تشخيص الأعطال", desc: "تشخيص سحبات الباور سبلاي", accent: "hover:border-rose-500/40 group-hover:text-rose-400" },
     { href: "/schematic", icon: <Cpu className="w-6 h-6 text-blue-400" />, title: "عارض المخططات (ZXW)", desc: "تتبع مسارات البوردات ونقاط الفحص", accent: "hover:border-blue-500/40 group-hover:text-blue-400" },
     { href: "/tools", icon: <Sliders className="w-6 h-6 text-cyan-400" />, title: "صندوق العدة والبدائل", desc: "حاسبة الحقن وبدائل الآيسيات", accent: "hover:border-cyan-500/40 group-hover:text-cyan-400" },
     { href: "/pricing", icon: <Coins className="w-6 h-6 text-[#FFC400]" />, title: "دكتور الأسعار", desc: "تسعير الشاشات وقطع الهواتف", accent: "hover:border-purple-500/40 group-hover:text-purple-400" },

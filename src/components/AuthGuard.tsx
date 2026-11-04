@@ -7,7 +7,6 @@ import {
   Lock,
   ShieldAlert,
   ShieldCheck,
-  Stethoscope,
   Cpu,
   Sliders,
   Coins,
@@ -15,6 +14,7 @@ import {
   LogOut,
   Loader2,
 } from "lucide-react";
+import CrossedTools from "@/components/icons/CrossedTools";
 
 interface AuthGuardProps {
   children: React.ReactNode;
@@ -82,7 +82,7 @@ export default function AuthGuard({ children, allowedRoles, denyMessage }: AuthG
               <p className="text-xs font-black text-[#FFC400]">مراكز الصيانة تحصل على:</p>
               <ul className="text-[11px] text-neutral-300 space-y-1.5">
                 <li className="flex items-center gap-2"><ShieldCheck className="w-3.5 h-3.5 text-rose-400" /><span>خزنة الزبائن وسندات الاستلام</span></li>
-                <li className="flex items-center gap-2"><Stethoscope className="w-3.5 h-3.5 text-amber-400" /><span>تشخيص أعطال الباور سبلاي</span></li>
+                <li className="flex items-center gap-2"><CrossedTools className="w-3.5 h-3.5 text-amber-400" /><span>تشخيص أعطال الباور سبلاي</span></li>
                 <li className="flex items-center gap-2"><Cpu className="w-3.5 h-3.5 text-blue-400" /><span>عارض المخططات التفاعلي (ZXW)</span></li>
                 <li className="flex items-center gap-2"><Sliders className="w-3.5 h-3.5 text-cyan-400" /><span>صندوق العدة وبدائل الآيسيات</span></li>
                 <li className="flex items-center gap-2"><Coins className="w-3.5 h-3.5 text-purple-400" /><span>دكتور الأسعار والتسعير</span></li>

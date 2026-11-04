@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { FAULTS_DATABASE, FaultItem } from "@/lib/faults-data";
 import {
-  Stethoscope,
   Search,
   Loader2,
   Zap,
@@ -14,6 +13,7 @@ import {
   Activity,
   Database,
 } from "lucide-react";
+import CrossedTools from "@/components/icons/CrossedTools";
 
 export default function HospitalPage() {
   const [model, setModel] = useState("Galaxy A12");
@@ -78,8 +78,8 @@ export default function HospitalPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#222] pb-6">
         <div>
           <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-[#FFC400]/10 text-[#FFC400] text-xs font-bold mb-2">
-            <Stethoscope className="w-3.5 h-3.5" />
-            <span>AI Doctor</span>
+            <CrossedTools className="w-3.5 h-3.5" />
+            <span>تشخيص الأعطال الذكي</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-white flex items-center gap-2">
             <span>تشخيص الأعطال</span>
@@ -219,7 +219,7 @@ export default function HospitalPage() {
               {/* Diagnosis */}
               <div>
                 <h3 className="text-xs font-bold text-neutral-400 mb-1 flex items-center gap-1.5">
-                  <Stethoscope className="w-3.5 h-3.5" />
+                  <CrossedTools className="w-3.5 h-3.5" />
                   التشخيص بالعامية الأردنية:
                 </h3>
                 <p className="text-base sm:text-lg font-bold text-neutral-100 bg-[#1A1A1A] p-4 rounded-xl border border-[#2B2B2B] leading-relaxed">

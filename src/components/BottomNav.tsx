@@ -8,10 +8,12 @@ import {
   Home,
   ShoppingBag,
   MessageSquare,
-  Stethoscope,
   ShieldCheck,
   User,
+  Building2,
+  Search,
 } from "lucide-react";
+import CrossedTools from "@/components/icons/CrossedTools";
 
 export default function BottomNav() {
   const pathname = usePathname();
@@ -46,15 +48,17 @@ export default function BottomNav() {
       isActive: pathname.startsWith("/chat"),
     },
     {
-      href: "/hospital",
-      label: "التشخيص",
-      icon: Stethoscope,
-      isActive: pathname.startsWith("/hospital") || pathname.startsWith("/schematic"),
+      href: isMaintenance ? "/hospital" : "/centers",
+      label: isMaintenance ? "التشخيص" : "المراكز",
+      icon: isMaintenance ? CrossedTools : Building2,
+      isActive: isMaintenance
+        ? (pathname.startsWith("/hospital") || pathname.startsWith("/schematic"))
+        : pathname.startsWith("/centers"),
     },
     {
       href: isMaintenance ? "/vault" : "/track",
-      label: isMaintenance ? "الخزنة" : "حسابي",
-      icon: isMaintenance ? ShieldCheck : User,
+      label: isMaintenance ? "الخزنة" : "الاستعلام",
+      icon: isMaintenance ? ShieldCheck : Search,
       isActive: isMaintenance ? pathname.startsWith("/vault") : pathname.startsWith("/track"),
     },
   ];
