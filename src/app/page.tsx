@@ -20,6 +20,7 @@ import {
   Building2,
   MessageSquare,
   User,
+  Download,
 } from "lucide-react";
 import CrossedTools from "@/components/icons/CrossedTools";
 
@@ -119,6 +120,18 @@ function HomeContent({ onOpenAuth }: { onOpenAuth: () => void }) {
       color: "from-cyan-500/20 to-cyan-900/10",
       border: "border-cyan-500/30",
       accent: "text-cyan-400",
+      maintenanceOnly: true,
+    },
+    {
+      href: "/software",
+      title: "Software & Firmware",
+      badge: "فلاشات رسمية",
+      subtitle: "قاعدة بيانات الفيرموير وخطوات الفلاش",
+      desc: "فلاشات وتحديثات البرمجيات للأجهزة الشائعة. اختر الشركة والموديل واحصل على ملف الفيرموير الرسمي وخطوات الفلاش المفصّلة بالعربي.",
+      icon: <Download className="w-8 h-8 text-violet-400" />,
+      color: "from-violet-500/20 to-violet-900/10",
+      border: "border-violet-500/30",
+      accent: "text-violet-400",
       maintenanceOnly: true,
     },
     {

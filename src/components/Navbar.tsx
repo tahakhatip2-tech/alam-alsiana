@@ -24,6 +24,7 @@ import {
   Sliders,
   MapPin,
   Building2,
+  Download,
 } from "lucide-react";
 import CrossedTools from "@/components/icons/CrossedTools";
 
@@ -73,7 +74,7 @@ export default function Navbar() {
   }, [router]);
 
   const isMaintenance = mounted && isMaintenanceRole(user?.role);
-  const isDiagActive = pathname === "/hospital" || pathname === "/schematic" || pathname === "/tools";
+  const isDiagActive = pathname === "/hospital" || pathname === "/schematic" || pathname === "/tools" || pathname === "/software";
   const isShopActive = pathname === "/vault" || pathname === "/pricing" || pathname === "/track";
 
   return (
@@ -121,6 +122,7 @@ export default function Navbar() {
                         { href: "/hospital", icon: <CrossedTools className="w-5 h-5 text-amber-400" />, title: "تشخيص الأعطال", desc: "تشخيص أعطال سحب الباور سبلاي" },
                         { href: "/schematic", icon: <Cpu className="w-5 h-5 text-blue-400" />, title: "عارض اللوحات (ZXW)", desc: "تتبع مسارات البوردات ونقاط الفحص" },
                         { href: "/tools", icon: <Sliders className="w-5 h-5 text-cyan-400" />, title: "صندوق العدة والبدائل", desc: "حاسبة الحقن وبدائل الآيسيات" },
+                        { href: "/software", icon: <Download className="w-5 h-5 text-violet-400" />, title: "Software & Firmware", desc: "فلاشات وتحديثات البرمجيات" },
                       ].map((item) => (
                         <Link key={item.href} href={item.href}
                           className={`flex items-start gap-3 p-2.5 rounded-xl transition-colors ${pathname === item.href ? "bg-[#FFC400]/15 text-[#FFC400]" : "hover:bg-neutral-900 text-neutral-200"}`}>
@@ -290,6 +292,10 @@ export default function Navbar() {
                     <Link href="/tools" className="p-2.5 rounded-xl bg-neutral-900 border border-neutral-800 text-xs font-bold text-neutral-200 flex items-center gap-2 col-span-2">
                       <Sliders className="w-4 h-4 text-cyan-400" />
                       <span>صندوق العدة</span>
+                    </Link>
+                    <Link href="/software" className="p-2.5 rounded-xl bg-neutral-900 border border-neutral-800 text-xs font-bold text-neutral-200 flex items-center gap-2 col-span-2">
+                      <Download className="w-4 h-4 text-violet-400" />
+                      <span>Software & Firmware</span>
                     </Link>
                   </div>
                 </div>
