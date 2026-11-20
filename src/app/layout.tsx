@@ -23,18 +23,54 @@ export const viewport: Viewport = {
 export const instant = false;
 
 export const metadata: Metadata = {
-  metadataBase: new URL("http://localhost:3000"),
-  title: "عالم الصيانة | منصة الفنيين الأولى في الأردن",
-  description: "المنصة الشاملة لتشخيص أعطال الهاردوير، تتبع مسارات اللوحات، سوق البوردات، وتسعير القطع.",
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_APP_URL || "https://alam-alsiana.vercel.app"
+  ),
+  title: "عالم الصيانة PRO | منصة الفنيين الأولى في الأردن",
+  description:
+    "المنصة الشاملة لتشخيص أعطال الهاردوير، تتبع مسارات اللوحات التفاعلية (ZXW Killer)، سوق بوردات التشليح، وخزنة الزبائن مع وكيل الذكاء الاصطناعي.",
   icons: {
-    icon: "/logo.png",
-    shortcut: "/logo.png",
-    apple: "/logo.png",
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/icon.png", type: "image/png", sizes: "512x512" },
+      { url: "/logo.png", type: "image/png" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
   },
   openGraph: {
     title: "عالم الصيانة PRO | منصة الفنيين في الأردن",
-    description: "تشخيص باور سبلاي، عارض لوحات ZXW، سوق بوردات تشليح، وخزنة زبائن مع وكيل AI وواتساب",
-    images: [{ url: "/logo.png" }],
+    description:
+      "تشخيص باور سبلاي، عارض لوحات ZXW، سوق بوردات تشليح، وخزنة زبائن مع وكيل AI وواتساب",
+    url: "https://alam-alsiana.vercel.app",
+    siteName: "عالم الصيانة",
+    locale: "ar_JO",
+    type: "website",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "عالم الصيانة PRO - منصة فنيي صيانة الهواتف الذكية",
+        type: "image/jpeg",
+      },
+      {
+        url: "/logo.png",
+        width: 512,
+        height: 512,
+        alt: "لوغو عالم الصيانة",
+        type: "image/png",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "عالم الصيانة PRO | منصة الفنيين في الأردن",
+    description:
+      "تشخيص باور سبلاي، عارض لوحات ZXW، سوق بوردات تشليح، وخزنة زبائن مع وكيل AI وواتساب",
+    images: ["/og-image.jpg"],
   },
 };
 
