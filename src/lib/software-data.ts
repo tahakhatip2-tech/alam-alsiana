@@ -904,3 +904,125 @@ export function getSoftwareByBrand(brand: string): SoftwareEntry[] {
 export function getSoftwareById(id: string): SoftwareEntry | undefined {
   return SOFTWARE_DATABASE.find((e) => e.id === id);
 }
+
+// ─────────────────────────────────────────────────────────────
+//  Official Tools & Drivers (الأدوات والتعاريف الرسمية)
+// ─────────────────────────────────────────────────────────────
+
+export interface OfficialUtility {
+  id: string;
+  name: string;
+  category: "tool" | "driver";
+  brandTarget: string;
+  version: string;
+  fileSize: string;
+  downloadUrl: string;
+  description: string;
+  badge?: string;
+}
+
+export const OFFICIAL_UTILITIES: OfficialUtility[] = [
+  // ── الأدوات (Flash Tools) ──
+  {
+    id: "odin-latest",
+    name: "Samsung Odin Flasher",
+    category: "tool",
+    brandTarget: "Samsung",
+    version: "v3.14.4 (Latest)",
+    fileSize: "3.2 MB",
+    downloadUrl: "https://odindownload.com/download/Odin3_v3.14.4.zip",
+    description: "الأداة الرسمية لتفليش هواتف سامسونج عبر منافذ BL, AP, CP, CSC ودعم Android 10 إلى 14.",
+    badge: "الأكثر طلباً",
+  },
+  {
+    id: "miflash-tool",
+    name: "Xiaomi MiFlash Tool",
+    category: "tool",
+    brandTarget: "Xiaomi",
+    version: "v20200314",
+    fileSize: "66.7 MB",
+    downloadUrl: "https://xiaomiflashtool.com/download/mi-flash-tool-20200314",
+    description: "أداة تفليش رومات شاومي Fastboot لجميع هواتف ريدمي وبوكو وشاومي مع خيارات القفل والفرمتة.",
+    badge: "شاومي رسمي",
+  },
+  {
+    id: "sp-flash-tool",
+    name: "SP Flash Tool (Smart Phone)",
+    category: "tool",
+    brandTarget: "MTK / Multi",
+    version: "v5.2124",
+    fileSize: "58.4 MB",
+    downloadUrl: "https://spflashtools.com/download/sp-flash-tool-v5-2124",
+    description: "أداة تفليش معالجات ميدياتك MTK الأساسية لأجهزة إنفينيكس وتكنو وشاومي MTK عبر ملفات Scatter.",
+    badge: "معالجات MTK",
+  },
+  {
+    id: "3utools-apple",
+    name: "3uTools All-In-One",
+    category: "tool",
+    brandTarget: "Apple",
+    version: "v3.05 (2024)",
+    fileSize: "115 MB",
+    downloadUrl: "https://url.3u.com/zmAJ3faa",
+    description: "أداة الفلاش والجيلبريك وفحص قطع الآيفون والبطارية وقراءة تقارير الفحص الأصلية بضغطة زر.",
+    badge: "شامل للآيفون",
+  },
+  {
+    id: "qfil-qualcomm",
+    name: "QFIL Qualcomm Flash Tool",
+    category: "tool",
+    brandTarget: "Qualcomm",
+    version: "v2.0.3.5",
+    fileSize: "28.5 MB",
+    downloadUrl: "https://qualcommflashtool.com/download/qfil-v2-0-3-5",
+    description: "أداة تفليش معالجات سناب دراجون عبر وضع EDL (9008) لإحياء الهواتف الميتة وفك حماية FRP.",
+    badge: "وضع EDL 9008",
+  },
+
+  // ── التعاريف (Drivers) ──
+  {
+    id: "samsung-driver",
+    name: "Samsung Android USB Driver",
+    category: "driver",
+    brandTarget: "Samsung",
+    version: "v1.7.59.0 (Official)",
+    fileSize: "35.3 MB",
+    downloadUrl: "https://developer.samsung.com/android-usb-driver",
+    description: "حزمة التعاريف الرسمية من سامسونج للتعرف على وضع Download Mode و ADB بدون أخطاء ID:COM.",
+    badge: "رسمي من سامسونج",
+  },
+  {
+    id: "mtk-vcom-driver",
+    name: "MediaTek MTK VCOM / Preloader Driver",
+    category: "driver",
+    brandTarget: "MTK / Multi",
+    version: "v1.0.8 (Auto-Installer)",
+    fileSize: "12.4 MB",
+    downloadUrl: "https://androidmtk.com/download-mtk-usb-all-drivers",
+    description: "تعاريف التثبيت التلقائي لمعالجات ميدياتك لتعريف بورت Preloader و BROM لتفليش إنفينيكس وتكنو.",
+    badge: "ضروري لـ MTK",
+  },
+  {
+    id: "qualcomm-qdloader-driver",
+    name: "Qualcomm HS-USB QDLoader 9008",
+    category: "driver",
+    brandTarget: "Qualcomm",
+    version: "x64 / x86 Official",
+    fileSize: "19.8 MB",
+    downloadUrl: "https://qualcommflashtool.com/download/qualcomm-usb-driver-v1-0",
+    description: "التعريف الأساسي للتعرف على وضع الطوارئ EDL 9008 لهواتف شاومي وسامسونج بمعالجات كوالكوم.",
+    badge: "تعريف EDL 9008",
+  },
+  {
+    id: "xiaomi-fastboot-driver",
+    name: "Xiaomi Fastboot & ADB Drivers",
+    category: "driver",
+    brandTarget: "Xiaomi",
+    version: "v1.4.3 Installer",
+    fileSize: "8.9 MB",
+    downloadUrl: "https://xiaomidriver.com/download/xiaomi-usb-driver",
+    description: "تعريف أوضاع Fastboot و Recovery لهواتف شاومي وريدمي لتفادي تعليق أداة MiFlash.",
+    badge: "تعاريف شاومي",
+  },
+];
+
