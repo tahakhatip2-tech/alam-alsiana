@@ -90,6 +90,8 @@ export async function POST(req: NextRequest) {
           id: id.toLowerCase().replace(/\s+/g, "-"),
           name,
           brand: brand || "Samsung",
+          chipset: body.chipset || "Universal",
+          year: Number(body.year) || new Date().getFullYear(),
           image,
           tracks: []
         };
@@ -112,6 +114,7 @@ export async function POST(req: NextRequest) {
           voltage: voltage || "5.0V",
           color: color || "#EF4444",
           pathD: pathD || "M 150 500 L 150 300 L 300 300",
+          category: body.category || "power",
           startPoint: {
             label: startLabel || "نقطة البداية",
             x: Number(startX) || 150,

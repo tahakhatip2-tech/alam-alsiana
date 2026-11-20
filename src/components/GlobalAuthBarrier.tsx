@@ -29,16 +29,26 @@ export default function GlobalAuthBarrier({ children }: { children: React.ReactN
     return () => window.removeEventListener("storage", handleStorage);
   }, [pathname]);
 
-  // If user is already on auth page explicitly, allow standard flow
+  // Public pages accessible without login
   const isAuthPage = pathname.startsWith("/auth/");
+  const isPublicPage =
+    pathname === "/" ||
+    pathname.startsWith("/track") ||
+    pathname.startsWith("/centers") ||
+    pathname.startsWith("/market");
 
-  // During SSR or before client hydration completes, render children so Next.js static shell and instant navigation validate without dropping segments
+  // During SSR or before client hydration completes, render children so Next.js static shell is always rendered
   if (!mounted) {
     return <>{children}</>;
   }
 
-  // If not logged in and not on auth page -> FORCE Mandatory Login Modal with background content rendered (blurred)
-  if (!sessionUser && !isAuthPage) {
+  // Public pages and auth pages -> always render without barrier
+  if (isAuthPage || isPublicPage) {
+    return <>{children}</>;
+  }
+
+  // If not logged in on a protected page -> FORCE Mandatory Login Modal
+  if (!sessionUser) {
     return (
       <>
         {/* Render the background content in locked blurred view so DOM and segments are always rendered */}

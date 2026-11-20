@@ -179,9 +179,17 @@ function HomeContent({ onOpenAuth }: { onOpenAuth: () => void }) {
 
   return (
     <div className="flex-1 flex flex-col">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden border-b border-[#1C1C1C] py-14 px-4 bg-gradient-to-b from-[#141414] via-[#0E0E0E] to-[#0A0A0A]">
-        <div className="max-w-5xl mx-auto text-center space-y-5">
+      {/* Hero Section with 3D Visual Identity Artwork */}
+      <section className="relative overflow-hidden border-b border-[#1C1C1C] py-16 px-4 bg-[#070707]">
+        {/* 3D Background Artwork with Cyberpunk-Gold Overlays */}
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-25 mix-blend-luminosity pointer-events-none scale-105"
+          style={{ backgroundImage: "url('/schematic-hero-3d.jpg')" }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a]/85 via-[#070707]/90 to-[#070707] pointer-events-none" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,196,0,0.1)_0%,transparent_70%)] pointer-events-none" />
+
+        <div className="relative z-10 max-w-5xl mx-auto text-center space-y-5">
           {isCustomer ? (
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 text-xs font-bold">
               <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
