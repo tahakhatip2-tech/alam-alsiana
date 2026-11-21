@@ -361,13 +361,16 @@ export default function SoftwarePage() {
                 </a>
 
                 <button
-                  onClick={() =>
+                  onClick={() => {
+                    const fullUrl = typeof window !== "undefined"
+                      ? `${window.location.origin}/api/download/openlock`
+                      : "/api/download/openlock";
                     handleCopyLink(
-                      "https://download.alam-alsiana.com/OpenLock-PRO-Setup.exe",
+                      fullUrl,
                       "openlock-pro-link",
                       "أداة OpenLock PRO"
-                    )
-                  }
+                    );
+                  }}
                   className="flex items-center justify-center gap-2 bg-[#1a1a1a] hover:bg-[#222] text-neutral-300 hover:text-white border border-[#333] hover:border-[#FFC400]/40 font-bold text-xs px-4 py-2.5 rounded-xl transition-all"
                 >
                   {copiedId === "openlock-pro-link" ? (

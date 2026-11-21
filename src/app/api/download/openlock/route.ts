@@ -1,18 +1,28 @@
 import { NextResponse } from "next/server";
+import { readFileSync, existsSync } from "fs";
+import { join } from "path";
 
 export async function GET() {
-  const downloadCdnUrl =
-    process.env.OPENLOCK_DOWNLOAD_URL ||
-    "https://download.alam-alsiana.com/OpenLock-PRO-Setup.exe";
+  const filePath = join(process.cwd(), "public", "downloads", "OpenLock-PRO-Setup.exe");
 
-  // Redirect cleanly with download intent or forward to dedicated CDN storage
-  return NextResponse.redirect(downloadCdnUrl, {
-    status: 307,
-    headers: {
-      "Content-Disposition": 'attachment; filename="OpenLock-PRO-Setup.exe"',
-      "Cache-Control": "public, max-age=300, stale-while-revalidate=600",
-      "X-Release-Version": "v1.0.0",
-      "X-Product-Name": "OpenLock PRO Tool",
-    },
+  if (existsSync(filePath)) {
+    const fileBuffer = readFileSync(filePath);
+
+    return new NextResponse(fileBuffer, {
+      status: 200,
+      headers: {
+        "Content-Disposition": 'attachment; filename="OpenLock-PRO-Setup.exe"',
+        "Content-Type": "application/octet-stream",
+        "Content-Length": fileBuffer.length.toString(),
+        "Cache-Control": "public, max-age=3600, stale-while-revalidate=86400",
+        "X-Product-Name": "OpenLock PRO Tool",
+        "X-Release-Version": "v1.0.0",
+      },
+    });
+  }
+
+  // Fallback to static route
+  return NextResponse.redirect("/downloads/OpenLock-PRO-Setup.exe", {
+    status: 302,
   });
 }
