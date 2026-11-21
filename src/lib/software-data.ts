@@ -3,6 +3,17 @@
 //  عالم الصيانة — قاعدة بيانات السوفتوير والفلاشات
 // ─────────────────────────────────────────────────────────────
 
+export interface ModelPackageFile {
+  id: string;
+  name: string;             // e.g. "الفلاشة الرسمية الكاملة (4 ملفات)"
+  fileName: string;         // e.g. "A125FXXU6EXC1_OJO_4Files.zip"
+  category: "rom" | "tool" | "pit" | "driver" | "fix";
+  fileSize: string;         // "3.8 GB", "3.2 MB", "120 KB"
+  downloadUrl: string;      // Direct or official link
+  description?: string;     // e.g. "تشمل ملفات AP, BL, CP, CSC لإعادة التهيئة الكاملة"
+  isEssential?: boolean;
+}
+
 export interface SoftwareVersion {
   id: string;
   versionName: string;       // "Android 14 / One UI 6.1"
@@ -18,6 +29,7 @@ export interface SoftwareVersion {
   isLatest?: boolean;
   isStable?: boolean;
   tags?: string[];
+  packageFiles?: ModelPackageFile[];
 }
 
 export interface SoftwareEntry {
@@ -1025,4 +1037,200 @@ export const OFFICIAL_UTILITIES: OfficialUtility[] = [
     badge: "تعاريف شاومي",
   },
 ];
+
+// ─────────────────────────────────────────────────────────────
+//  Helper: Get Model Package Files (حزمة الموديل الشاملة)
+// ─────────────────────────────────────────────────────────────
+
+export function getModelPackageFiles(entry: SoftwareEntry, version: SoftwareVersion): ModelPackageFile[] {
+  if (version.packageFiles && version.packageFiles.length > 0) {
+    return version.packageFiles;
+  }
+
+  const modelCode = entry.modelNumber || entry.name.replace(/\s+/g, "_");
+  const build = version.buildNumber || "LATEST";
+
+  // 1. Samsung Devices
+  if (entry.brand === "Samsung") {
+    return [
+      {
+        id: `${entry.id}-rom`,
+        category: "rom",
+        name: `الفلاشة الرسمية الكاملة (${entry.name})`,
+        fileName: `${modelCode}_${build}_OJO_4Files.zip`,
+        fileSize: version.fileSize || "4.1 GB",
+        downloadUrl: version.downloadUrl || `${SAMFW}${modelCode}/OJO`,
+        description: "حزمة الفلاش الكاملة المكونة من 4 ملفات (AP + BL + CP + CSC) لإعادة ضبط المصنع وإحياء الجهاز.",
+        isEssential: true,
+      },
+      {
+        id: `${entry.id}-tool`,
+        category: "tool",
+        name: "برنامج Odin 3.14.4 الرسمي",
+        fileName: "Odin3_v3.14.4.zip",
+        fileSize: "3.2 MB",
+        downloadUrl: "https://odindownload.com/download/Odin3_v3.14.4.zip",
+        description: "الأداة المعتمدة لتفليش هذا الموديل مع تفعيل Auto Reboot و F.Reset Time.",
+        isEssential: true,
+      },
+      {
+        id: `${entry.id}-pit`,
+        category: "pit",
+        name: `ملف الـ PIT لإصلاح التقسيم (${modelCode})`,
+        fileName: `${modelCode}_Partition.pit`,
+        fileSize: "140 KB",
+        downloadUrl: version.downloadUrl || `${SAMFW}${modelCode}/OJO`,
+        description: "ملف جدول تقسيم الذاكرة (Partition Information Table) لحل مشاكل FAIL وتعليق الشعار والذاكرة التالفة.",
+        isEssential: false,
+      },
+      {
+        id: `${entry.id}-driver`,
+        category: "driver",
+        name: "تعريف Samsung Android USB Driver",
+        fileName: "SAMSUNG_USB_Driver_v1.7.59.0.exe",
+        fileSize: "35.3 MB",
+        downloadUrl: "https://developer.samsung.com/android-usb-driver",
+        description: "التعريف الرسمي المعتمد للتعرف الفوري على الهاتف في وضع Download Mode وتجنب انقطاع التفليش.",
+        isEssential: true,
+      },
+    ];
+  }
+
+  // 2. Apple Devices
+  if (entry.brand === "Apple") {
+    return [
+      {
+        id: `${entry.id}-rom`,
+        category: "rom",
+        name: `ملف الاستعادة الرسمي IPSW (${version.versionName})`,
+        fileName: `${entry.name.replace(/\s+/g, "_")}_${version.buildNumber || "Restore"}.ipsw`,
+        fileSize: version.fileSize || "6.8 GB",
+        downloadUrl: version.downloadUrl || "https://ipsw.me",
+        description: "الفيرموير الرسمي الموقّع من سيرفرات آبل المباشرة (Apple CDN) بدون أي تعديل أو ضغط.",
+        isEssential: true,
+      },
+      {
+        id: `${entry.id}-tool`,
+        category: "tool",
+        name: "برنامج 3uTools الشامل للآيفون",
+        fileName: "3uTools_v3.05_Setup.exe",
+        fileSize: "115 MB",
+        downloadUrl: "https://url.3u.com/zmAJ3faa",
+        description: "أداة الفلاش الذكي (Smart Flash) مع خيار الحفاظ على البيانات (Retain User's Data) وفحص قطع الجهاز.",
+        isEssential: true,
+      },
+      {
+        id: `${entry.id}-fix`,
+        category: "fix",
+        name: "أداة الخروج من وضع الريكفري DFU",
+        fileName: "Exit_Recovery_DFU_Kit.zip",
+        fileSize: "1.8 MB",
+        downloadUrl: "https://url.3u.com/zmAJ3faa",
+        description: "أداة سريعة بنقرة واحدة لإخراج أجهزة الآيفون العالقة على علامة الكابل أو شعار التفاحة.",
+        isEssential: false,
+      },
+      {
+        id: `${entry.id}-driver`,
+        category: "driver",
+        name: "حزمة تعريفات Apple Mobile Device",
+        fileName: "Apple_Mobile_Device_Support.msi",
+        fileSize: "48.2 MB",
+        downloadUrl: "https://support.apple.com/downloads/itunes",
+        description: "تعاريف ويندوز الرسمية للتعرف على الآيفون في أوضاع Normal و Recovery و DFU.",
+        isEssential: true,
+      },
+    ];
+  }
+
+  // 3. Xiaomi Devices
+  if (entry.brand === "Xiaomi") {
+    return [
+      {
+        id: `${entry.id}-rom`,
+        category: "rom",
+        name: `روم الفاست بوت الرسمي (${version.versionName})`,
+        fileName: `${modelCode}_${build}_Fastboot.tgz`,
+        fileSize: version.fileSize || "3.8 GB",
+        downloadUrl: version.downloadUrl || "https://c.mi.com/global/miuidownload/index",
+        description: "روم الفاست بوت الكامل للتفليش الشامل وحل مشاكل التعليق مع خيارات flash_all.",
+        isEssential: true,
+      },
+      {
+        id: `${entry.id}-tool`,
+        category: "tool",
+        name: "أداة Xiaomi MiFlash Tool",
+        fileName: "MiFlash20200314.zip",
+        fileSize: "66.7 MB",
+        downloadUrl: "https://xiaomiflashtool.com/download/mi-flash-tool-20200314",
+        description: "الأداة الرسمية لتفليش رومات شاومي Fastboot مع ميزة القفل التلقائي للبوتلودر.",
+        isEssential: true,
+      },
+      {
+        id: `${entry.id}-pit`,
+        category: "pit",
+        name: "ملفات التقسيم والباتش (Rawprogram/Patch XML)",
+        fileName: "rawprogram_unsparse_patch0.xml",
+        fileSize: "220 KB",
+        downloadUrl: version.downloadUrl || "https://c.mi.com",
+        description: "ملفات برمجة الذاكرة لوضع EDL كوالكوم لتفادي موت الجهاز أثناء التفليش.",
+        isEssential: false,
+      },
+      {
+        id: `${entry.id}-driver`,
+        category: "driver",
+        name: "تعاريف شاومي Fastboot & ADB Drivers",
+        fileName: "Xiaomi_Fastboot_ADB_Driver.zip",
+        fileSize: "8.9 MB",
+        downloadUrl: "https://xiaomidriver.com/download/xiaomi-usb-driver",
+        description: "التعريف الأساسي لضمان ظهور الجهاز كـ Android Bootloader Interface في إدارة الأجهزة.",
+        isEssential: true,
+      },
+    ];
+  }
+
+  // 4. Infinix / Tecno / MTK Devices
+  return [
+    {
+      id: `${entry.id}-rom`,
+      category: "rom",
+      name: `الروم الرسمي مع ملف الـ Scatter (${entry.name})`,
+      fileName: `${modelCode}_${build}_Scatter_Firmware.zip`,
+      fileSize: version.fileSize || "3.2 GB",
+      downloadUrl: version.downloadUrl || "https://spflashtools.com",
+      description: "حزمة السوفتوير الرسمية الشاملة لمعالج ميدياتك مع ملف scatter.txt و preloader.",
+      isEssential: true,
+    },
+    {
+      id: `${entry.id}-tool`,
+      category: "tool",
+      name: "برنامج SP Flash Tool v5.2124",
+      fileName: "SP_Flash_Tool_v5.2124_Win.zip",
+      fileSize: "58.4 MB",
+      downloadUrl: "https://spflashtools.com/download/sp-flash-tool-v5-2124",
+      description: "الأداة المعتمدة لتفليش معالجات MTK بخيارات Firmware Upgrade و Download Only.",
+      isEssential: true,
+    },
+    {
+      id: `${entry.id}-pit`,
+      category: "pit",
+      name: "ملف الـ Scatter المعتمد لهذا الإصدار",
+      fileName: `${entry.chipset.replace(/\s+/g, '_')}_Android_scatter.txt`,
+      fileSize: "85 KB",
+      downloadUrl: version.downloadUrl || "https://spflashtools.com",
+      description: "خريطة تقسيم ذواكر EMMC/UFS لمعالجات ميدياتك لتحديد عناوين الذاكرة الصحيحة.",
+      isEssential: false,
+    },
+    {
+      id: `${entry.id}-driver`,
+      category: "driver",
+      name: "تعريف MediaTek MTK VCOM Preloader",
+      fileName: "MediaTek_MTK_USB_All_Drivers.zip",
+      fileSize: "12.4 MB",
+      downloadUrl: "https://androidmtk.com/download-mtk-usb-all-drivers",
+      description: "التعريف الحيوي لضمان استقرار بورت الـ MTK USB Port وعدم فصل الكابل أثناء الفلاش.",
+      isEssential: true,
+    },
+  ];
+}
+
 
