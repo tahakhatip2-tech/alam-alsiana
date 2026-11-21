@@ -31,6 +31,7 @@ import {
   FolderArchive,
   FileCode,
   Layers,
+  Target,
 } from "lucide-react";
 import {
   SOFTWARE_DATABASE,
@@ -45,6 +46,8 @@ import {
   type OfficialUtility,
   type ModelPackageFile,
 } from "@/lib/software-data";
+import { getTestPoint, MODE_CONFIG, DIFFICULTY_CONFIG } from "@/lib/testpoint-data";
+import TestPointPanel from "@/components/TestPointPanel";
 
 // ─── Brand emoji map ──────────────────────────────────────────
 const BRAND_EMOJI: Record<string, string> = {
@@ -110,6 +113,9 @@ export default function SoftwarePage() {
   // Utilities sub-category filter
   const [utilFilter, setUtilFilter] = useState<"all" | "tool" | "driver">("all");
 
+  // Test Point panel state
+  const [showTestPoint, setShowTestPoint] = useState(false);
+
   const brandSlider = useDragScroll();
   const modelSlider = useDragScroll();
   const versionSlider = useDragScroll();
@@ -174,6 +180,9 @@ export default function SoftwarePage() {
     return acc;
   }, {});
 
+  // Test Point data for currently selected model
+  const testPointEntry = selectedModel ? getTestPoint(selectedModel.id) : undefined;
+
   // Filtered utilities
   const filteredUtilities = OFFICIAL_UTILITIES.filter((u) => {
     if (utilFilter === "tool") return u.category === "tool";
@@ -183,6 +192,22 @@ export default function SoftwarePage() {
 
   return (
     <div className="min-h-screen bg-[#070707] text-white relative pb-16" dir="rtl">
+
+      {/* ═══ TEST POINT MODAL ════════════════════════════════════ */}
+      {showTestPoint && testPointEntry && (
+        <TestPointPanel
+          entry={testPointEntry}
+          onClose={() => setShowTestPoint(false)}
+          onViewSchematic={
+            testPointEntry.schematicId
+              ? () => {
+                  setShowTestPoint(false);
+                  window.open(`/schematic?board=${testPointEntry.schematicId}`, "_blank");
+                }
+              : undefined
+          }
+        />
+      )}
 
       {/* ═══ FLOATING TOAST ══════════════════════════════════ */}
       {toastMessage && (
@@ -437,6 +462,72 @@ export default function SoftwarePage() {
                     </div>
                   </div>
                 </div>
+
+                {/* ── Test Point Banner ────────────────────────── */}
+                {testPointEntry && (
+                  <div
+                    className={`mt-4 rounded-2xl border p-4 flex flex-wrap items-center justify-between gap-3 transition-all cursor-pointer group
+                      ${testPointEntry.mode === "edl_9008"
+                        ? "bg-purple-500/5 border-purple-500/30 hover:border-purple-500/60 hover:bg-purple-500/10"
+                        : testPointEntry.mode === "brom"
+                        ? "bg-red-500/5 border-red-500/30 hover:border-red-500/60 hover:bg-red-500/10"
+                        : testPointEntry.mode === "dfu"
+                        ? "bg-neutral-700/20 border-neutral-600/30 hover:border-neutral-500/60"
+                        : "bg-blue-500/5 border-blue-500/30 hover:border-blue-500/60 hover:bg-blue-500/10"
+                      }`}
+                    onClick={() => setShowTestPoint(true)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => e.key === "Enter" && setShowTestPoint(true)}
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      {/* Mode icon */}
+                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 text-lg
+                        ${testPointEntry.mode === "edl_9008" ? "bg-purple-500/10 border border-purple-500/30" :
+                          testPointEntry.mode === "brom" ? "bg-red-500/10 border border-red-500/30" :
+                          testPointEntry.mode === "dfu" ? "bg-white/5 border border-white/20" :
+                          "bg-blue-500/10 border border-blue-500/30"}`}
+                      >
+                        {MODE_CONFIG[testPointEntry.mode].icon}
+                      </div>
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap mb-0.5">
+                          <span className={`text-xs font-black ${
+                            testPointEntry.mode === "edl_9008" ? "text-purple-300" :
+                            testPointEntry.mode === "brom" ? "text-red-300" :
+                            testPointEntry.mode === "dfu" ? "text-neutral-300" :
+                            "text-blue-300"
+                          }`}>
+                            {testPointEntry.modeLabel}
+                          </span>
+                          <span className={`text-[9px] font-black px-1.5 py-0.5 rounded-full border ${DIFFICULTY_CONFIG[testPointEntry.difficulty].color}`}>
+                            {DIFFICULTY_CONFIG[testPointEntry.difficulty].label}
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-neutral-400 leading-relaxed truncate">
+                          {testPointEntry.pins.find((p) => p.isPrimary)?.description ?? "انقر لعرض نقطة التيست بوينت والخطوات"}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* CTA button */}
+                    <button
+                      className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black border shrink-0 transition-all group-hover:scale-105
+                        ${testPointEntry.mode === "edl_9008"
+                          ? "bg-purple-500/15 border-purple-500/40 text-purple-300 hover:bg-purple-500/25"
+                          : testPointEntry.mode === "brom"
+                          ? "bg-red-500/15 border-red-500/40 text-red-300 hover:bg-red-500/25"
+                          : testPointEntry.mode === "dfu"
+                          ? "bg-white/5 border-white/20 text-neutral-300 hover:bg-white/10"
+                          : "bg-blue-500/15 border-blue-500/40 text-blue-300 hover:bg-blue-500/25"
+                        }`}
+                      onClick={(e) => { e.stopPropagation(); setShowTestPoint(true); }}
+                    >
+                      <Target className="w-3.5 h-3.5" />
+                      عرض نقطة التيست بوينت
+                    </button>
+                  </div>
+                )}
 
                 {/* ── Version Slider ───────────────────────────── */}
                 <div>
