@@ -12,7 +12,7 @@ import {
   BookOpen,
   Target,
   Info,
-  Youtube,
+  PlayCircle,
 } from "lucide-react";
 import {
   type TestPointEntry,
@@ -428,7 +428,7 @@ export default function TestPointPanel({
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-red-600/10 hover:bg-red-600/20 border border-red-500/30 hover:border-red-500/60 text-xs font-bold text-red-400 hover:text-red-300 transition-all"
               >
-                <Youtube className="w-4 h-4" />
+                <PlayCircle className="w-4 h-4" />
                 شرح فيديو على يوتيوب
                 <ExternalLink className="w-3 h-3 opacity-70" />
               </a>

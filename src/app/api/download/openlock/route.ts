@@ -1,28 +1,53 @@
-import { NextResponse } from "next/server";
-import { readFileSync, existsSync } from "fs";
-import { join } from "path";
+import { NextRequest, NextResponse } from "next/server";
+import { createReadStream, statSync, existsSync } from "fs";
+import path from "path";
+import { Readable } from "stream";
 
-export async function GET() {
-  const filePath = join(process.cwd(), "public", "downloads", "OpenLock-PRO-Setup.exe");
+export async function GET(req: NextRequest) {
+  const filePath = path.join(process.cwd(), "public", "downloads", "OpenLock-PRO-Setup.exe");
 
-  if (existsSync(filePath)) {
-    const fileBuffer = readFileSync(filePath);
+  if (!existsSync(filePath)) {
+    return NextResponse.json({ error: "File not found" }, { status: 404 });
+  }
 
-    return new NextResponse(fileBuffer, {
-      status: 200,
+  const stat = statSync(filePath);
+  const fileSize = stat.size;
+
+  // Support Range requests for download managers (IDM, etc.)
+  const range = req.headers.get("range");
+
+  if (range) {
+    const parts = range.replace(/bytes=/, "").split("-");
+    const start = parseInt(parts[0], 10);
+    const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+    const chunkSize = end - start + 1;
+
+    const stream = createReadStream(filePath, { start, end });
+    const webStream = Readable.toWeb(stream) as ReadableStream<Uint8Array>;
+
+    return new NextResponse(webStream, {
+      status: 206,
       headers: {
-        "Content-Disposition": 'attachment; filename="OpenLock-PRO-Setup.exe"',
+        "Content-Range": `bytes ${start}-${end}/${fileSize}`,
+        "Accept-Ranges": "bytes",
+        "Content-Length": String(chunkSize),
         "Content-Type": "application/octet-stream",
-        "Content-Length": fileBuffer.length.toString(),
-        "Cache-Control": "public, max-age=3600, stale-while-revalidate=86400",
-        "X-Product-Name": "OpenLock PRO Tool",
-        "X-Release-Version": "v1.0.0",
+        "Content-Disposition": 'attachment; filename="OpenLock-PRO-Setup.exe"',
       },
     });
   }
 
-  // Fallback to static route
-  return NextResponse.redirect("/downloads/OpenLock-PRO-Setup.exe", {
-    status: 302,
+  // Full file stream
+  const stream = createReadStream(filePath);
+  const webStream = Readable.toWeb(stream) as ReadableStream<Uint8Array>;
+
+  return new NextResponse(webStream, {
+    status: 200,
+    headers: {
+      "Content-Type": "application/octet-stream",
+      "Content-Disposition": 'attachment; filename="OpenLock-PRO-Setup.exe"',
+      "Content-Length": String(fileSize),
+      "Accept-Ranges": "bytes",
+    },
   });
 }
