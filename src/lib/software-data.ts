@@ -942,7 +942,7 @@ export const OFFICIAL_UTILITIES: OfficialUtility[] = [
     brandTarget: "Multi-Brand",
     version: "v1.0.0 (Official)",
     fileSize: "85.4 MB",
-    downloadUrl: "https://github.com/alam-alsiana/openlock-pro/releases/download/v1.0.0/OpenLock-PRO-Setup.exe",
+    downloadUrl: "/api/download/openlock",
     description: "الأداة الرسمية الشاملة لسطح المكتب للتحكم المباشر بمنافذ USB، وتخطي حمايات Google FRP، وتفليش الهواتف، والتعرف التلقائي على أوضاع EDL 9008 و BROM.",
     badge: "الأداة الرسمية المعتمدة ★",
   },

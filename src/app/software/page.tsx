@@ -352,9 +352,8 @@ export default function SoftwarePage() {
               {/* Action buttons */}
               <div className="flex flex-col sm:flex-row md:flex-col gap-2 shrink-0 w-full md:w-auto">
                 <a
-                  href="https://github.com/alam-alsiana/openlock-pro/releases/download/v1.0.0/OpenLock-PRO-Setup.exe"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href="/api/download/openlock"
+                  download="OpenLock-PRO-Setup.exe"
                   className="flex items-center justify-center gap-2 bg-[#FFC400] hover:bg-[#FFD340] text-black font-black text-xs px-5 py-3 rounded-xl transition-all shadow-[0_0_20px_rgba(255,196,0,0.3)] hover:scale-102"
                 >
                   <Download className="w-4 h-4" />
@@ -364,7 +363,7 @@ export default function SoftwarePage() {
                 <button
                   onClick={() =>
                     handleCopyLink(
-                      "https://github.com/alam-alsiana/openlock-pro/releases/download/v1.0.0/OpenLock-PRO-Setup.exe",
+                      "https://download.alam-alsiana.com/OpenLock-PRO-Setup.exe",
                       "openlock-pro-link",
                       "أداة OpenLock PRO"
                     )
@@ -374,12 +373,12 @@ export default function SoftwarePage() {
                   {copiedId === "openlock-pro-link" ? (
                     <>
                       <Check className="w-3.5 h-3.5 text-green-400" />
-                      <span className="text-green-400">تم نسخ رابط IDM!</span>
+                      <span className="text-green-400">تم نسخ رابط IDM المباشر!</span>
                     </>
                   ) : (
                     <>
                       <Copy className="w-3.5 h-3.5 text-[#FFC400]" />
-                      <span>نسخ رابط التنزيل لـ IDM</span>
+                      <span>نسخ رابط IDM المباشر</span>
                     </>
                   )}
                 </button>
