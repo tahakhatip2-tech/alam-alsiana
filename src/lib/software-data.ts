@@ -934,6 +934,19 @@ export interface OfficialUtility {
 }
 
 export const OFFICIAL_UTILITIES: OfficialUtility[] = [
+  // ── أداة عالم الصيانة الرسمية لسطح المكتب ──
+  {
+    id: "openlock-pro",
+    name: "OpenLock PRO Tool (Windows Edition)",
+    category: "tool",
+    brandTarget: "Multi-Brand",
+    version: "v1.0.0 (Official)",
+    fileSize: "85.4 MB",
+    downloadUrl: "https://github.com/alam-alsiana/openlock-pro/releases/download/v1.0.0/OpenLock-PRO-Setup.exe",
+    description: "الأداة الرسمية الشاملة لسطح المكتب للتحكم المباشر بمنافذ USB، وتخطي حمايات Google FRP، وتفليش الهواتف، والتعرف التلقائي على أوضاع EDL 9008 و BROM.",
+    badge: "الأداة الرسمية المعتمدة ★",
+  },
+
   // ── الأدوات (Flash Tools) ──
   {
     id: "odin-latest",

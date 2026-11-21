@@ -32,6 +32,8 @@ import {
   FileCode,
   Layers,
   Target,
+  Monitor,
+  Key,
 } from "lucide-react";
 import {
   SOFTWARE_DATABASE,
@@ -311,6 +313,78 @@ export default function SoftwarePage() {
                 {s.label}
               </div>
             ))}
+          </div>
+
+          {/* ═══ OPENLOCK PRO DESKTOP SHOWCASE BANNER ═══════════ */}
+          <div className="max-w-4xl mx-auto mb-6 rounded-2xl border border-[#FFC400]/40 bg-gradient-to-r from-[#141208] via-[#101010] to-[#120f07] p-5 shadow-[0_0_35px_rgba(255,196,0,0.15)] relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-48 h-48 bg-[#FFC400]/10 rounded-full blur-3xl pointer-events-none" />
+
+            <div className="flex flex-col md:flex-row items-center justify-between gap-5 relative z-10">
+              <div className="flex items-start gap-4">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#FFC400] to-[#FF9100] text-black flex items-center justify-center font-black text-2xl shadow-[0_0_20px_rgba(255,196,0,0.4)] shrink-0">
+                  OL
+                </div>
+                <div>
+                  <div className="flex flex-wrap items-center gap-2 mb-1">
+                    <h3 className="text-lg font-black text-white">
+                      OpenLock <span className="text-[#FFC400]">PRO</span> Tool
+                    </h3>
+                    <span className="text-[10px] bg-[#FFC400] text-black px-2 py-0.5 rounded font-black">
+                      أداة سطح المكتب الحصرية
+                    </span>
+                    <span className="text-[10px] font-mono text-neutral-400 bg-white/5 px-2 py-0.5 rounded border border-white/10">
+                      v1.0.0 Windows
+                    </span>
+                  </div>
+                  <p className="text-xs text-neutral-300 leading-relaxed mb-3">
+                    أداة فنيي الصيانة الشاملة للتحكم بمنافذ USB، وتخطي حماية FRP، وتفليش الهواتف، والتعرف التلقائي على أوضاع EDL 9008 و MTK BROM بضغطة زر واحدة.
+                  </p>
+
+                  <div className="flex flex-wrap gap-2 text-[10px] text-neutral-400">
+                    <span className="bg-black/40 border border-[#333] px-2 py-0.5 rounded">🔌 كشف USB تلقائي</span>
+                    <span className="bg-black/40 border border-[#333] px-2 py-0.5 rounded">🟣 وضع EDL 9008</span>
+                    <span className="bg-black/40 border border-[#333] px-2 py-0.5 rounded">🛡️ تخطي FRP</span>
+                    <span className="bg-black/40 border border-[#333] px-2 py-0.5 rounded">⚡ تفليش Odin & SP Flash</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action buttons */}
+              <div className="flex flex-col sm:flex-row md:flex-col gap-2 shrink-0 w-full md:w-auto">
+                <a
+                  href="https://github.com/alam-alsiana/openlock-pro/releases/download/v1.0.0/OpenLock-PRO-Setup.exe"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 bg-[#FFC400] hover:bg-[#FFD340] text-black font-black text-xs px-5 py-3 rounded-xl transition-all shadow-[0_0_20px_rgba(255,196,0,0.3)] hover:scale-102"
+                >
+                  <Download className="w-4 h-4" />
+                  <span>تحميل OpenLock PRO (.exe)</span>
+                </a>
+
+                <button
+                  onClick={() =>
+                    handleCopyLink(
+                      "https://github.com/alam-alsiana/openlock-pro/releases/download/v1.0.0/OpenLock-PRO-Setup.exe",
+                      "openlock-pro-link",
+                      "أداة OpenLock PRO"
+                    )
+                  }
+                  className="flex items-center justify-center gap-2 bg-[#1a1a1a] hover:bg-[#222] text-neutral-300 hover:text-white border border-[#333] hover:border-[#FFC400]/40 font-bold text-xs px-4 py-2.5 rounded-xl transition-all"
+                >
+                  {copiedId === "openlock-pro-link" ? (
+                    <>
+                      <Check className="w-3.5 h-3.5 text-green-400" />
+                      <span className="text-green-400">تم نسخ رابط IDM!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-3.5 h-3.5 text-[#FFC400]" />
+                      <span>نسخ رابط التنزيل لـ IDM</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
           </div>
 
           {/* Search (only in firmware tab) */}
